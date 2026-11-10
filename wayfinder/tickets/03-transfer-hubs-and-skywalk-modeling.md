@@ -3,8 +3,8 @@ id: 3
 title: Physical transfer hubs, skywalks, and walking penalty calibration
 labels: [wayfinder:grilling]
 mode: HITL
-status: open
-assignee:
+status: closed
+assignee: Antigravity
 blocked_by: []
 blocks: []
 map: ../map.md
@@ -38,4 +38,14 @@ We settle on:
 
 ## Resolution
 
-_(empty — written by the session that claims and closes this ticket)_
+- **Structured Hub Entity Model**: Implemented in `data/seeds/transfer-hubs.json` grouping stations into parent hubs with **directional pedestrian edges** (`fromStopId -> toStopId`) to capture vertical ascent/descent asymmetry (e.g. CSW Corridor 1 to 13 takes 240s up vs 180s down) and one-way turnstile corridors.
+- **Calibrated Formula & Buffers**:
+  $$\text{Transfer Duration} = \text{baseDurationSeconds} (1.0\text{ m/s}) + \text{gateBufferSeconds} + \mathbb{I}_{\text{peak}} \times \text{peakPenaltySeconds}$$
+  - `gateBufferSeconds`: `0s` (inside paid area), `45s` (single gate/street bus), `75–90s` (crossing two separate operator gates).
+  - `peakPenaltySeconds`: Additional congestion buffer during morning (06:30–09:00 WIB) and evening (16:30–19:30 WIB) rush hours (e.g. Manggarai platforms 6/7 to 10/11 stairs).
+- **Commuter Experience Flags**:
+  - `isPaidAreaTransfer`: Triggers green "Inside Station Transfer (No Re-tap)" vs amber "Exit Gate & Re-tap" UI badges.
+  - `isSheltered`: Highlights covered skywalks for tropical rain and afternoon heat.
+  - `isStepFree`: Identifies elevator/ramp accessible routes.
+- **Initial Curated Hubs**: Dukuh Atas TOD, CSW-ASEAN, Kebayoran Skywalk, Manggarai Central, and Rawamangun-Velodrome.
+- **Formalized in**: [docs/adr/0003-transfer-hubs-and-skywalk-modeling.md](../../docs/adr/0003-transfer-hubs-and-skywalk-modeling.md).

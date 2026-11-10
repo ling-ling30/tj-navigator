@@ -1,0 +1,255 @@
+[
+  {
+    "id": "hub:dukuh-atas",
+    "name": "Dukuh Atas Transit Oriented Development (TOD)",
+    "description": "Jakarta's premier 5-mode interchange connecting heavy rail, metro, light rail, airport rail, and BRT.",
+    "memberStops": [
+      "krl:SUD",
+      "mrt:DKA",
+      "lrt:DUK",
+      "tj:1-12",
+      "tj:4-17",
+      "krl:BNC"
+    ],
+    "edges": [
+      {
+        "fromStopId": "krl:SUD",
+        "toStopId": "mrt:DKA",
+        "distanceMeters": 280,
+        "baseDurationSeconds": 280,
+        "pathwayType": "UNDERGROUND_CONCOURSE",
+        "isPaidAreaTransfer": false,
+        "gateBufferSeconds": 75,
+        "peakPenaltySeconds": 60,
+        "isSheltered": true,
+        "isStepFree": true
+      },
+      {
+        "fromStopId": "mrt:DKA",
+        "toStopId": "krl:SUD",
+        "distanceMeters": 280,
+        "baseDurationSeconds": 280,
+        "pathwayType": "UNDERGROUND_CONCOURSE",
+        "isPaidAreaTransfer": false,
+        "gateBufferSeconds": 75,
+        "peakPenaltySeconds": 60,
+        "isSheltered": true,
+        "isStepFree": true
+      },
+      {
+        "fromStopId": "mrt:DKA",
+        "toStopId": "lrt:DUK",
+        "distanceMeters": 350,
+        "baseDurationSeconds": 350,
+        "pathwayType": "SKYWALK",
+        "isPaidAreaTransfer": false,
+        "gateBufferSeconds": 90,
+        "peakPenaltySeconds": 60,
+        "isSheltered": true,
+        "isStepFree": true
+      },
+      {
+        "fromStopId": "lrt:DUK",
+        "toStopId": "mrt:DKA",
+        "distanceMeters": 350,
+        "baseDurationSeconds": 350,
+        "pathwayType": "SKYWALK",
+        "isPaidAreaTransfer": false,
+        "gateBufferSeconds": 90,
+        "peakPenaltySeconds": 60,
+        "isSheltered": true,
+        "isStepFree": true
+      },
+      {
+        "fromStopId": "krl:SUD",
+        "toStopId": "tj:1-12",
+        "distanceMeters": 180,
+        "baseDurationSeconds": 180,
+        "pathwayType": "STREET_WALK",
+        "isPaidAreaTransfer": false,
+        "gateBufferSeconds": 75,
+        "peakPenaltySeconds": 45,
+        "isSheltered": true,
+        "isStepFree": true
+      }
+    ]
+  },
+  {
+    "id": "hub:csw-asean",
+    "name": "CSW - ASEAN Multi-Level Interchange",
+    "description": "5-tier circular hub connecting elevated BRT Corridor 13 (+20m), elevated MRT ASEAN, and ground-level Corridor 1.",
+    "memberStops": [
+      "tj:13-1",
+      "tj:1-4",
+      "mrt:ASN"
+    ],
+    "edges": [
+      {
+        "fromStopId": "tj:1-4",
+        "toStopId": "tj:13-1",
+        "distanceMeters": 160,
+        "baseDurationSeconds": 240,
+        "pathwayType": "STAIRS_ESCALATOR",
+        "isPaidAreaTransfer": true,
+        "gateBufferSeconds": 0,
+        "peakPenaltySeconds": 90,
+        "isSheltered": true,
+        "isStepFree": true
+      },
+      {
+        "fromStopId": "tj:13-1",
+        "toStopId": "tj:1-4",
+        "distanceMeters": 160,
+        "baseDurationSeconds": 180,
+        "pathwayType": "STAIRS_ESCALATOR",
+        "isPaidAreaTransfer": true,
+        "gateBufferSeconds": 0,
+        "peakPenaltySeconds": 45,
+        "isSheltered": true,
+        "isStepFree": true
+      },
+      {
+        "fromStopId": "tj:1-4",
+        "toStopId": "mrt:ASN",
+        "distanceMeters": 120,
+        "baseDurationSeconds": 120,
+        "pathwayType": "SKYWALK",
+        "isPaidAreaTransfer": false,
+        "gateBufferSeconds": 75,
+        "peakPenaltySeconds": 30,
+        "isSheltered": true,
+        "isStepFree": true
+      },
+      {
+        "fromStopId": "mrt:ASN",
+        "toStopId": "tj:1-4",
+        "distanceMeters": 120,
+        "baseDurationSeconds": 120,
+        "pathwayType": "SKYWALK",
+        "isPaidAreaTransfer": false,
+        "gateBufferSeconds": 75,
+        "peakPenaltySeconds": 30,
+        "isSheltered": true,
+        "isStepFree": true
+      },
+      {
+        "fromStopId": "tj:13-1",
+        "toStopId": "mrt:ASN",
+        "distanceMeters": 190,
+        "baseDurationSeconds": 210,
+        "pathwayType": "STAIRS_ESCALATOR",
+        "isPaidAreaTransfer": false,
+        "gateBufferSeconds": 75,
+        "peakPenaltySeconds": 45,
+        "isSheltered": true,
+        "isStepFree": true
+      }
+    ]
+  },
+  {
+    "id": "hub:kebayoran",
+    "name": "Kebayoran Skywalk Interchange",
+    "description": "450m covered pedestrian skybridge connecting KRL Stasiun Kebayoran with BRT Corridor 13 (Velbak) and Corridor 8.",
+    "memberStops": [
+      "krl:KBY",
+      "tj:13-2",
+      "tj:8-6"
+    ],
+    "edges": [
+      {
+        "fromStopId": "krl:KBY",
+        "toStopId": "tj:13-2",
+        "distanceMeters": 320,
+        "baseDurationSeconds": 320,
+        "pathwayType": "SKYWALK",
+        "isPaidAreaTransfer": false,
+        "gateBufferSeconds": 75,
+        "peakPenaltySeconds": 45,
+        "isSheltered": true,
+        "isStepFree": false
+      },
+      {
+        "fromStopId": "tj:13-2",
+        "toStopId": "krl:KBY",
+        "distanceMeters": 320,
+        "baseDurationSeconds": 320,
+        "pathwayType": "SKYWALK",
+        "isPaidAreaTransfer": false,
+        "gateBufferSeconds": 75,
+        "peakPenaltySeconds": 45,
+        "isSheltered": true,
+        "isStepFree": false
+      },
+      {
+        "fromStopId": "krl:KBY",
+        "toStopId": "tj:8-6",
+        "distanceMeters": 450,
+        "baseDurationSeconds": 450,
+        "pathwayType": "SKYWALK",
+        "isPaidAreaTransfer": false,
+        "gateBufferSeconds": 75,
+        "peakPenaltySeconds": 45,
+        "isSheltered": true,
+        "isStepFree": false
+      }
+    ]
+  },
+  {
+    "id": "hub:manggarai",
+    "name": "Manggarai Central Interchange",
+    "description": "Multi-tier heavy rail junction between Bogor Line (Platforms 10-13) and Cikarang Line (Platforms 6-8).",
+    "memberStops": [
+      "krl:MRI",
+      "tj:4-13"
+    ],
+    "edges": [
+      {
+        "fromStopId": "krl:MRI",
+        "toStopId": "tj:4-13",
+        "distanceMeters": 180,
+        "baseDurationSeconds": 180,
+        "pathwayType": "UNDERGROUND_CONCOURSE",
+        "isPaidAreaTransfer": false,
+        "gateBufferSeconds": 75,
+        "peakPenaltySeconds": 60,
+        "isSheltered": true,
+        "isStepFree": true
+      }
+    ]
+  },
+  {
+    "id": "hub:rawamangun",
+    "name": "Rawamangun - Velodrome Interchange",
+    "description": "Direct skybridge connecting LRT Jakarta Velodrome and Transjakarta Corridor 4 Pemuda Rawamangun.",
+    "memberStops": [
+      "lrt:VEL",
+      "tj:4-8"
+    ],
+    "edges": [
+      {
+        "fromStopId": "lrt:VEL",
+        "toStopId": "tj:4-8",
+        "distanceMeters": 140,
+        "baseDurationSeconds": 140,
+        "pathwayType": "SKYWALK",
+        "isPaidAreaTransfer": false,
+        "gateBufferSeconds": 75,
+        "peakPenaltySeconds": 30,
+        "isSheltered": true,
+        "isStepFree": true
+      },
+      {
+        "fromStopId": "tj:4-8",
+        "toStopId": "lrt:VEL",
+        "distanceMeters": 140,
+        "baseDurationSeconds": 140,
+        "pathwayType": "SKYWALK",
+        "isPaidAreaTransfer": false,
+        "gateBufferSeconds": 75,
+        "peakPenaltySeconds": 30,
+        "isSheltered": true,
+        "isStepFree": true
+      }
+    ]
+  }
+]

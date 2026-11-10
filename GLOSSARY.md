@@ -43,8 +43,24 @@ A heavy rail, metro, or light rail facility (KRL, MRT, LRT) with physical platfo
 ### TransferHub
 A designated interchange area connecting multiple transit modes or lines via physical infrastructure (e.g., *Dukuh Atas TOD*, *CSW-ASEAN Interchange*, *Kebayoran Skywalk*, *Manggarai Central Interchange*).
 
-### Skywalk / Pedestrian Link
-An explicit walking edge connecting two stops/stations within a Transfer Hub with a measured walking duration buffer (e.g., 4 minutes at 1.0 m/s walking speed including stairs/elevators).
+### DirectionalTransferEdge
+An asymmetric pedestrian connection from `fromStopId` to `toStopId` that accounts for differing climb vs. descent times (e.g. ascending 5 levels at CSW vs. descending) and one-way turnstile flows.
+
+### PaidAreaTransfer
+A transfer occurring strictly inside the paid gate area (e.g. transferring between Corridor 1 and Corridor 13 at CSW, or between KRL lines at Manggarai). Incurs **0s** gate buffer and **Rp 0** additional fare.
+
+### GateBuffer
+Pedestrian friction delay for passing through fare turnstiles:
+- `0s`: Inside paid area (`isPaidAreaTransfer: true`).
+- `45s`: Single gate (boarding street-level bus or non-BRT feeder).
+- `75–90s`: Double gate (tapping out of operator A, e.g. KRL, and tapping into operator B, e.g. MRT).
+
+### PeakPenalty
+Additional rush-hour delay buffer applied during morning (06:30–09:00 WIB) and evening (16:30–19:30 WIB) peaks to model stair bottlenecks and platform crowding.
+
+### ShelteredSkywalk & StepFreeTransfer
+- `isSheltered`: Weather-protected overhead pedestrian bridge or concourse protecting against rain and heat.
+- `isStepFree`: Route accessible via elevator or ramp for luggage, strollers, and wheelchairs.
 
 ---
 
