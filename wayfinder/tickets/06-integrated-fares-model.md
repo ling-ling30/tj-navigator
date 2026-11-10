@@ -3,8 +3,8 @@ id: 6
 title: Multi-modal fare calculation & JakLingko tariff capping rules
 labels: [wayfinder:research]
 mode: AFK
-status: open
-assignee:
+status: closed
+assignee: Antigravity
 blocked_by: []
 blocks: []
 map: ../map.md
@@ -36,4 +36,11 @@ A research document specifies:
 
 ## Resolution
 
-_(empty — written by the session that claims and closes this ticket)_
+- **Formulas Documented**:
+  - Transjakarta: Flat Rp 3.500 (Rp 2.000 early bird 05:00–07:00 WIB, Rp 0 within paid gates, Rp 0 Mikrotrans).
+  - KRL Commuterline: $3000 + \max(0, \lceil \frac{d - 25}{10} \rceil) \times 1000$ IDR with free within-network transfers.
+  - MRT Jakarta: Station matrix from Rp 3.000 to Rp 14.000 max.
+  - LRT: Rp 5.000 flat (LRT Jakarta), Rp 3.000 + Rp 700/km (capped at Rp 10k off-peak / Rp 20k peak for Jabodebek).
+- **JakLingko Integrated Tariff**: $\min(10000, 2500 + \lceil d_{\text{total}} \rceil \times 250)$ IDR when transferring between TJ + MRT + LRT within 45 minutes and concluding within 180 minutes. KRL calculated as separate leg.
+- **Dual Display**: Engine returns both standard bank e-money total and JakLingko integrated total with savings callout.
+- **Full Specification**: [docs/FARE-ENGINE-SPEC.md](../../docs/FARE-ENGINE-SPEC.md).

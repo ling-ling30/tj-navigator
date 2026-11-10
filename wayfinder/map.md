@@ -27,6 +27,7 @@ A complete architectural and implementation blueprint for **TJ-Navigator** (a hi
 - [#3 Physical Transfer Hubs & Skywalks](tickets/03-transfer-hubs-and-skywalk-modeling.md): Structured hub model with directional edges, asymmetric vertical buffers, rush-hour peak penalties, and sheltered/step-free flags documented in [ADR 0003](docs/adr/0003-transfer-hubs-and-skywalk-modeling.md) and seeded in `data/seeds/transfer-hubs.json`. (2026-11-10)
 - [#4 Real-Time MQTT Telemetry & ETA Engine](tickets/04-headway-vs-realtime-telemetry.md): On-demand multiplexed MQTT WebSocket subscriptions with Page Visibility pausing, 1.5s render throttling, heading-validated polyline snapping, and 3-tier staleness decay documented in [ADR 0004](docs/adr/0004-realtime-telemetry-and-eta-engine.md). (2026-11-10)
 - [#5 Commuter Journey Planner UI/UX](tickets/05-commuter-ui-and-itinerary-ux.md): Mobile prototype designed in FigCraft, documented in [UI/UX Spec](docs/COMMUTER-UI-UX-SPEC.md), and exported to `design/screen-01-home.png` and `design/screen-02-results.png`. (2026-11-10)
+- [#6 Multi-Modal Fare Engine](tickets/06-integrated-fares-model.md): Mathematical formulas for Transjakarta, KRL, MRT, LRT, and JakLingko Rp 10.000 / 3-hour tariff capping documented in [Fare Spec](docs/FARE-ENGINE-SPEC.md). (2026-11-10)
 
 ## Tickets
 
@@ -37,11 +38,12 @@ A complete architectural and implementation blueprint for **TJ-Navigator** (a hi
 | [#3](tickets/03-transfer-hubs-and-skywalk-modeling.md) | Physical transfer hubs, skywalks, and walking penalty calibration | grilling | HITL | — | closed |
 | [#4](tickets/04-headway-vs-realtime-telemetry.md) | Real-time MQTT stream integration & ETA estimation model | grilling | HITL | — | closed |
 | [#5](tickets/05-commuter-ui-and-itinerary-ux.md) | Commuter Journey Planner UI/UX: Mobile-first itinerary flow & map canvas | prototype | HITL | — | closed |
-| [#6](tickets/06-integrated-fares-model.md) | Multi-modal fare calculation & JakLingko tariff capping rules | research | AFK | — | open |
+| [#6](tickets/06-integrated-fares-model.md) | Multi-modal fare calculation & JakLingko tariff capping rules | research | AFK | — | closed |
+| [#7](tickets/07-pwa-offline-storage.md) | Offline PWA Service Worker & IndexedDB caching strategy | research | AFK | — | open |
+| [#8](tickets/08-vertical-slice-roadmap.md) | Slicing the architecture into executable implementation tickets | task | HITL | #7 | open |
 
 ## Not yet specified
 
-- Offline PWA caching strategy: Compressing graph data for offline underground MRT search.
 - Turn-by-turn live navigation mode with push/vibration alarms before transfer stops.
 - Crowdsourced disruption and congestion reporting (delay crowdsourcing).
 - Multi-language support (Bahasa Indonesia & English).
