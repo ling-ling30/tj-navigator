@@ -3,8 +3,8 @@ id: 1
 title: Routing Engine: In-memory RAPTOR vs Multi-Criteria Dijkstra on Edge / Browser?
 labels: [wayfinder:grilling]
 mode: HITL
-status: open
-assignee:
+status: closed
+assignee: Antigravity
 blocked_by: []
 blocks: [3, 4, 5]
 map: ../map.md
@@ -38,4 +38,7 @@ We decide on:
 
 ## Resolution
 
-_(empty — written by the session that claims and closes this ticket)_
+- **Algorithm**: Standardized on **RAPTOR** (Round-Based Public Transit Routing) for transit route legs paired with a **Spatial KD-Tree** for pedestrian walking legs and transfer links. Avoids synthetic penalty weights and natively computes Pareto-optimal itineraries (Fastest vs. Fewest Transfers).
+- **Execution Target**: **Hybrid Model (Client-Side Primary + Edge API Fallback)**. A Web Worker executes searches in $<10\text{ ms}$ entirely inside the commuter's browser using an IndexedDB-cached binary graph (~3.5 MB), enabling offline routing in MRT subway tunnels. An Edge API route provides identical search capability for first visits or SSR.
+- **Initial Scope**: **Phase 1 (Core Spine)** covers 100% of Rail (KRL, MRT, LRT) + Transjakarta BRT dedicated corridors (Corridors 1–14) + Curated Multi-Modal Transfer Hubs. Non-BRT street feeders and Mikrotrans follow in Phase 2.
+- **Formalized in**: [docs/adr/0002-routing-engine-raptor-hybrid-execution.md](../../docs/adr/0002-routing-engine-raptor-hybrid-execution.md).

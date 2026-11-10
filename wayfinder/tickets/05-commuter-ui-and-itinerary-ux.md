@@ -5,14 +5,14 @@ labels: [wayfinder:prototype]
 mode: HITL
 status: open
 assignee:
-blocked_by: [1]
+blocked_by: []
 blocks: []
 map: ../map.md
 ---
 
 # #5 Commuter Journey Planner UI/UX: Mobile-first itinerary flow & map canvas
 
-**Type:** prototype · **Mode:** HITL · **Blocked by:** #1 · **Blocks:** —
+**Type:** prototype · **Mode:** HITL · **Blocked by:** — · **Blocks:** —
 
 ## Question
 

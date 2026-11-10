@@ -5,14 +5,14 @@ labels: [wayfinder:grilling]
 mode: HITL
 status: open
 assignee:
-blocked_by: [1]
+blocked_by: []
 blocks: []
 map: ../map.md
 ---
 
 # #3 Physical transfer hubs, skywalks, and walking penalty calibration
 
-**Type:** grilling · **Mode:** HITL · **Blocked by:** #1 · **Blocks:** —
+**Type:** grilling · **Mode:** HITL · **Blocked by:** — · **Blocks:** —
 
 ## Question
 
