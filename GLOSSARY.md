@@ -75,23 +75,17 @@ A departure frequency presentation format (e.g., *"Every 6–10 minutes"*) used 
 ### RealtimeEstimate
 Live countdown calculated from real-time vehicle GPS telemetry (e.g., *"Bus TJ-204 arriving in ~3 min (1 stop away)"*).
 
+### RecountedEta
+An independently calculated arrival estimate that discards the official API's static "arrive in X min" value and recalculates arrival time from raw vehicle GPS, rolling velocity, intermediate halte dwell times, and intersection bottlenecks.
+
+### RollingProgressVelocity
+The actual movement speed of a bus along its route polyline over a 60-second sliding window ($\Delta d / \Delta t$). When $< 3\text{ km/h}$, flags the vehicle as held in an intersection bottleneck.
+
+### HalteDwellPenalty
+A fixed $+30\text{–}45\text{s}$ buffer added to arrival estimates for each intermediate station the bus must service before reaching the commuter.
+
 ### ScheduledDeparture
 A fixed timetable departure time (primarily for KRL, MRT, and LRT trains).
-
-### MultiplexedRouteSubscription
-An on-demand WebSocket MQTT subscription to the union of routes serving a specific halte (e.g., subscribing to routes 1, 1F, 6B, and 9C at Halte Tosari), capped at 6 topics, with automatic pause via Page Visibility API when the screen is locked.
-
-### PolylineHeadingSnap
-A geometric verification ensuring that a bus's bearing or movement vector aligns within $\pm 45^\circ$ of the route's outbound polyline tangent, preventing incorrect matches against buses in the opposite median lane or U-turns.
-
-### StopHopEta
-Arrival estimation combining the count of remaining intermediate stops with the corridor's calibrated segment runtime, enriched with landmark context (e.g., *"Near Halte Polda Metro Jaya · 2 stops away · ~4 min"*).
-
-### TelemetryDecayTier
-Three-phase graceful degradation based on payload GPS timestamp:
-1. **Live Green (< 45s)**: Pulsing pin, high-confidence countdown.
-2. **Amber (45s–90s)**: 50% opacity, static ring, *"Updating... Last seen 1 min ago"*.
-3. **Headway Fallback (> 90s)**: Pin removed, reverts to scheduled frequency window.
 
 ---
 

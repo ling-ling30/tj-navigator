@@ -1,92 +1,58 @@
-# Commuter Journey Planner UI/UX Specification
+# Commuter Journey Planner UI/UX Specification (Apple Fluid Design System)
 
-> Visual design system, interaction patterns, and mobile prototype specifications for **TJ-Navigator**.
+> Visual design system, interaction patterns, and mobile prototype specifications for **TJ-Navigator**, built following Apple Design principles (WWDC fluid interfaces, translucency, springs, and direct manipulation).
 
 ---
 
 ## 1. Visual Prototype Assets (FigCraft)
 
-The core commuter flow has been designed in **FigCraft** and exported directly to the repository:
+The prototype screens are authored in **FigCraft** and exported to the repository:
 - **FigCraft File**: [design/tj-navigator.figcraft](file:///c:/Users/Ricky/Documents/tj-navigator/design/tj-navigator.figcraft)
 - **Screen 1 (Search & Live Radar)**: [design/screen-01-home.png](file:///c:/Users/Ricky/Documents/tj-navigator/design/screen-01-home.png)
 - **Screen 2 (Pareto Itineraries & Map Canvas)**: [design/screen-02-results.png](file:///c:/Users/Ricky/Documents/tj-navigator/design/screen-02-results.png)
+- **Screen 3 (Apple Fluid Live Radar & Recounted Traffic ETA)**: [design/screen-03-apple-radar.png](file:///c:/Users/Ricky/Documents/tj-navigator/design/screen-03-apple-radar.png)
 
 ---
 
-## 2. Design System & Tokens
+## 2. Apple Design Foundations Translated to Web
 
-### 2.1 Color Palette
+Following the `/apple-design` skill:
 
-| Token | Hex | Usage |
-| :--- | :--- | :--- |
-| **Canvas Background** | `#0D1117` | Deep obsidian dark-mode background |
-| **Surface Card** | `#161B22` | Elevation tier 1 container cards |
-| **Surface Elevated** | `#21262D` | Chip buttons, inner list items |
-| **Border / Stroke** | `#30363D` | Structural hairline dividers |
-| **Transjakarta BRT** | `#0066FF` | Corridor 1–14 badges, bus line polylines |
-| **KRL Commuterline** | `#00A859` | Commuter rail routes, station pins |
-| **MRT Jakarta** | `#EE3124` | North-South Line red brand color |
-| **LRT Jabodebek / Jkt** | `#F58220` | Light rail routes, interchange pins |
-| **Mikrotrans / Angkot** | `#00BCD4` | Feeder vans and neighbourhood lines |
-| **Live Telemetry Green** | `#00E676` | Pulsing GPS indicator, live countdowns |
-| **Amber Warning / Stale** | `#E3B341` | Re-tap gate alerts, 45s–90s stale telemetry |
+### 2.1 Physics & Springs
+- **Drawer / Sheet Drag**: Critically damped spring (`damping: 1.0`, `response: 0.35s`).
+- **Momentum Flick**: Under-damped spring with slight bounce (`damping: ~0.8`) using exponential decay projection (`project(v) = (v / 1000) * d / (1 - d)` with $d \approx 0.998$).
+- **Direct Manipulation**: 1:1 pointer tracking with Pointer Events and `setPointerCapture`.
+- **Interruptibility**: Animations start from the presentation/current transform value, never locking out user input.
 
----
+### 2.2 Materials, Depth, & Translucency
+- **Floating Sheets**: Translucent dark material (`background: rgba(28, 28, 30, 0.85)` with `backdrop-filter: blur(25px) saturate(180%)`).
+- **Light Edge Catch**: Hairline border `1px solid rgba(255, 255, 255, 0.15)` on sheet tops and cards representing physical light catching the edge of the glass.
+- **Corner Radii**: Generous Apple-style squircle radii (`32px` on bottom sheets, `16px` on inner cards, `12px` on chips).
 
-## 3. Screen 1: Mobile Commuter Home & Radar
-
-### Components
-1. **Header**:
-   - Monospace/Grotesque masthead: `TJ-NAVIGATOR`
-   - Status Chip: `● ALL MODES LIVE` (Green pulsing indicator)
-2. **Origin & Destination Search Card**:
-   - Origin field: Green circular anchor with station code (`krl:TET` - *Stasiun Tebet*)
-   - Destination field: Red destination anchor (`tj:1-14` - *Grand Indonesia / Halte Tosari*)
-   - Swap button for quick return trip calculation
-   - Filter chips: `🕒 Depart Now (22:30)` · `⚡ All Modes (4)`
-3. **Live Bus Radar Widget**:
-   - Direct MQTT subscriber showing nearest approaching armada
-   - Displays: Corridor pill (`CORRIDOR 1 · BLOK M ➔ KOTA`), Live ETA (`~3 MIN`), remaining stops (`2 stops away`), and last-known landmark (`Near Halte Polda Metro Jaya`).
-4. **Nearby Departures Board**:
-   - Real-time departure board for stations within 300m walking radius.
-5. **Fixed Bottom Navigation**:
-   - `Route` (active) · `Radar` · `Map` · `Saved`
+### 2.3 Optical Typography
+- **Headings**: Negative tracking (`letterSpacing: -0.02em` to `-0.03em`), tight leading (`1.05`–`1.15`).
+- **Data / Metrics**: Monospace and numeric tabular figures for countdowns and fares.
 
 ---
 
-## 4. Screen 2: Pareto Itinerary Comparison Drawer
+## 3. Screen 3: Apple Fluid Live Radar & Recounted ETA
 
-### 4.1 Layout Structure
-- **Top 25%**: Interactive Map Peek Canvas with vector transit paths and station pins.
-- **Bottom 75%**: Draggable bottom sheet comparing Pareto-optimal route options.
-
-### 4.2 Itinerary Cards
-Each card surfaces key commuter metrics at a glance:
-- **Card 1 (Fastest / Recommended)**:
-  - `32 MIN` · `Rp 6.500` · `22:35 ➔ 23:07`
-  - Flow: `[KRL] St. Tebet ➔ 🚶 [Skywalk 4m] ➔ [MRT] Tosari`
-  - Badges: `⚡ FASTEST` · `☂️ COVERED SKYWALK` · `♿ STEP-FREE`
-- **Card 2 (Direct / Fewest Transfers)**:
-  - `45 MIN` · `Rp 3.500` · `22:38 ➔ 23:23`
-  - Flow: `[TJ COR 4C] Tebet Eco Park ➔ Halte Tosari (Direct)`
-  - Badges: `0 TRANSFERS` · `🟢 LIVE BUS IN ~3M (POLDA METRO)`
-- **Card 3 (Lowest Fare / Inside Station Transfer)**:
-  - `41 MIN` · `Rp 3.500` · `22:36 ➔ 23:17`
-  - Flow: `[TJ COR 9] ➔ 🔄 [CSW Hub] ➔ [TJ COR 1] Tosari`
-  - Badges: `🔄 INSIDE STATION TRANSFER (NO RE-TAP)` · `RP 3.500 FLAT`
-
----
-
-## 5. Screen 3: Step-by-Step Active Navigation Flow
-
-When an itinerary card is selected, the sheet expands to full height with a step-by-step timeline:
-1. **Departure Leg**: Walking route with turn-by-turn distance and compass heading.
-2. **Boarding Instruction**:
-   - Platform / Bay number (e.g. *"Bay 2 - Towards Kota"*).
-   - Live bus countdown with countdown timer.
-3. **En-Route Transit**:
-   - Collapsible list of intermediate stops passed (e.g. *"Passing 6 stops: Cawang, Pancoran, Kuningan..."*).
-4. **Transfer Guidance**:
-   - Transfer badge (*"Inside Station Transfer"* vs *"Exit Gate & Re-tap"*).
-   - Skywalk walking directions (*"Take escalator up 2 levels to Corridor 13 platform"*).
-5. **Arrival Leg**: Alighting announcement and nearest exit guide.
+### 3.1 The "Why the Bus is Delayed" Solution
+When the official API claims *"Arrives in 3 mins"*, commuters are often misled by traffic jams. Screen 3 implements our **Recounted Traffic-Aware ETA Engine**:
+1. **Dynamic Island / Top Bar**:
+   - `HALTE TOSARI (CORRIDOR 1)` with glass circular back button (`‹`) and info button.
+2. **Interactive Map Canvas**:
+   - Glowing blue corridor polyline track (`#007AFF`).
+   - Pulsing bus indicator puck with directional chevron and tag: `🚌 TJ-204 · 0 km/h (Stopped)`.
+   - Green commuter pin at `📍 Halte Tosari (You)`.
+3. **Floating Glass Sheet**:
+   - Route badge: `CORRIDOR 1`.
+   - Traffic Alert Pill: `⚠️ TRAFFIC BOTTLENECK DETECTED`.
+   - **Honest Recounted Countdown**:
+     - Large display: **`8–11 MIN`**
+     - Muted discrepancy note: `(Official API claimed "3 min")`
+   - **Diagnostic Reasoning Card**:
+     - *"Bus TJ-204 is stationary at Kuningan West junction (0 km/h for 85s). Remaining 1.4 km has 2 halte stops + 1 red light."*
+   - **Milestone Progress Bar**:
+     - `✓ Mampang` ➔ `🚌 Kuningan (0 km/h)` ➔ `📍 Tosari (You)`.
+   - **Apple Spring Button**: `Track Bus on Live Map`.
