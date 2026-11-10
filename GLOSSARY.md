@@ -26,6 +26,9 @@ The end-to-end trip duration adjusted in real-time by integrating live vehicle t
 ### TrafficDelayOffset
 The difference between nominal scheduled transit time and live recounted conditions (e.g. `+7 minutes` caused by Kuningan West bottleneck).
 
+### ActiveJourneyPersistence
+The serialization of the user's active trip leg, transfer checklist, and recent corridor traffic multipliers to local storage, surviving mid-tunnel phone locks or browser reloads.
+
 ---
 
 ## 2. Transit Network & Infrastructure
@@ -68,6 +71,9 @@ Additional rush-hour delay buffer applied during morning (06:30–09:00 WIB) and
 - `isSheltered`: Weather-protected overhead pedestrian bridge or concourse protecting against rain and heat.
 - `isStepFree`: Route accessible via elevator or ramp for luggage, strollers, and wheelchairs.
 
+### OfflineOrientationLayer
+A bundled 40 KB GeoJSON underlay of primary Jakarta arterial roads (Sudirman-Thamrin, Gatot Subroto, Rasuna Said) and canals rendered on `#0A0E17` to give spatial orientation when raster map tiles cannot load offline.
+
 ---
 
 ## 3. Schedules, Time, & Real-Time Telemetry
@@ -100,8 +106,11 @@ The ratio of live segment runtime to baseline runtime, bounded between $0.8\time
 ### HalteDwellBuffer
 A calibrated $+25\text{ seconds}$ delay added per intermediate stop for passenger boarding and alighting.
 
-### ScheduledDeparture
-A fixed timetable departure time (primarily for KRL, MRT, and LRT trains).
+### LieFiDetection
+Strict 2.5-second fetch timeouts and 15-second telemetry heartbeat watchdogs that detect dead-signal "Lie-Fi" in subway tunnels and trigger offline fallbacks without waiting for OS disconnect events.
+
+### GraphVersionHash
+A SHA-256 fingerprint of the compiled GTFS transit graph stored in IndexedDB, checked in the background by a Web Worker to avoid blocking mobile startup.
 
 ---
 

@@ -21,11 +21,11 @@ How should the PWA cache the web shell, transit network graph, and map tiles to 
 ## Context
 
 - The compiled graph (`jakarta-transit-network.json`) is ~1.5 MB (or ~350 KB for Phase 1).
-- Commuters in underground stations (e.g. MRT Istora Mandiri, Dukuh Atas, Bundaran HI) frequently lose cellular connection.
+- Commuters in underground stations (e.g. MRT Istora Mandiri, Dukuh Atas, Bundaran HI) frequently lose cellular connection or encounter "Lie-Fi" dead signal traps.
 - We need:
   1. A Service Worker strategy (e.g. Workbox / Vite PWA plugin) that caches HTML/JS/CSS assets with cache-first strategy.
   2. An IndexedDB data loader (`lib/storage/transit-db.ts`) storing the parsed graph arrays so subsequent app loads skip JSON parsing overhead.
-  3. Offline vector map tile caching for Greater Jakarta bounding box.
+  3. Offline vector map tile caching for Greater Jakarta bounding box with arterial orientation underlays.
 
 ## Resolved when
 
@@ -36,7 +36,9 @@ A research document specifies:
 
 ## Resolution
 
-- **Service Worker Policies**: Cache-first for app shell, fonts, and assets; Stale-While-Revalidate for `/data/jakarta-transit-network.json`; bounded tile cache for Jakarta center.
-- **IndexedDB Storage (`tj_navigator_store`)**: Direct structured object stores for `stops`, `routes`, `stopRoutes`, `transfers`, and `shapes` to eliminate 150ms JSON parsing latency on mobile app launches.
-- **Offline Vector Fallback**: Renders route polylines and station pins as pure client vector overlays over a dark canvas when raster/satellite tiles are unavailable in subway tunnels.
+- **Four Real-World Underground Refinements**:
+  1. *Lie-Fi Timeout Detection*: 2.5s raster tile timeout + 15s MQTT heartbeat watchdog to instantly switch to offline vector mode without waiting for OS disconnect events.
+  2. *Background Graph Versioning*: `graphVersion` hash stored in IndexedDB; background Web Worker updates schema without blocking $<20\text{ ms}$ startup.
+  3. *Active Journey Persistence*: Local storage saves active navigation legs and recent traffic multipliers ($M_{\text{traffic}}$), surviving mid-tunnel phone locks or refreshes.
+  4. *Offline Arterial Orientation Layer*: Bundles a compressed 40 KB GeoJSON underlay of primary Jakarta arterials (Sudirman-Thamrin, Gatot Subroto, Rasuna Said) on `#0A0E17`.
 - **Full Specification**: [docs/PWA-OFFLINE-STORAGE-SPEC.md](../../docs/PWA-OFFLINE-STORAGE-SPEC.md).
