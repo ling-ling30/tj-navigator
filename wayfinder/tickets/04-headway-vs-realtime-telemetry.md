@@ -37,9 +37,15 @@ We decide on:
 ## Resolution
 
 - **On-Demand Multiplexed MQTT Subscriptions**: Browser connects directly to `wss://mqtt.tj.co.id:8084/mqtt` only when viewing active route/halte sheets. Multiplexes union of routes serving a stop (capped at 6 topics, e.g. 1, 1F, 6B, 9C at Tosari). Automatically un-subscribes / suspends via Page Visibility API when `document.hidden === true`. Ingestion is buffered into an in-memory mutable map and flushed to UI state on a 1.5-second throttled ticker.
-- **Directional Polyline Snapping & Stop-Hop ETA**: Snapping checks that vehicle heading aligns within $\pm 45^\circ$ of the outbound polyline tangent, strictly excluding opposite-direction median buses. ETA combines remaining stop count with corridor segment runtimes and surfaces landmark context (e.g., `"Near Halte Polda Metro Jaya · 2 stops away · ~4 min"`).
-- **Three-Tier Payload Decay**: Invalidation based on GPS payload timestamp (preventing stale retained MQTT false-positives):
+- **Unified Live Segment Runtime Engine (ADR 0005)**:
+  - Discard raw pre-computed API ETAs upon ingestion.
+  - Preceding buses serve as live traffic probes measuring actual stop-to-stop hop traversal times.
+  - Exponential blend filter:
+    $$\text{Recounted Hop Time} = 0.7 \cdot \text{Observed} + 0.3 \cdot \text{Baseline}$$
+  - Applied to **both phases** of each bus leg:
+    $$\text{Total Bus Leg Duration} = \underbrace{\sum_{k=\text{bus}}^{\text{origin}} \text{LiveSeg}_k}_{\text{Recounted Wait ETA}} + \underbrace{\sum_{m=\text{origin}}^{\text{dest}} (\text{LiveSeg}_m + 25\text{s})}_{\text{Recounted In-Vehicle Travel Time}}$$
+- **Three-Tier Payload Decay**: Invalidation based on GPS payload timestamp:
   - `Age < 45s`: Pulsing Green Live badge.
   - `45s < Age < 90s`: Amber status (`"Updating... Last seen 1 min ago"`), marker opacity dimmed to 50% with static ring.
   - `Age > 90s`: Pin removed, seamlessly decays to scheduled headway window (`"Every 5–8 min"`).
-- **Formalized in**: [docs/adr/0004-realtime-telemetry-and-eta-engine.md](../../docs/adr/0004-realtime-telemetry-and-eta-engine.md).
+- **Formalized in**: [docs/adr/0004-realtime-telemetry-and-eta-engine.md](../../docs/adr/0004-realtime-telemetry-and-eta-engine.md) and [docs/adr/0005-recounted-traffic-aware-eta-engine.md](../../docs/adr/0005-recounted-traffic-aware-eta-engine.md).

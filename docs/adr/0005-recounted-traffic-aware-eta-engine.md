@@ -1,57 +1,46 @@
-# ADR 0005: Recounted Traffic-Aware ETA Engine vs. Naive Backend Timers
+# ADR 0005: Unified Live Segment Runtime Engine (Recounted Telemetry for Arrival Countdowns & In-Vehicle Travel Time)
 
 ## Status
 Accepted
 
 ## Context
-Transjakarta's official consumer API and MQTT payloads frequently broadcast arrival countdowns such as `"Arrives in 3 mins"`. In Jakarta street practice, this number is notoriously detached from physical reality:
-- The bus may be completely stationary behind multiple traffic lights (e.g. Kuningan Barat or Mampang Prapatan).
-- The official backend often computes ETAs by dividing distance by nominal free-flow speed ($40\text{ km/h}$) or reading scheduled timetable offsets without accounting for real-time congestion.
-- When an app promises "3 mins" and the commuter waits 14 minutes, trust in the application collapses.
-- Crucially, if this false precision is only corrected at the stop level, the **journey planner's total travel time comparison** remains broken (e.g. advertising a "45-minute direct bus" that actually takes 58 minutes due to current traffic).
+Transjakarta's official API and MQTT broker broadcast static, pre-computed arrival fields (e.g. `"arrive in 3 mins"`). In Jakarta street practice, this value is notoriously unreliable:
+- It divides raw distance by free-flow speed ($40\text{ km/h}$) or uses static timetable clocks, ignoring red lights, junction queues, and mixed-traffic bottlenecks.
+- If we only apply live telemetry to the **boarding countdown** at the origin stop, the journey planner's **in-vehicle travel time** remains dangerously inaccurate (e.g. advertising a 30-minute bus ride that actually takes 55 minutes during rush-hour gridlock).
 
-Because we receive raw GPS coordinates (`latitude`, `longitude`, `speed_kmh`, `timestamp`) directly from the MQTT telemetry broker, we have the complete capability to **recalculate and recount the true arrival ETA** independently, both for bus stop arrival countdowns AND for end-to-end itinerary travel time estimations.
+Because we receive raw GPS telemetry coordinates (`lat`, `lng`, `speed`, `bearing`, `timestamp`) directly from the MQTT broker, we can use active buses on each corridor as **live traffic probes** to calculate true segment runtimes for both phases of every bus transit leg.
 
 ## Decision
 
-1. **Independent Stop Arrival Recount**:
-   Never display the raw API arrival minute value directly. Instead, compute an independent **Recounted ETA**:
+1. **Discard Raw API ETAs & Ingest Pure GPS Telemetry**:
+   - Strip all pre-computed API ETA fields upon ingestion.
+   - Snap raw vehicle coordinates to our directional stop-to-stop polylines using heading-validated tangent alignment ($\pm 45^\circ$).
 
-   $$\text{ETA}_{\text{recounted}} = \sum_{s \in \text{remainingSegments}} \left( \frac{\text{length}(s)}{v_{\text{expected}}(s, t)} \right) + N_{\text{intermediateStops}} \times t_{\text{dwell}} + t_{\text{choke}}$$
+2. **Buses as Live Traffic Probes (Stop-Hop Traversal)**:
+   - Track when preceding buses enter and clear each stop-to-stop hop $(i \to i+1)$ on the corridor.
+   - Derive an empirical **Traffic Multiplier** bounded between $0.8\times$ (midnight empty busway) and $3.0\times$ (severe rush-hour intersection bottleneck).
 
-   - **Polyline Track Distance**: Project the vehicle coordinate onto the route polyline to find exact remaining track distance (meters).
-   - **Rolling Window Progress Velocity ($v_{\text{rolling}}$)**:
-     $$\Delta d / \Delta t \quad \text{over the last 60 seconds}$$
-     If $v_{\text{rolling}} < 3\text{ km/h}$, the bus is classified as **`HELD_IN_TRAFFIC`**.
-   - **Halte Dwell Penalty ($t_{\text{dwell}}$)**: Add $+35\text{ seconds}$ per intermediate halte for passenger board/alight.
-   - **Chokepoint Multiplier ($t_{\text{choke}}$)**: Calibrated delays for notoriously congested intersections (e.g., Mampang-Kuningan, Semanggi loop, Harmoni).
+3. **Rolling Blend Filter (70% Live / 30% Baseline)**:
+   To prevent brief 30-second red lights from causing false infinite-delay spikes while ensuring real traffic jams register immediately, smooth the segment runtime using an exponential blend:
 
-2. **Application to End-to-End Itinerary Travel Time Estimation**:
-   When evaluating candidate itineraries in the journey planner, total travel duration is dynamically recounted:
+   $$\text{Recounted Segment Time}_{(i \to i+1)} = 0.7 \cdot \text{Observed Bus Hop Time} + 0.3 \cdot \text{Baseline Hop Time}$$
 
-   $$\text{Total Duration} = t_{\text{originWalk}} + \text{ETA}_{\text{boardRecounted}} + \sum_{\text{legs}} t_{\text{transitLive}} + \sum_{\text{transfers}} t_{\text{transfer}} + t_{\text{destWalk}}$$
+4. **Unified Total Bus Leg Duration**:
+   Pipe the recounted segment times into both the **boarding arrival wait** and the **in-vehicle transit duration**:
 
-   - **Initial Boarding Delay Integration**: If the first bus is delayed by $+7$ minutes at an intersection, the departure time and total duration shift accordingly (e.g. nominal 45 min becomes **`52 MIN (+7m traffic delay)`**).
-   - **En-Route Segment Dilation**: For in-vehicle bus transit legs traversing active chokepoint segments where rolling speed is depressed, leg durations are scaled by the current traffic delay factor.
-   - **Dynamic Pareto Re-Ranking**: If traffic congestion causes a bus route to suffer major delays, the routing engine automatically re-ranks alternative routes (e.g. Rail + Skywalk transfers) as the faster recommended choice.
+   $$\text{Total Bus Leg Duration} = \underbrace{\sum_{k=\text{bus}}^{\text{origin}} \text{LiveSeg}_k}_{\text{Recounted Wait ETA}} + \underbrace{\sum_{m=\text{origin}}^{\text{dest}} (\text{LiveSeg}_m + 25\text{s})}_{\text{Recounted In-Vehicle Travel Time}}$$
 
-3. **Transparent Commuter UI Presentation (Apple Design)**:
-   - **Stop Radar View (Screen 3)**:
-     - Shows honest range: **`8–11 MIN`** *(Recounted from live GPS & traffic)*.
-     - Explains physical context: `"Bus TJ-204 is stationary at Kuningan West junction (0 km/h for 85s). Remaining 1.4 km has 2 intermediate stops."`
-     - Muted note: `(Official API claimed "3 min")`.
-   - **Itinerary Card View (Screen 2)**:
-     - Total duration explicitly displays the live traffic offset:
-       `52 MIN (+7m traffic) · 22:45 ➔ 23:37`
-     - Highlights badge: `0 TRANSFERS · ⚠️ +7M TRAFFIC DELAY (KUNINGAN BOTTLENECK)`.
+   - **Boarding Arrival ETA**: Sum of live traffic-adjusted runtimes for every remaining stop-hop between the approaching bus's position and the passenger's boarding halte.
+   - **In-Vehicle Travel Time**: Sum of those same live traffic-adjusted runtimes across all stops between origin and destination haltes, plus an empirical **$25\text{ second}$ dwell buffer** per intermediate stop for passenger board/alight.
+   - **Cold-Start Fallback**: Before MQTT is active for a route, estimate travel time using a corridor time-of-day profile (Peak 06:30–09:00, 16:30–19:30 vs. Off-Peak), then hot-swap to the live recounted duration once telemetry streams in.
 
 ## Consequences
 
 ### Positive
-- High commuter trust: Accurately sets passenger expectations during rush hours.
-- Prevents bad journey recommendations: Commuters aren't steered onto a bus trapped in gridlock when rail is running smoothly.
-- Clear mental model: Commuters see *why* an itinerary takes 52 minutes instead of 45 minutes.
-- Fully client-side: Executes in milliseconds inside the browser Web Worker without requiring server compute.
+- **100% Truthful Durations**: Eliminates the "3-minute phantom bus" and accurately predicts total journey arrival times in heavy Jakarta traffic.
+- **Dynamic Route Optimization**: The journey planner automatically steers commuters away from gridlocked bus corridors toward running rail options (KRL / MRT) when traffic multipliers surge past $2.0\times$.
+- **Smoothness**: The $0.7 / 0.3$ rolling blend filters out traffic light noise while reflecting actual corridor gridlock within 1–2 bus hops.
+- **Zero Server Compute**: The array-based segment lookup runs in $< 2\text{ ms}$ inside the browser Web Worker.
 
 ### Negative / Trade-offs
-- Requires maintaining calibrated choke point parameters for Jakarta's top intersection bottlenecks.
+- Low-frequency feeder routes with only 1 bus running rely more heavily on the time-of-day baseline fallback until that bus clears a hop.

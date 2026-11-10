@@ -81,14 +81,24 @@ A departure frequency presentation format (e.g., *"Every 6–10 minutes"*) used 
 ### RealtimeEstimate
 Live countdown calculated from real-time vehicle GPS telemetry (e.g., *"Bus TJ-204 arriving in ~3 min (1 stop away)"*).
 
-### RecountedEta
-An independently calculated arrival estimate that discards the official API's static "arrive in X min" value and recalculates arrival time from raw vehicle GPS, rolling velocity, intermediate halte dwell times, and intersection bottlenecks.
+### LiveSegmentRuntimeEngine
+The unified runtime calculation engine that models buses on each corridor as live traffic probes, computing both the boarding arrival countdown and the in-vehicle transit travel time.
 
-### RollingProgressVelocity
-The actual movement speed of a bus along its route polyline over a 60-second sliding window ($\Delta d / \Delta t$). When $< 3\text{ km/h}$, flags the vehicle as held in an intersection bottleneck.
+### ObservedBusHopTime
+The measured duration taken by preceding buses to traverse a directional stop-to-stop hop $(i \to i+1)$ on the corridor.
 
-### HalteDwellPenalty
-A fixed $+30\text{–}45\text{s}$ buffer added to arrival estimates for each intermediate station the bus must service before reaching the commuter.
+### BaselineHopTime
+The calibrated nominal transit time for a stop-to-stop hop under scheduled or free-flow conditions.
+
+### RollingBlendFilter
+The exponential smoothing filter blending $70\%$ live observed traversal time with $30\%$ historical time-of-day baseline:
+$$\text{Recounted Hop Time} = 0.7 \cdot \text{Observed} + 0.3 \cdot \text{Baseline}$$
+
+### TrafficMultiplier
+The ratio of live segment runtime to baseline runtime, bounded between $0.8\times$ (midnight empty busway) and $3.0\times$ (severe intersection gridlock).
+
+### HalteDwellBuffer
+A calibrated $+25\text{ seconds}$ delay added per intermediate stop for passenger boarding and alighting.
 
 ### ScheduledDeparture
 A fixed timetable departure time (primarily for KRL, MRT, and LRT trains).
