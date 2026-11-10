@@ -1,0 +1,77 @@
+{
+  "agency": {
+    "id": "lrt",
+    "name": "LRT Jabodebek & Jakarta",
+    "url": "https://lrtjabodebek.kai.id"
+  },
+  "routes": [
+    {
+      "id": "lrt:cibubur",
+      "shortName": "CB",
+      "longName": "LRT Cibubur Line (Dukuh Atas - Harjamukti)",
+      "color": "#F58220",
+      "textColor": "#FFFFFF",
+      "mode": 4,
+      "peakHeadwaySeconds": 360,
+      "offPeakHeadwaySeconds": 720,
+      "stations": [
+        { "id": "lrt:DUK", "name": "Dukuh Atas", "lat": -6.2023, "lon": 106.8242, "hopSeconds": 130 },
+        { "id": "lrt:STB", "name": "Setiabudi", "lat": -6.2110, "lon": 106.8291, "hopSeconds": 120 },
+        { "id": "lrt:RSS", "name": "Rasuna Said", "lat": -6.2201, "lon": 106.8315, "hopSeconds": 110 },
+        { "id": "lrt:KNG", "name": "Kuningan", "lat": -6.2305, "lon": 106.8335, "hopSeconds": 140 },
+        { "id": "lrt:PCR", "name": "Pancoran", "lat": -6.2425, "lon": 106.8431, "hopSeconds": 150 },
+        { "id": "lrt:CKK", "name": "Cikoko", "lat": -6.2447, "lon": 106.8587, "hopSeconds": 110 },
+        { "id": "lrt:CLW", "name": "Ciliwung", "lat": -6.2465, "lon": 106.8665, "hopSeconds": 120 },
+        { "id": "lrt:CWG", "name": "Cawang", "lat": -6.2505, "lon": 106.8732, "hopSeconds": 180 },
+        { "id": "lrt:TMI", "name": "TMII", "lat": -6.2917, "lon": 106.8837, "hopSeconds": 170 },
+        { "id": "lrt:KBR", "name": "Kampung Rambutan", "lat": -6.3112, "lon": 106.8745, "hopSeconds": 150 },
+        { "id": "lrt:CRC", "name": "Ciracas", "lat": -6.3312, "lon": 106.8785, "hopSeconds": 180 },
+        { "id": "lrt:HJM", "name": "Harjamukti", "lat": -6.3705, "lon": 106.8925, "hopSeconds": 0 }
+      ]
+    },
+    {
+      "id": "lrt:bekasi",
+      "shortName": "BK",
+      "longName": "LRT Bekasi Line (Dukuh Atas - Jati Mulya)",
+      "color": "#00A3E0",
+      "textColor": "#FFFFFF",
+      "mode": 4,
+      "peakHeadwaySeconds": 360,
+      "offPeakHeadwaySeconds": 720,
+      "stations": [
+        { "id": "lrt:DUK", "name": "Dukuh Atas", "lat": -6.2023, "lon": 106.8242, "hopSeconds": 130 },
+        { "id": "lrt:STB", "name": "Setiabudi", "lat": -6.2110, "lon": 106.8291, "hopSeconds": 120 },
+        { "id": "lrt:RSS", "name": "Rasuna Said", "lat": -6.2201, "lon": 106.8315, "hopSeconds": 110 },
+        { "id": "lrt:KNG", "name": "Kuningan", "lat": -6.2305, "lon": 106.8335, "hopSeconds": 140 },
+        { "id": "lrt:PCR", "name": "Pancoran", "lat": -6.2425, "lon": 106.8431, "hopSeconds": 150 },
+        { "id": "lrt:CKK", "name": "Cikoko", "lat": -6.2447, "lon": 106.8587, "hopSeconds": 110 },
+        { "id": "lrt:CLW", "name": "Ciliwung", "lat": -6.2465, "lon": 106.8665, "hopSeconds": 120 },
+        { "id": "lrt:CWG", "name": "Cawang", "lat": -6.2505, "lon": 106.8732, "hopSeconds": 170 },
+        { "id": "lrt:HLM", "name": "Halim (Whoosh Transfer)", "lat": -6.2515, "lon": 106.8912, "hopSeconds": 190 },
+        { "id": "lrt:JTB", "name": "Jatibening Baru", "lat": -6.2589, "lon": 106.9421, "hopSeconds": 160 },
+        { "id": "lrt:CK1", "name": "Cikunir 1", "lat": -6.2581, "lon": 106.9632, "hopSeconds": 150 },
+        { "id": "lrt:CK2", "name": "Cikunir 2", "lat": -6.2541, "lon": 106.9815, "hopSeconds": 160 },
+        { "id": "lrt:BKB", "name": "Bekasi Barat", "lat": -6.2482, "lon": 107.0012, "hopSeconds": 180 },
+        { "id": "lrt:JTM", "name": "Jati Mulya", "lat": -6.2625, "lon": 107.0321, "hopSeconds": 0 }
+      ]
+    },
+    {
+      "id": "lrt:jakarta",
+      "shortName": "LJ",
+      "longName": "LRT Jakarta (Velodrome - Pegangsaan Dua)",
+      "color": "#D32F2F",
+      "textColor": "#FFFFFF",
+      "mode": 4,
+      "peakHeadwaySeconds": 600,
+      "offPeakHeadwaySeconds": 600,
+      "stations": [
+        { "id": "lrt:VEL", "name": "Velodrome", "lat": -6.1945, "lon": 106.8912, "hopSeconds": 120 },
+        { "id": "lrt:EQS", "name": "Equestrian", "lat": -6.1821, "lon": 106.8925, "hopSeconds": 110 },
+        { "id": "lrt:PLS", "name": "Pulomas", "lat": -6.1701, "lon": 106.8972, "hopSeconds": 110 },
+        { "id": "lrt:BVS", "name": "Boulevard Selatan", "lat": -6.1625, "lon": 106.9035, "hopSeconds": 120 },
+        { "id": "lrt:BVU", "name": "Boulevard Utara", "lat": -6.1555, "lon": 106.9082, "hopSeconds": 140 },
+        { "id": "lrt:PGD", "name": "Pegangsaan Dua", "lat": -6.1485, "lon": 106.9152, "hopSeconds": 0 }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,66 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": { "name": "Jl. Jenderal Sudirman - M.H. Thamrin", "type": "arterial" },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [106.8271, -6.1754],
+          [106.8235, -6.1925],
+          [106.8225, -6.2025],
+          [106.8185, -6.2165],
+          [106.8085, -6.2245],
+          [106.8015, -6.2275],
+          [106.7985, -6.2445]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "Jl. Gatot Subroto - M.T. Haryono", "type": "highway" },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [106.7825, -6.2075],
+          [106.8015, -6.2275],
+          [106.8235, -6.2365],
+          [106.8435, -6.2425],
+          [106.8585, -6.2445],
+          [106.8735, -6.2505],
+          [106.8915, -6.2515]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "Jl. H.R. Rasuna Said (Kuningan)", "type": "arterial" },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [106.8291, -6.2025],
+          [106.8315, -6.2205],
+          [106.8335, -6.2305],
+          [106.8345, -6.2425],
+          [106.8285, -6.2555]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "Ciliwung River / Banjir Kanal Barat", "type": "waterway" },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [106.8105, -6.1855],
+          [106.8175, -6.2005],
+          [106.8235, -6.2025],
+          [106.8505, -6.2099],
+          [106.8585, -6.2425],
+          [106.8665, -6.2625]
+        ]
+      }
+    }
+  ]
+}

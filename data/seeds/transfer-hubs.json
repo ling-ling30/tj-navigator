@@ -251,5 +251,40 @@
         "isStepFree": true
       }
     ]
+  },
+  {
+    "id": "hub:tebet",
+    "name": "Stasiun Tebet Multimodal Hub",
+    "description": "Seamless pedestrian connection between KRL Commuterline Tebet and Transjakarta Feeder 6C / Mikrotrans JAK-48A terminal.",
+    "memberStops": [
+      "krl:TEB",
+      "tj:6c-tebet"
+    ],
+    "edges": [
+      {
+        "fromStopId": "krl:TEB",
+        "toStopId": "tj:6c-tebet",
+        "distanceMeters": 40,
+        "baseDurationSeconds": 45,
+        "pathwayType": "SHELTERED_WALKWAY",
+        "isPaidAreaTransfer": false,
+        "gateBufferSeconds": 45,
+        "peakPenaltySeconds": 30,
+        "isSheltered": true,
+        "isStepFree": true
+      },
+      {
+        "fromStopId": "tj:6c-tebet",
+        "toStopId": "krl:TEB",
+        "distanceMeters": 40,
+        "baseDurationSeconds": 45,
+        "pathwayType": "SHELTERED_WALKWAY",
+        "isPaidAreaTransfer": false,
+        "gateBufferSeconds": 45,
+        "peakPenaltySeconds": 30,
+        "isSheltered": true,
+        "isStepFree": true
+      }
+    ]
   }
 ]

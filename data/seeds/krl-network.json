@@ -1,0 +1,96 @@
+{
+  "agency": {
+    "id": "krl",
+    "name": "KAI Commuter",
+    "url": "https://commuterline.id"
+  },
+  "routes": [
+    {
+      "id": "krl:bogor-line",
+      "shortName": "B",
+      "longName": "Bogor Line (Jakarta Kota - Bogor)",
+      "color": "#E31B23",
+      "textColor": "#FFFFFF",
+      "mode": 2,
+      "peakHeadwaySeconds": 300,
+      "offPeakHeadwaySeconds": 480,
+      "stations": [
+        { "id": "krl:JAK", "name": "Jakarta Kota", "lat": -6.1376, "lon": 106.8146, "hopSeconds": 150 },
+        { "id": "krl:JAY", "name": "Jayakarta", "lat": -6.1458, "lon": 106.8211, "hopSeconds": 120 },
+        { "id": "krl:MGB", "name": "Mangga Besar", "lat": -6.1498, "lon": 106.8245, "hopSeconds": 130 },
+        { "id": "krl:SW", "name": "Sawah Besar", "lat": -6.1605, "lon": 106.8282, "hopSeconds": 130 },
+        { "id": "krl:JUA", "name": "Juanda", "lat": -6.1667, "lon": 106.8306, "hopSeconds": 180 },
+        { "id": "krl:GDD", "name": "Gondangdia", "lat": -6.1865, "lon": 106.8329, "hopSeconds": 150 },
+        { "id": "krl:CKI", "name": "Cikini", "lat": -6.1985, "lon": 106.8415, "hopSeconds": 180 },
+        { "id": "krl:MRI", "name": "Manggarai", "lat": -6.2099, "lon": 106.8502, "hopSeconds": 180 },
+        { "id": "krl:TEB", "name": "Tebet", "lat": -6.2263, "lon": 106.8582, "hopSeconds": 150 },
+        { "id": "krl:CW", "name": "Cawang", "lat": -6.2427, "lon": 106.8584, "hopSeconds": 140 },
+        { "id": "krl:DRN", "name": "Duren Kalibata", "lat": -6.2552, "lon": 106.8553, "hopSeconds": 130 },
+        { "id": "krl:PSM", "name": "Pasar Minggu Baru", "lat": -6.2625, "lon": 106.8512, "hopSeconds": 150 },
+        { "id": "krl:PSMB", "name": "Pasar Minggu", "lat": -6.2842, "lon": 106.8445, "hopSeconds": 180 },
+        { "id": "krl:TNT", "name": "Tanjung Barat", "lat": -6.3075, "lon": 106.8385, "hopSeconds": 160 },
+        { "id": "krl:LNA", "name": "Lenteng Agung", "lat": -6.3312, "lon": 106.8345, "hopSeconds": 140 },
+        { "id": "krl:UP", "name": "Univ. Pancasila", "lat": -6.3392, "lon": 106.8335, "hopSeconds": 150 },
+        { "id": "krl:UI", "name": "Univ. Indonesia", "lat": -6.3612, "lon": 106.8315, "hopSeconds": 150 },
+        { "id": "krl:POC", "name": "Pondok Cina", "lat": -6.3695, "lon": 106.8312, "hopSeconds": 180 },
+        { "id": "krl:DP", "name": "Depok Baru", "lat": -6.3912, "lon": 106.8215, "hopSeconds": 150 },
+        { "id": "krl:DPK", "name": "Depok", "lat": -6.4055, "lon": 106.8185, "hopSeconds": 240 },
+        { "id": "krl:CTA", "name": "Citayam", "lat": -6.4485, "lon": 106.8012, "hopSeconds": 260 },
+        { "id": "krl:BJD", "name": "Bojong Gede", "lat": -6.4942, "lon": 106.7955, "hopSeconds": 280 },
+        { "id": "krl:CLT", "name": "Cilebut", "lat": -6.5295, "lon": 106.7915, "hopSeconds": 300 },
+        { "id": "krl:BOG", "name": "Bogor", "lat": -6.5955, "lon": 106.7905, "hopSeconds": 0 }
+      ]
+    },
+    {
+      "id": "krl:cikarang-line",
+      "shortName": "C",
+      "longName": "Cikarang Loop Line (Cikarang - Manggarai - Kampung Bandan)",
+      "color": "#00A859",
+      "textColor": "#FFFFFF",
+      "mode": 2,
+      "peakHeadwaySeconds": 480,
+      "offPeakHeadwaySeconds": 720,
+      "stations": [
+        { "id": "krl:CKR", "name": "Cikarang", "lat": -6.2625, "lon": 107.1512, "hopSeconds": 300 },
+        { "id": "krl:TLM", "name": "Telaga Murni", "lat": -6.2605, "lon": 107.1145, "hopSeconds": 240 },
+        { "id": "krl:CIT", "name": "Cibitung", "lat": -6.2582, "lon": 107.0875, "hopSeconds": 280 },
+        { "id": "krl:TB", "name": "Tambun", "lat": -6.2575, "lon": 107.0612, "hopSeconds": 300 },
+        { "id": "krl:BKST", "name": "Bekasi Timur", "lat": -6.2485, "lon": 107.0175, "hopSeconds": 240 },
+        { "id": "krl:BKS", "name": "Bekasi", "lat": -6.2362, "lon": 106.9995, "hopSeconds": 240 },
+        { "id": "krl:KRI", "name": "Kranji", "lat": -6.2245, "lon": 106.9795, "hopSeconds": 210 },
+        { "id": "krl:CUK", "name": "Cakung", "lat": -6.2195, "lon": 106.9535, "hopSeconds": 180 },
+        { "id": "krl:KLDB", "name": "Klender Baru", "lat": -6.2185, "lon": 106.9385, "hopSeconds": 140 },
+        { "id": "krl:BKT", "name": "Buaran", "lat": -6.2165, "lon": 106.9245, "hopSeconds": 160 },
+        { "id": "krl:KLD", "name": "Klender", "lat": -6.2135, "lon": 106.8995, "hopSeconds": 200 },
+        { "id": "krl:JNG", "name": "Jatinegara", "lat": -6.2152, "lon": 106.8702, "hopSeconds": 180 },
+        { "id": "krl:MRI", "name": "Manggarai", "lat": -6.2099, "lon": 106.8502, "hopSeconds": 180 },
+        { "id": "krl:SUD", "name": "Sudirman", "lat": -6.2025, "lon": 106.8235, "hopSeconds": 120 },
+        { "id": "krl:KAT", "name": "Karet", "lat": -6.2005, "lon": 106.8175, "hopSeconds": 150 },
+        { "id": "krl:THB", "name": "Tanah Abang", "lat": -6.1855, "lon": 106.8105, "hopSeconds": 180 },
+        { "id": "krl:DU", "name": "Duri", "lat": -6.1555, "lon": 106.8025, "hopSeconds": 140 },
+        { "id": "krl:AK", "name": "Angke", "lat": -6.1445, "lon": 106.7975, "hopSeconds": 160 },
+        { "id": "krl:KPB", "name": "Kampung Bandan", "lat": -6.1335, "lon": 106.8255, "hopSeconds": 0 }
+      ]
+    },
+    {
+      "id": "krl:rangkas-line",
+      "shortName": "R",
+      "longName": "Rangkasbitung Line (Tanah Abang - Rangkasbitung)",
+      "color": "#00833E",
+      "textColor": "#FFFFFF",
+      "mode": 2,
+      "peakHeadwaySeconds": 480,
+      "offPeakHeadwaySeconds": 720,
+      "stations": [
+        { "id": "krl:THB", "name": "Tanah Abang", "lat": -6.1855, "lon": 106.8105, "hopSeconds": 240 },
+        { "id": "krl:PLM", "name": "Palmerah", "lat": -6.2075, "lon": 106.7975, "hopSeconds": 240 },
+        { "id": "krl:KBY", "name": "Kebayoran", "lat": -6.2375, "lon": 106.7825, "hopSeconds": 300 },
+        { "id": "krl:PDJ", "name": "Pondok Ranji", "lat": -6.2815, "lon": 106.7415, "hopSeconds": 240 },
+        { "id": "krl:JMU", "name": "Jurang Mangu", "lat": -6.2945, "lon": 106.7265, "hopSeconds": 180 },
+        { "id": "krl:SDM", "name": "Sudimara", "lat": -6.3055, "lon": 106.7115, "hopSeconds": 240 },
+        { "id": "krl:RU", "name": "Rawa Buntu", "lat": -6.3215, "lon": 106.6785, "hopSeconds": 210 },
+        { "id": "krl:SRP", "name": "Serpong", "lat": -6.3245, "lon": 106.6665, "hopSeconds": 0 }
+      ]
+    }
+  ]
+}
