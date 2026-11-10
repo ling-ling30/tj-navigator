@@ -1,0 +1,43 @@
+---
+id: 5
+title: Commuter Journey Planner UI/UX: Mobile-first itinerary flow & map canvas
+labels: [wayfinder:prototype]
+mode: HITL
+status: open
+assignee:
+blocked_by: [1]
+blocks: []
+map: ../map.md
+---
+
+# #5 Commuter Journey Planner UI/UX: Mobile-first itinerary flow & map canvas
+
+**Type:** prototype · **Mode:** HITL · **Blocked by:** #1 · **Blocks:** —
+
+## Question
+
+How should the commuter experience be structured on web and mobile browsers to match the clarity of DB Navigator / Citymapper while optimizing for Jakarta commuters?
+
+## Context
+
+A commuter in Jakarta typically needs:
+1. **Search Input**: Quick origin / destination search with autocomplete for halte, stations, and major Jakarta landmarks (e.g., "Bundaran HI", "Monas", "SCBD", "Blok M").
+2. **Itinerary Comparison List**: Clear card summaries comparing total duration, departure time, transfer count, modes used (colored transit pills: BRT Blue, MRT Red, KRL Green, LRT Orange), and estimated fare.
+3. **Step-by-Step Leg Details**: Detailed accordion/sheet showing:
+   - Walk to halte/station (duration, meters).
+   - Boarding vehicle (corridor number, destination headsign, platform/bay).
+   - Number of stops passed.
+   - Transfer directions (e.g. "Take escalator up to Corridor 13 platform").
+   - Alighting stop and exit guide.
+4. **Interactive Map View**: Route polyline overlay on MapLibre / Leaflet with stop markers and live bus indicator.
+
+## Resolved when
+
+A working UI prototype or interactive layout specification is validated for:
+1. Mobile layout (bottom sheet + full map background vs dedicated page flow).
+2. Transit mode badges, line colors, and leg iconography.
+3. Rapid origin/destination selection UX.
+
+## Resolution
+
+_(empty — written by the session that claims and closes this ticket)_
