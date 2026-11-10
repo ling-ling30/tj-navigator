@@ -3,8 +3,8 @@ id: 5
 title: Commuter Journey Planner UI/UX: Mobile-first itinerary flow & map canvas
 labels: [wayfinder:prototype]
 mode: HITL
-status: open
-assignee:
+status: closed
+assignee: Antigravity
 blocked_by: []
 blocks: []
 map: ../map.md
@@ -40,4 +40,9 @@ A working UI prototype or interactive layout specification is validated for:
 
 ## Resolution
 
-_(empty — written by the session that claims and closes this ticket)_
+- **Visual Prototype Created in FigCraft**: Saved to `design/tj-navigator.figcraft` and exported to 2x resolution PNGs:
+  - `design/screen-01-home.png`: Search Card with origin/destination pins, live status chip, Live Bus Radar with live MQTT ETA countdown (`~3 min`, `2 stops away`, landmark context), and Nearby Departures board.
+  - `design/screen-02-results.png`: Peek vector map canvas paired with draggable Pareto Itinerary Drawer (Fastest, Direct, and Cheapest with inside-station badges).
+- **Design System Tokens**: High-contrast dark-mode palette (`#0D1117` obsidian canvas, `#161B22` cards, `#0066FF` BRT Blue, `#00A859` KRL Green, `#EE3124` MRT Red, `#F58220` LRT Orange, `#00E676` Live Telemetry).
+- **Commuter Guidance Badges**: `Covered Skywalk`, `Step-Free / Elevator`, `Inside Station Transfer (No Re-tap)`, and `Live Bus ~3m`.
+- **Full Specification**: [docs/COMMUTER-UI-UX-SPEC.md](../../docs/COMMUTER-UI-UX-SPEC.md).
