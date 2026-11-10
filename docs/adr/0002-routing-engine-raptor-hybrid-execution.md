@@ -1,36 +1,42 @@
-# ADR 0002: Routing Engine Algorithm (RAPTOR) and Hybrid Execution Model
+# ADR 0002: Client-Side Static PWA Architecture and RAPTOR In-Browser Engine
 
 ## Status
-Accepted
+Accepted (Amended from hybrid model to pure static client-side PWA)
 
 ## Context
-Commuters in Jakarta require fast, realistic multi-modal journey plans across rail (KRL, MRT, LRT) and bus networks (Transjakarta BRT). They experience frequent connectivity drops underground (e.g. MRT tunnels) and mobile network congestion during peak rush hour.
+Commuters in Jakarta require fast, realistic multi-modal journey plans across rail (KRL, MRT, LRT) and bus networks (Transjakarta BRT). In underground MRT stations (e.g., between Bundaran HI and Senayan) and during peak rush-hour platform crowds, cellular connections frequently drop or lag.
 
-Traditional shortest-path algorithms like Dijkstra require artificial cost tuning to balance transfer count against travel time. External routing servers introduce latency, hosting costs, and complete failure when the user lacks cellular data.
+As a side project with zero operational budget, maintaining server clusters or continuous edge compute instances introduces hosting costs ($5–$50/mo), rate limits, uptime alerts, and unnecessary complexity.
+
+Because Jakarta's compiled transit graph for Phase 1 (Rail Spine + Transjakarta BRT 1–14) is only ~350 KB (and even the full city network compresses to ~1.5–2.2 MB), modern mobile web browsers can easily store the entire network in IndexedDB and compute RAPTOR journeys in < 8 milliseconds directly inside a Web Worker.
 
 ## Decision
 
-1. **Routing Algorithm**:
-   - Adopt **RAPTOR (Round-Based Public Transit Routing)** as the core transit leg algorithm.
-   - Round $k$ computes the Pareto-optimal frontier of trips with at most $k$ transfers without needing heuristic weight matrices.
-   - Use a **Spatial KD-Tree** (2D coordinate indexing) to resolve nearest-neighbor walking access from origin/destination coordinates to halte/stations and inter-modal transfer links.
+1. **Pure Client-Side Static Architecture (Option C / PWA)**:
+   - Deploys as a 100% static application hosted on Cloudflare Pages, Vercel, or GitHub Pages ($0/month hosting bill forever, zero database or server infrastructure to maintain).
+   - Fully PWA-capable: Installable to iOS/Android home screens, works completely offline in underground MRT stations or airplane mode.
 
-2. **Execution Architecture (Hybrid Model)**:
-   - **Primary Execution Target**: **Client-side Web Worker**. The compiled transit network graph (~3.5 MB compressed) is cached in browser **IndexedDB** on first load. Queries execute locally in $<10\text{ ms}$, operating 100% offline in underground MRT stations or airplane mode.
-   - **Fallback Execution Target**: **Edge API Route** (e.g. Next.js / Cloudflare Worker) serving identical query results for first-load previews, low-memory legacy devices, or server-side rendering.
+2. **Build-Time Ingestion (Build-Time ETL)**:
+   - An offline build script (`scripts/build-graph.ts`) runs at build time (or via weekly GitHub Actions cron).
+   - Ingests Transjakarta GTFS, KRL station dictionaries, and MRT/LRT schedules, strips redundant attributes, and outputs a single optimized static JSON asset: `public/data/jakarta-transit-network.json`.
+   - The client fetches this file once and stores it in browser IndexedDB / CacheStorage via Service Worker.
 
-3. **MVP Network Scope Boundary**:
-   - **Phase 1 (Core Spine)**: All KRL lines (6 lines, ~110 stations), MRT Jakarta (13 stations), LRT Jabodebek & Jakarta (24 stations), Transjakarta BRT dedicated corridors (Corridors 1–14, ~260 halte), and prioritized physical Transfer Hubs.
-   - **Phase 2 (Feeders & Microtransit)**: Transjakarta non-BRT street routes and Mikrotrans / JakLingko angkot routes (~200 additional routes).
+3. **In-Browser RAPTOR Routing**:
+   - Routing queries execute in a dedicated **Web Worker** off the main browser UI thread.
+   - Computes Pareto-optimal multi-modal itineraries (Fastest vs. Fewest Transfers) in 2–8ms with zero UI stutter.
+   - Uses a lightweight 2D Spatial KD-tree in memory for walking access to nearby stops and transfer skywalks.
+
+4. **Direct Browser WebSocket for Real-Time Telemetry**:
+   - The client connects directly to Transjakarta's public WebSocket broker (`wss://mqtt.tj.co.id:8084/mqtt`) to stream live bus coordinates when viewing active routes or halte arrival boards, requiring zero server-side socket relays.
 
 ## Consequences
 
 ### Positive
-- Sub-15ms route calculations without network latency.
-- Full offline capability for commuters in subway stations and low-signal areas.
-- Zero server computation costs for active daily users once the static graph payload is cached.
-- Clean Pareto-optimal comparisons (Fastest vs. Fewest Transfers vs. Rail-Only).
+- **Zero hosting cost**: Free static hosting with infinite scaling capacity.
+- **Offline first**: Works seamlessly underground in MRT subway tunnels or during mobile data dips.
+- **Instant speed**: Sub-10ms search results with zero network roundtrips.
+- **Zero operational burden**: No servers to monitor, crash, or keep alive.
 
 ### Negative / Trade-offs
-- Initial load requires downloading a ~3.5 MB transit bundle (stored in IndexedDB with version hash).
-- RAPTOR implementation must be maintained in TypeScript (compiled to JS/WASM for both Web Worker and Edge).
+- First app visit requires downloading the ~1.5 MB static transit graph (mitigated by background Service Worker caching and showing instant skeletons).
+- Any API endpoint with browser CORS gating (like TJ Guest Auth REST token) may need a 10-line serverless relay function or public token cache if direct browser access is blocked.

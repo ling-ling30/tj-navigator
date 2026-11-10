@@ -5,12 +5,12 @@
 
 ## Destination
 
-A complete architectural and implementation blueprint for **TJ-Navigator** (a high-accuracy, open Jakarta public transit journey planner akin to DB Navigator / Citymapper for Transjakarta, KRL, MRT, LRT, and Mikrotrans) ready for vertical-slice implementation.
+A complete architectural and implementation blueprint for **TJ-Navigator** (a high-accuracy, open Jakarta public transit journey planner akin to DB Navigator / Citymapper for Transjakarta, KRL, MRT, LRT, and Mikrotrans) ready for vertical-slice implementation as a zero-cost, offline-capable static PWA.
 
 ## Notes
 
 - Domain: Jakarta Multi-Modal Transit (Transjakarta BRT & Non-BRT, KRL Commuterline, MRT Jakarta, LRT Jabodebek/Jakarta, Mikrotrans/JakLingko).
-- Stack: Modern TypeScript (Vite/TanStack/Next.js), Leaflet/MapLibre GL for transit maps, Tailwind CSS.
+- Stack: Modern TypeScript (Vite + React / TanStack), Tailwind CSS, Leaflet / MapLibre GL, Web Worker + IndexedDB, deployable as a static PWA to Cloudflare Pages / Vercel ($0/mo hosting).
 - Key skills for sessions: `wayfinder`, `grilling`, `domain-modeling`, `design-taste-frontend`.
 - Tracker: Local markdown in `wayfinder/` — keep `blocked_by` and `blocks` front matter in sync.
 - Source data verified in `docs/FEASIBILITY.md`: Transjakarta GTFS (8,143 stops, 241 routes), TJ Guest Auth REST API, TJ MQTT live bus stream (`wss://mqtt.tj.co.id:8084/mqtt`), KRL topology dictionary.
@@ -21,7 +21,7 @@ A complete architectural and implementation blueprint for **TJ-Navigator** (a hi
 - Feasibility confirmed: Ingestion of Transjakarta GTFS + KRL/MRT/LRT topology into unified in-memory graph is viable with sub-15ms search times. (charting, 2026-11-10)
 - Transit modeling: Bus routes will be modeled as Headway Windows ("Every X–Y min") with real-time GPS overlays, avoiding fake minute-exact schedules for street traffic. (charting, 2026-11-10)
 - [ADR 0001](docs/adr/0001-transit-graph-and-data-ingestion.md) accepted: Unified Multi-Modal Ingestion Pipeline and Transit Graph Model. (charting, 2026-11-10)
-- [#1 Routing Engine Architecture](tickets/01-routing-engine-architecture.md): Standardized on in-memory RAPTOR + spatial KD-tree, hybrid client Web Worker primary with Edge API fallback, covering Rail Spine + BRT 1–14 for MVP. (2026-11-10)
+- [#1 Routing Engine Architecture](tickets/01-routing-engine-architecture.md): Standardized on in-browser RAPTOR + spatial KD-tree in a Web Worker, Option C (pure static PWA, $0 server cost, offline-capable in MRT tunnels), build-time ETL, covering Rail Spine + BRT 1–14 for MVP. (2026-11-10)
 
 ## Tickets
 
@@ -46,3 +46,4 @@ A complete architectural and implementation blueprint for **TJ-Navigator** (a hi
 - Ride-hailing / Ojol (Gojek / Grab) dispatching or direct booking APIs (TJ-Navigator focuses strictly on public mass transit).
 - In-app payment processing or digital ticketing issuance (users tap physical cards / JakLingko app at gates; we calculate fares, not sell tickets).
 - Intercity rail outside Jabodetabek (Whoosh HSR and KAI Intercity trains like Argo Parahyangan are out of initial metro scope).
+- Heavy dedicated backend routing servers (e.g. self-hosted Java OTP / Docker clusters).
