@@ -9,7 +9,7 @@
 The prototype screens are authored in **FigCraft** and exported to the repository:
 - **FigCraft File**: [design/tj-navigator.figcraft](file:///c:/Users/Ricky/Documents/tj-navigator/design/tj-navigator.figcraft)
 - **Screen 1 (Search & Live Radar)**: [design/screen-01-home.png](file:///c:/Users/Ricky/Documents/tj-navigator/design/screen-01-home.png)
-- **Screen 2 (Pareto Itineraries & Map Canvas)**: [design/screen-02-results.png](file:///c:/Users/Ricky/Documents/tj-navigator/design/screen-02-results.png)
+- **Screen 2 (Pareto Itineraries & Map Canvas with Recounted Travel Time)**: [design/screen-02-results.png](file:///c:/Users/Ricky/Documents/tj-navigator/design/screen-02-results.png)
 - **Screen 3 (Apple Fluid Live Radar & Recounted Traffic ETA)**: [design/screen-03-apple-radar.png](file:///c:/Users/Ricky/Documents/tj-navigator/design/screen-03-apple-radar.png)
 
 ---
@@ -35,9 +35,27 @@ Following the `/apple-design` skill:
 
 ---
 
-## 3. Screen 3: Apple Fluid Live Radar & Recounted ETA
+## 3. Screen 2: Recounted Travel Time on Candidate Itineraries
 
-### 3.1 The "Why the Bus is Delayed" Solution
+End-to-end trip duration incorporates live recounted vehicle telemetry and traffic bottlenecks:
+- **Card 1 (Fastest / Recommended - KRL + MRT)**:
+  - `32 MIN` · `Rp 6.500` · `22:35 ➔ 23:07`
+  - Flow: `[KRL] St. Tebet ➔ 🚶 [Skywalk 4m] ➔ [MRT] Tosari`
+  - Badges: `⚡ FASTEST` · `☂️ COVERED SKYWALK` · `♿ STEP-FREE`
+- **Card 2 (Direct BRT - Recounted Live Delay)**:
+  - **`52 MIN (+7m traffic)`** · `Rp 3.500` · `22:45 ➔ 23:37` *(Adjusted from nominal 45m)*
+  - Flow: `[TJ COR 4C] Tebet Eco Park ➔ Halte Tosari (Direct)`
+  - Badges: `0 TRANSFERS` · `⚠️ +7M TRAFFIC DELAY (KUNINGAN BOTTLENECK)`
+- **Card 3 (Lowest Fare - Inside Station Transfer)**:
+  - `41 MIN` · `Rp 3.500` · `22:36 ➔ 23:17`
+  - Flow: `[TJ COR 9] ➔ 🔄 [CSW Hub] ➔ [TJ COR 1] Tosari`
+  - Badges: `🔄 INSIDE STATION TRANSFER (NO RE-TAP)` · `RP 3.500 FLAT`
+
+---
+
+## 4. Screen 3: Apple Fluid Live Radar & Recounted ETA
+
+### 4.1 The "Why the Bus is Delayed" Solution
 When the official API claims *"Arrives in 3 mins"*, commuters are often misled by traffic jams. Screen 3 implements our **Recounted Traffic-Aware ETA Engine**:
 1. **Dynamic Island / Top Bar**:
    - `HALTE TOSARI (CORRIDOR 1)` with glass circular back button (`‹`) and info button.

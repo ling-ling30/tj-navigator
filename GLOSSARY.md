@@ -20,6 +20,12 @@ A single continuous segment of travel within an itinerary using one mode and veh
 ### Transfer
 The transition between two consecutive transit legs. May involve changing platforms within the same station, or walking through an inter-modal **Transfer Hub**.
 
+### RecountedJourneyDuration
+The end-to-end trip duration adjusted in real-time by integrating live vehicle telemetry and traffic bottleneck delays into both the boarding wait time and the in-vehicle transit legs.
+
+### TrafficDelayOffset
+The difference between nominal scheduled transit time and live recounted conditions (e.g. `+7 minutes` caused by Kuningan West bottleneck).
+
 ---
 
 ## 2. Transit Network & Infrastructure

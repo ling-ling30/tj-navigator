@@ -8,12 +8,13 @@ Transjakarta's official consumer API and MQTT payloads frequently broadcast arri
 - The bus may be completely stationary behind multiple traffic lights (e.g. Kuningan Barat or Mampang Prapatan).
 - The official backend often computes ETAs by dividing distance by nominal free-flow speed ($40\text{ km/h}$) or reading scheduled timetable offsets without accounting for real-time congestion.
 - When an app promises "3 mins" and the commuter waits 14 minutes, trust in the application collapses.
+- Crucially, if this false precision is only corrected at the stop level, the **journey planner's total travel time comparison** remains broken (e.g. advertising a "45-minute direct bus" that actually takes 58 minutes due to current traffic).
 
-Because we receive raw GPS coordinates (`latitude`, `longitude`, `speed_kmh`, `timestamp`) directly from the MQTT telemetry broker, we have the complete capability to **recalculate and recount the true arrival ETA** independently.
+Because we receive raw GPS coordinates (`latitude`, `longitude`, `speed_kmh`, `timestamp`) directly from the MQTT telemetry broker, we have the complete capability to **recalculate and recount the true arrival ETA** independently, both for bus stop arrival countdowns AND for end-to-end itinerary travel time estimations.
 
 ## Decision
 
-1. **Independent Recount Algorithm**:
+1. **Independent Stop Arrival Recount**:
    Never display the raw API arrival minute value directly. Instead, compute an independent **Recounted ETA**:
 
    $$\text{ETA}_{\text{recounted}} = \sum_{s \in \text{remainingSegments}} \left( \frac{\text{length}(s)}{v_{\text{expected}}(s, t)} \right) + N_{\text{intermediateStops}} \times t_{\text{dwell}} + t_{\text{choke}}$$
@@ -25,17 +26,31 @@ Because we receive raw GPS coordinates (`latitude`, `longitude`, `speed_kmh`, `t
    - **Halte Dwell Penalty ($t_{\text{dwell}}$)**: Add $+35\text{ seconds}$ per intermediate halte for passenger board/alight.
    - **Chokepoint Multiplier ($t_{\text{choke}}$)**: Calibrated delays for notoriously congested intersections (e.g., Mampang-Kuningan, Semanggi loop, Harmoni).
 
-2. **Transparent Commuter UI Presentation (Apple Design)**:
-   - Show an **honest minute range** rather than a single false minute (e.g., **`8–11 MIN`**).
-   - Surface the physical reason with landmark context:
-     `"Bus is stationary at Kuningan West junction (0 km/h for 85s). Remaining 1.4 km has 2 intermediate stops."`
-   - Explicitly clarify discrepancy: `(Official API claimed "3 min" ⚠️ delayed by intersection traffic)`.
+2. **Application to End-to-End Itinerary Travel Time Estimation**:
+   When evaluating candidate itineraries in the journey planner, total travel duration is dynamically recounted:
+
+   $$\text{Total Duration} = t_{\text{originWalk}} + \text{ETA}_{\text{boardRecounted}} + \sum_{\text{legs}} t_{\text{transitLive}} + \sum_{\text{transfers}} t_{\text{transfer}} + t_{\text{destWalk}}$$
+
+   - **Initial Boarding Delay Integration**: If the first bus is delayed by $+7$ minutes at an intersection, the departure time and total duration shift accordingly (e.g. nominal 45 min becomes **`52 MIN (+7m traffic delay)`**).
+   - **En-Route Segment Dilation**: For in-vehicle bus transit legs traversing active chokepoint segments where rolling speed is depressed, leg durations are scaled by the current traffic delay factor.
+   - **Dynamic Pareto Re-Ranking**: If traffic congestion causes a bus route to suffer major delays, the routing engine automatically re-ranks alternative routes (e.g. Rail + Skywalk transfers) as the faster recommended choice.
+
+3. **Transparent Commuter UI Presentation (Apple Design)**:
+   - **Stop Radar View (Screen 3)**:
+     - Shows honest range: **`8–11 MIN`** *(Recounted from live GPS & traffic)*.
+     - Explains physical context: `"Bus TJ-204 is stationary at Kuningan West junction (0 km/h for 85s). Remaining 1.4 km has 2 intermediate stops."`
+     - Muted note: `(Official API claimed "3 min")`.
+   - **Itinerary Card View (Screen 2)**:
+     - Total duration explicitly displays the live traffic offset:
+       `52 MIN (+7m traffic) · 22:45 ➔ 23:37`
+     - Highlights badge: `0 TRANSFERS · ⚠️ +7M TRAFFIC DELAY (KUNINGAN BOTTLENECK)`.
 
 ## Consequences
 
 ### Positive
 - High commuter trust: Accurately sets passenger expectations during rush hours.
-- Clear mental model: Commuters see *why* the bus is taking 8 minutes instead of wondering if the app is frozen.
+- Prevents bad journey recommendations: Commuters aren't steered onto a bus trapped in gridlock when rail is running smoothly.
+- Clear mental model: Commuters see *why* an itinerary takes 52 minutes instead of 45 minutes.
 - Fully client-side: Executes in milliseconds inside the browser Web Worker without requiring server compute.
 
 ### Negative / Trade-offs
