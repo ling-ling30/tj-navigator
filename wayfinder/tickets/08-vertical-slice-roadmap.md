@@ -3,8 +3,8 @@ id: 8
 title: Slicing the architecture into executable implementation tickets
 labels: [wayfinder:task]
 mode: HITL
-status: open
-assignee:
+status: closed
+assignee: Antigravity
 blocked_by: []
 blocks: []
 map: ../map.md
@@ -35,4 +35,11 @@ A `ROADMAP.md` or `tickets.md` is authored with concrete vertical slices:
 
 ## Resolution
 
-_(empty — written by the session that claims and closes this ticket)_
+- **Roadmap Authored**: [ROADMAP.md](../../ROADMAP.md) organizes implementation into 6 test-driven vertical slices:
+  1. *Slice 1*: Scaffolding & Multi-Modal GTFS Pipeline (`scripts/build-graph.ts`).
+  2. *Slice 2*: In-Browser RAPTOR & Spatial KD-Tree Web Worker.
+  3. *Slice 3*: Live MQTT Telemetry & Recounted Segment Runtime Engine (ADR 0004 & ADR 0005).
+  4. *Slice 4*: Multi-Modal Fare Calculation Engine.
+  5. *Slice 5*: Apple Fluid Commuter UI (FigCraft Screens 1, 2, 3).
+  6. *Slice 6*: Offline PWA Shell & Static Cloudflare Pages Deployment.
+- **The Wayfinder Map is Complete**: All 8 decision tickets are closed. The route from loose idea to executable build is 100% charted.
