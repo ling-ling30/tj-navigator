@@ -3,8 +3,8 @@ id: 2
 title: How to build the automated multi-modal GTFS ETL pipeline?
 labels: [wayfinder:research]
 mode: AFK
-status: open
-assignee:
+status: closed
+assignee: Antigravity
 blocked_by: []
 blocks: [6]
 map: ../map.md
@@ -34,4 +34,8 @@ A research artifact or script architecture is documented detailing:
 
 ## Resolution
 
-_(empty — written by the session that claims and closes this ticket)_
+- **Ingestion Pipeline**: Build-time Node/TypeScript script (`scripts/build-graph.ts`) combining live Transjakarta GTFS with static seed JSONs for KRL (6 lines, 110 stations), MRT (13 stations), LRT (24 stations), and curated transfer hub walking links.
+- **Global Namespacing**: Standardized on authority-prefixed IDs (`tj:<id>`, `krl:<code>`, `mrt:<code>`, `lrt:<code>`) preventing stop collisions.
+- **Data Layout**: Flat array schema (`stops: [id, name, lat, lon, modeEnum]`, `routes`, `stopRoutes` inverted index, `transfers`, and encoded polylines) designed for sub-8ms in-browser RAPTOR traversal.
+- **Validation**: Enforces Jabodetabek bounding box coordinates, connectivity checks, and a $<1.5\text{ MB}$ compressed bundle size budget.
+- **Full Specification**: [docs/ETL-TRANSIT-GRAPH-SPEC.md](../../docs/ETL-TRANSIT-GRAPH-SPEC.md).

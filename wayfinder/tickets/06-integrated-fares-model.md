@@ -5,14 +5,14 @@ labels: [wayfinder:research]
 mode: AFK
 status: open
 assignee:
-blocked_by: [2]
+blocked_by: []
 blocks: []
 map: ../map.md
 ---
 
 # #6 Multi-modal fare calculation & JakLingko tariff capping rules
 
-**Type:** research · **Mode:** AFK · **Blocked by:** #2 · **Blocks:** —
+**Type:** research · **Mode:** AFK · **Blocked by:** — · **Blocks:** —
 
 ## Question
 

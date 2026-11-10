@@ -22,17 +22,18 @@ A complete architectural and implementation blueprint for **TJ-Navigator** (a hi
 - Transit modeling: Bus routes will be modeled as Headway Windows ("Every X–Y min") with real-time GPS overlays, avoiding fake minute-exact schedules for street traffic. (charting, 2026-11-10)
 - [ADR 0001](docs/adr/0001-transit-graph-and-data-ingestion.md) accepted: Unified Multi-Modal Ingestion Pipeline and Transit Graph Model. (charting, 2026-11-10)
 - [#1 Routing Engine Architecture](tickets/01-routing-engine-architecture.md): Standardized on in-browser RAPTOR + spatial KD-tree in a Web Worker, Option C (pure static PWA, $0 server cost, offline-capable in MRT tunnels), build-time ETL, covering Rail Spine + BRT 1–14 for MVP. (2026-11-10)
+- [#2 Multi-Modal GTFS Normalization](tickets/02-multi-modal-gtfs-normalization.md): Ingestion pipeline, entity namespacing (`tj:`, `krl:`, `mrt:`, `lrt:`), and compact array schema for sub-8ms in-browser RAPTOR traversal documented in [ETL Spec](docs/ETL-TRANSIT-GRAPH-SPEC.md). (2026-11-10)
 
 ## Tickets
 
 | # | Decision | Type | Mode | Blocked by | Status |
 | --- | --- | --- | --- | --- | --- |
 | [#1](tickets/01-routing-engine-architecture.md) | Routing Engine: In-memory RAPTOR vs Multi-Criteria Dijkstra on Edge / Browser? | grilling | HITL | — | closed |
-| [#2](tickets/02-multi-modal-gtfs-normalization.md) | How to build the automated multi-modal GTFS ETL pipeline? | research | AFK | — | open |
+| [#2](tickets/02-multi-modal-gtfs-normalization.md) | How to build the automated multi-modal GTFS ETL pipeline? | research | AFK | — | closed |
 | [#3](tickets/03-transfer-hubs-and-skywalk-modeling.md) | Physical transfer hubs, skywalks, and walking penalty calibration | grilling | HITL | — | open |
 | [#4](tickets/04-headway-vs-realtime-telemetry.md) | Real-time MQTT stream integration & ETA estimation model | grilling | HITL | — | open |
 | [#5](tickets/05-commuter-ui-and-itinerary-ux.md) | Commuter Journey Planner UI/UX: Mobile-first itinerary flow & map canvas | prototype | HITL | — | open |
-| [#6](tickets/06-integrated-fares-model.md) | Multi-modal fare calculation & JakLingko tariff capping rules | research | AFK | #2 | open |
+| [#6](tickets/06-integrated-fares-model.md) | Multi-modal fare calculation & JakLingko tariff capping rules | research | AFK | — | open |
 
 ## Not yet specified
 
