@@ -78,6 +78,21 @@ Live countdown calculated from real-time vehicle GPS telemetry (e.g., *"Bus TJ-2
 ### ScheduledDeparture
 A fixed timetable departure time (primarily for KRL, MRT, and LRT trains).
 
+### MultiplexedRouteSubscription
+An on-demand WebSocket MQTT subscription to the union of routes serving a specific halte (e.g., subscribing to routes 1, 1F, 6B, and 9C at Halte Tosari), capped at 6 topics, with automatic pause via Page Visibility API when the screen is locked.
+
+### PolylineHeadingSnap
+A geometric verification ensuring that a bus's bearing or movement vector aligns within $\pm 45^\circ$ of the route's outbound polyline tangent, preventing incorrect matches against buses in the opposite median lane or U-turns.
+
+### StopHopEta
+Arrival estimation combining the count of remaining intermediate stops with the corridor's calibrated segment runtime, enriched with landmark context (e.g., *"Near Halte Polda Metro Jaya · 2 stops away · ~4 min"*).
+
+### TelemetryDecayTier
+Three-phase graceful degradation based on payload GPS timestamp:
+1. **Live Green (< 45s)**: Pulsing pin, high-confidence countdown.
+2. **Amber (45s–90s)**: 50% opacity, static ring, *"Updating... Last seen 1 min ago"*.
+3. **Headway Fallback (> 90s)**: Pin removed, reverts to scheduled frequency window.
+
 ---
 
 ## 4. Ticketing & Fares
