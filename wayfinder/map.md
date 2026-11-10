@@ -26,8 +26,9 @@ A complete architectural and implementation blueprint for **TJ-Navigator** (a hi
 - [#2 Multi-Modal GTFS Normalization](tickets/02-multi-modal-gtfs-normalization.md): Ingestion pipeline, entity namespacing (`tj:`, `krl:`, `mrt:`, `lrt:`), and compact array schema for sub-8ms in-browser RAPTOR traversal documented in [ETL Spec](docs/ETL-TRANSIT-GRAPH-SPEC.md). (2026-11-10)
 - [#3 Physical Transfer Hubs & Skywalks](tickets/03-transfer-hubs-and-skywalk-modeling.md): Structured hub model with directional edges, asymmetric vertical buffers, rush-hour peak penalties, and sheltered/step-free flags documented in [ADR 0003](docs/adr/0003-transfer-hubs-and-skywalk-modeling.md) and seeded in `data/seeds/transfer-hubs.json`. (2026-11-10)
 - [#4 Real-Time MQTT Telemetry & ETA Engine](tickets/04-headway-vs-realtime-telemetry.md): On-demand multiplexed MQTT WebSocket subscriptions with Page Visibility pausing, 1.5s render throttling, heading-validated polyline snapping, and 3-tier staleness decay documented in [ADR 0004](docs/adr/0004-realtime-telemetry-and-eta-engine.md). (2026-11-10)
-- [#5 Commuter Journey Planner UI/UX](tickets/05-commuter-ui-and-itinerary-ux.md): Mobile prototype designed in FigCraft, documented in [UI/UX Spec](docs/COMMUTER-UI-UX-SPEC.md), and exported to `design/screen-01-home.png` and `design/screen-02-results.png`. (2026-11-10)
+- [#5 Commuter Journey Planner UI/UX](tickets/05-commuter-ui-and-itinerary-ux.md): Mobile prototype designed in FigCraft, documented in [UI/UX Spec](docs/COMMUTER-UI-UX-SPEC.md), and exported to `design/screen-01-home.png`, `design/screen-02-results.png`, and `design/screen-03-apple-radar.png`. (2026-11-10)
 - [#6 Multi-Modal Fare Engine](tickets/06-integrated-fares-model.md): Mathematical formulas for Transjakarta, KRL, MRT, LRT, and JakLingko Rp 10.000 / 3-hour tariff capping documented in [Fare Spec](docs/FARE-ENGINE-SPEC.md). (2026-11-10)
+- [#7 Offline PWA & IndexedDB Storage](tickets/07-pwa-offline-storage.md): Service Worker cache policies, IndexedDB structured stores, and offline vector map tile fallback documented in [PWA Spec](docs/PWA-OFFLINE-STORAGE-SPEC.md). (2026-11-10)
 
 ## Tickets
 
@@ -39,8 +40,8 @@ A complete architectural and implementation blueprint for **TJ-Navigator** (a hi
 | [#4](tickets/04-headway-vs-realtime-telemetry.md) | Real-time MQTT stream integration & ETA estimation model | grilling | HITL | — | closed |
 | [#5](tickets/05-commuter-ui-and-itinerary-ux.md) | Commuter Journey Planner UI/UX: Mobile-first itinerary flow & map canvas | prototype | HITL | — | closed |
 | [#6](tickets/06-integrated-fares-model.md) | Multi-modal fare calculation & JakLingko tariff capping rules | research | AFK | — | closed |
-| [#7](tickets/07-pwa-offline-storage.md) | Offline PWA Service Worker & IndexedDB caching strategy | research | AFK | — | open |
-| [#8](tickets/08-vertical-slice-roadmap.md) | Slicing the architecture into executable implementation tickets | task | HITL | #7 | open |
+| [#7](tickets/07-pwa-offline-storage.md) | Offline PWA Service Worker & IndexedDB caching strategy | research | AFK | — | closed |
+| [#8](tickets/08-vertical-slice-roadmap.md) | Slicing the architecture into executable implementation tickets | task | HITL | — | open |
 
 ## Not yet specified
 

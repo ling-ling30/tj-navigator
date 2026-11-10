@@ -5,14 +5,14 @@ labels: [wayfinder:task]
 mode: HITL
 status: open
 assignee:
-blocked_by: [7]
+blocked_by: []
 blocks: []
 map: ../map.md
 ---
 
 # #8 Slicing the architecture into executable implementation tickets
 
-**Type:** task · **Mode:** HITL · **Blocked by:** #7 · **Blocks:** —
+**Type:** task · **Mode:** HITL · **Blocked by:** — · **Blocks:** —
 
 ## Question
 

@@ -3,8 +3,8 @@ id: 7
 title: Offline PWA Service Worker & IndexedDB caching strategy
 labels: [wayfinder:research]
 mode: AFK
-status: open
-assignee:
+status: closed
+assignee: Antigravity
 blocked_by: []
 blocks: [8]
 map: ../map.md
@@ -36,4 +36,7 @@ A research document specifies:
 
 ## Resolution
 
-_(empty — written by the session that claims and closes this ticket)_
+- **Service Worker Policies**: Cache-first for app shell, fonts, and assets; Stale-While-Revalidate for `/data/jakarta-transit-network.json`; bounded tile cache for Jakarta center.
+- **IndexedDB Storage (`tj_navigator_store`)**: Direct structured object stores for `stops`, `routes`, `stopRoutes`, `transfers`, and `shapes` to eliminate 150ms JSON parsing latency on mobile app launches.
+- **Offline Vector Fallback**: Renders route polylines and station pins as pure client vector overlays over a dark canvas when raster/satellite tiles are unavailable in subway tunnels.
+- **Full Specification**: [docs/PWA-OFFLINE-STORAGE-SPEC.md](../../docs/PWA-OFFLINE-STORAGE-SPEC.md).
