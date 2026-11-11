@@ -1,7 +1,7 @@
 /** Typed-array view of the compiled graph, built once when the worker loads it. */
 import type { NetworkV2 } from '../../../types/network-v2';
 import { buildFootpaths, haversineMeters, isRailStopId, WALK_DETOUR, WALK_SPEED_MPS, type FootpathTable } from './footpaths';
-import { hopClassOf, hopSeconds } from './time-model';
+import { hopClassOf, hopSeconds, LINE_TIME_FACTOR } from './time-model';
 
 export interface NearbyStop { stop: number; meters: number; walkSec: number }
 
@@ -60,6 +60,7 @@ export class NetworkIndex {
       const [lineIdx, dir, , stopIdx, hopMeters] = p;
       const serviceClass = net.lines[lineIdx][6];
       const fareClass = net.lines[lineIdx][5];
+      const [offPeakFactor, peakFactor] = LINE_TIME_FACTOR[net.lines[lineIdx][1]] ?? [1, 1];
       this.patLine[pi] = lineIdx;
       this.patDir[pi] = dir;
       for (let i = 0; i < stopIdx.length; i++) {
@@ -71,8 +72,8 @@ export class NetworkIndex {
         const meters = hopMeters[i];
         const hopClass = hopClassOf(serviceClass, meters, fareClass);
         this.posHopM[pos] = meters;
-        this.posHopSecOffPeak[pos] = hopSeconds(meters, hopClass, false);
-        this.posHopSecPeak[pos] = hopSeconds(meters, hopClass, true);
+        this.posHopSecOffPeak[pos] = hopSeconds(meters, hopClass, false) * offPeakFactor;
+        this.posHopSecPeak[pos] = hopSeconds(meters, hopClass, true) * peakFactor;
         const key = (lineIdx * S + stopIdx[i]) * S + stopIdx[i + 1];
         let g = groups.get(key);
         if (g === undefined) groups.set(key, (g = groups.size));

@@ -55,3 +55,8 @@ Reached when `docs/LIVE-COMPANION-SPEC.md` is decided and built in slices, and t
 
 - Booking or paying for ojek, taxis or tickets.
 - A paid map, geocoder or routing service.
+
+## Owner feedback, 2026-11-11 (after trying the results)
+
+- **"If we miss this route, what can we take?"** DB Navigator lists later departures. Added now: "Lebih awal / Lebih lambat" on the results, which re-plans 15 minutes earlier or later. The full answer for a headway city is the next vehicles per leg ("berikutnya 4 mnt, lalu 19 mnt"), which comes with the live arrival slices; for rail it needs real timetables.
+- **Penjaringan → Gading Serpong 2 takes the owner about two hours door to door in the evening.** The app said 78 minutes stop to stop. S11 runs far slower than the class speeds at peak (published: 120 to 150 minutes end to end). Riding time on S11, B51, S61, P11 and corridor 1 is now scaled to their published times (`LINE_TIME_FACTOR` in `src/lib/router/v2/time-model.ts`); the trip now reads 95 minutes stop to stop. The rest of the gap is the walk at both ends and peak traffic, which the live traffic speeds are meant to close.

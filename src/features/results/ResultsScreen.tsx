@@ -8,6 +8,7 @@ import { Chip } from '../../components/ui/Chip';
 import { ModeFilterBar } from '../search/ModeFilterBar';
 import { ConnectionCard } from './ConnectionCard';
 import { ConnectionFilterSheet } from './ConnectionFilterSheet';
+import { DepartureShiftBar } from './DepartureShiftBar';
 import { useTransitSearch, type SortStrategy } from '../../hooks/useTransitSearch';
 import type { Itinerary } from '../../types/transit';
 import { useT } from '../../hooks/useT';
@@ -196,6 +197,8 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onSelectItinerary 
                 {t('ladder.walk_only_banner')}
               </div>
             ) : null}
+
+            <DepartureShiftBar />
 
             {/* Results Connection Cards */}
             {itineraries.map(itin => (

@@ -22,6 +22,11 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
 
 /** Each step: [label, action]. Actions run in the page. `click:Text` clicks the first control containing the text. */
 const SCENARIOS = {
+  later: [
+    ['l1-results', 'click:Cari Rute'],
+    ['l2-later', 'click:Lebih lambat'],
+    ['l3-later-again', 'click:Lebih lambat'],
+  ],
   expand: [
     ['e1-results', 'click:Cari Rute'],
     ['e2-expanded', 'clickCard'],

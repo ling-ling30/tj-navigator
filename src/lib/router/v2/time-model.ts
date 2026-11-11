@@ -24,6 +24,20 @@ export const SPEED_KMH: Record<number, readonly [number, number]> = {
   [HopClass.LRT_JABODEBEK]: [40, 40]
 };
 
+/**
+ * Lines whose published end-to-end time differs from what the class speeds give: riding time is multiplied
+ * by published ÷ model, [off-peak, peak]. One toll speed cannot fit both a fast toll road (Jagorawi, P11)
+ * and a jammed one (Jakarta–Tangerang, S11), and the owner's own trip home on S11 confirmed the gap.
+ * Source: wayfinder/routing-v2/tickets/14-real-speed-references.md. Live traffic speeds will replace this.
+ */
+export const LINE_TIME_FACTOR: Record<string, readonly [number, number]> = {
+  S11: [1.18, 1.36],
+  B51: [1.33, 1.21],
+  S61: [0.92, 0.9],
+  P11: [0.84, 0.85],
+  '1': [1.07, 1.12]
+};
+
 /** A hop this long on an express service is treated as a toll or highway stretch. */
 export const TOLL_HOP_MIN_METERS = 2500;
 const EXPRESS_SERVICE_CLASSES = new Set(['TRANSJABODETABEK', 'ROYALTRANS']);

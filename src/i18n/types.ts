@@ -73,6 +73,10 @@ export interface TranslationDictionary {
   'results.status_headway': string;
   'results.walk_chip': string;
   'results.view_detail': string;
+  'results.earlier': string;
+  'results.later': string;
+  'results.depart_now': string;
+  'results.depart_at': string;
   'results.step_ride_meta': string;
   'results.filter_title': string;
   'results.filter_max_transfers': string;
