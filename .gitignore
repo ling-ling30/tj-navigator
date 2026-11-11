@@ -1,5 +1,40 @@
+# Dependencies
 node_modules/
+.pnpm-store/
+
+# Build output
 dist/
 *.tsbuildinfo
+.vite/
+coverage/
+
+# Env & secrets
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# OS
 .DS_Store
+Thumbs.db
+
+# Editor
+.vscode/*
+!.vscode/extensions.json
+.idea/
+
+# Temp
 tmp_gtfs/
+*.tmp
+
+# Cached raw GTFS and diagnostics data
+tmp_gtfs.zip
+scripts/diag/gtfs/
+
+# Design inspector output and stray screenshots
+.taste-skill/
+/screenshot-*.png
