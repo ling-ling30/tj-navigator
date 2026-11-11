@@ -38,3 +38,9 @@ scripts/diag/gtfs/
 # Design inspector output and stray screenshots
 .taste-skill/
 /screenshot-*.png
+
+# Live feed recordings
+scripts/diag/*.jsonl
+scripts/diag/*.ndjson
+scripts/diag/recordings/
+scripts/diag/speed-statistics.json
