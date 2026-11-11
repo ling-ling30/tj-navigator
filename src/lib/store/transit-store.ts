@@ -7,10 +7,17 @@ import { calculateItineraryFare } from '../fare/fare-engine';
 import { jakartaTelemetry, type ConnectionStatus } from '../telemetry/mqtt-client';
 import { liveSegmentEngine, type VehicleTelemetryPing } from '../telemetry/live-segment-engine';
 
+export type RoutingStatus = 'idle' | 'computing' | 'success' | 'no-route' | 'same-place' | 'error';
+export type { AnswerKind } from '../../types/transit';
+import type { AnswerKind } from '../../types/transit';
+import { JourneyPlanner, type LocationInput } from '../router/journey-planner';
+
 interface TransitStoreState {
   network: CompiledTransitNetwork | null;
   isLoading: boolean;
   error: string | null;
+  routingStatus: RoutingStatus;
+  answerKind: AnswerKind | null;
   
   originStop: StopEntity | null;
   destinationStop: StopEntity | null;
@@ -41,19 +48,25 @@ interface TransitStoreState {
 
 // Fallback direct synchronous RAPTOR instance in case Web Worker is delayed or offline
 let syncRouter: RaptorRouter | null = null;
+let syncPlanner: JourneyPlanner | null = null;
 let workerApi: any = null;
+let initPromise: Promise<void> | null = null;
 
 try {
   const worker = new Worker(new URL('../../workers/raptor.worker.ts', import.meta.url), { type: 'module' });
   workerApi = Comlink.wrap(worker);
 } catch {
-  console.log('Worker creation fallback to main thread');
+  if (import.meta.env?.DEV) {
+    console.log('[Worker] Worker creation fallback to main thread');
+  }
 }
 
 export const useTransitStore = create<TransitStoreState>((set, get) => ({
   network: null,
   isLoading: true,
   error: null,
+  routingStatus: 'idle',
+  answerKind: null,
 
   originStop: null,
   destinationStop: null,
@@ -70,10 +83,16 @@ export const useTransitStore = create<TransitStoreState>((set, get) => ({
   isSearchingDest: false,
 
   loadInitialData: async () => {
-    try {
-      set({ isLoading: true, error: null });
-      const network = await loadTransitNetwork();
-      syncRouter = new RaptorRouter(network);
+    if (initPromise) return initPromise;
+
+    initPromise = (async () => {
+      try {
+        set({ isLoading: true, error: null });
+        const network = await loadTransitNetwork();
+        if (!syncRouter) {
+          syncRouter = new RaptorRouter(network);
+          syncPlanner = new JourneyPlanner(syncRouter);
+        }
 
       if (workerApi) {
         try {
@@ -142,6 +161,8 @@ export const useTransitStore = create<TransitStoreState>((set, get) => ({
       console.error('Failed to load transit data:', err);
       set({ isLoading: false, error: err.message || 'Failed to load transit graph' });
     }
+    })();
+    return initPromise;
   },
 
   setOriginStop: (stop: StopEntity) => {
@@ -167,176 +188,80 @@ export const useTransitStore = create<TransitStoreState>((set, get) => ({
     const { originStop, destinationStop, network } = get();
     if (!originStop || !destinationStop || !network) return;
 
-    set({ isComputingRoute: true });
+    // Same place check (origin === destination)
+    if (originStop.id === destinationStop.id || originStop.index === destinationStop.index) {
+      set({
+        routingStatus: 'same-place',
+        itineraries: [],
+        selectedItinerary: null,
+        isComputingRoute: false,
+        error: null
+      });
+      return;
+    }
+
+    set({ isComputingRoute: true, routingStatus: 'computing', error: null });
     const now = new Date();
     const departureSeconds = now.getHours() * 3600 + now.getMinutes() * 60 + now.getSeconds();
 
+    const originLoc: LocationInput = {
+      stopIndex: originStop.index,
+      lat: originStop.lat,
+      lon: originStop.lon,
+      name: originStop.name,
+      isCustomPoint: originStop.isCustomPoint
+    };
+
+    const destLoc: LocationInput = {
+      stopIndex: destinationStop.index,
+      lat: destinationStop.lat,
+      lon: destinationStop.lon,
+      name: destinationStop.name,
+      isCustomPoint: destinationStop.isCustomPoint
+    };
+
     try {
-      let rawItineraries: Itinerary[] = [];
+      let ladderResult: { itineraries: Itinerary[]; answerKind: AnswerKind; ladderLevel: number } | null = null;
       if (workerApi) {
         try {
-          rawItineraries = await workerApi.planJourney(originStop.index, destinationStop.index, departureSeconds);
+          ladderResult = await workerApi.planJourneyWithLadder(originLoc, destLoc, departureSeconds);
         } catch {
-          rawItineraries = syncRouter ? syncRouter.planJourney(originStop.index, destinationStop.index, departureSeconds) : [];
+          ladderResult = syncPlanner ? syncPlanner.plan(originLoc, destLoc, departureSeconds) : null;
         }
-      } else if (syncRouter) {
-        rawItineraries = syncRouter.planJourney(originStop.index, destinationStop.index, departureSeconds);
+      } else if (syncPlanner) {
+        ladderResult = syncPlanner.plan(originLoc, destLoc, departureSeconds);
       }
 
-      // If no direct RAPTOR route found for specific stop pair, construct realistic Jakarta multi-modal Pareto set
-      if (rawItineraries.length === 0) {
-        rawItineraries = [
-          // 1. FASTEST: KRL Commuterline via Dukuh Atas Skywalk to MRT
-          {
-            id: 'itin-fastest',
-            category: 'FASTEST',
-            totalDurationMinutes: 18,
-            nominalDurationMinutes: 18,
-            trafficDelayMinutes: 0,
-            departureTime: '17:42',
-            arrivalTime: '18:00',
-            standardFareIdr: 6000,
-            integratedFareIdr: 4500,
-            transfersCount: 1,
-            badges: ['⚡ FASTEST (18 MIN)', '☂️ COVERED SKYWALK', 'SEAMLESS CONCOURSE'],
-            legs: [
-              {
-                type: 'TRANSIT',
-                mode: 2, // KRL
-                routeId: 'krl:bogor-line',
-                routeShortName: 'B',
-                routeColor: '#E31B23',
-                fromStopName: originStop.name,
-                toStopName: 'Stasiun Sudirman',
-                departureTime: '17:42',
-                arrivalTime: '17:51',
-                durationSeconds: 540,
-                distanceMeters: 4800,
-                intermediateStopCount: 1,
-                intermediateStopNames: ['Manggarai']
-              },
-              {
-                type: 'WALK',
-                fromStopName: 'Stasiun Sudirman',
-                toStopName: 'Halte Dukuh Atas 1 / MRT',
-                departureTime: '17:51',
-                arrivalTime: '17:54',
-                durationSeconds: 180,
-                distanceMeters: 180,
-                isSheltered: true,
-                isStepFree: true,
-                isPaidAreaTransfer: false
-              },
-              {
-                type: 'TRANSIT',
-                mode: 0, // BRT Corridor 1
-                routeId: 'tj:corridor-1',
-                routeShortName: '1',
-                routeColor: '#0066FF',
-                fromStopName: 'Dukuh Atas 1',
-                toStopName: destinationStop.name,
-                departureTime: '17:56',
-                arrivalTime: '18:00',
-                durationSeconds: 240,
-                distanceMeters: 800,
-                intermediateStopCount: 0
-              }
-            ]
-          },
-          // 2. DIRECT BRT: Feeder 6C with Recounted Traffic Telemetry
-          {
-            id: 'itin-direct',
-            category: 'FEWEST_TRANSFERS',
-            totalDurationMinutes: 38,
-            nominalDurationMinutes: 29,
-            trafficDelayMinutes: 9,
-            departureTime: '17:40',
-            arrivalTime: '18:18',
-            standardFareIdr: 3500,
-            integratedFareIdr: 3500,
-            transfersCount: 0,
-            badges: ['🟢 DIRECT (0 TRANSFERS)', '⚠️ +9M KUNINGAN DELAY'],
-            legs: [
-              {
-                type: 'TRANSIT',
-                mode: 1, // Non-BRT Feeder
-                routeId: 'tj:feeder-6c',
-                routeShortName: '6C',
-                routeColor: '#FFA500',
-                fromStopName: originStop.name,
-                toStopName: destinationStop.name,
-                departureTime: '17:40',
-                arrivalTime: '18:18',
-                durationSeconds: 2280,
-                distanceMeters: 7400,
-                intermediateStopCount: 5,
-                intermediateStopNames: ['Pal Batu', 'Mall Ambassador', 'GOR Soemantri', 'Karet Sudirman'],
-                recountedDelaySeconds: 540,
-                liveBusId: 'TJ-0842',
-                liveBusLandmark: 'Simpang Casablanca bottleneck'
-              }
-            ]
-          },
-          // 3. CHEAPEST: Mikrotrans + BRT JakLingko Rp 3.500 flat
-          {
-            id: 'itin-cheapest',
-            category: 'CHEAPEST',
-            totalDurationMinutes: 32,
-            nominalDurationMinutes: 30,
-            trafficDelayMinutes: 2,
-            departureTime: '17:38',
-            arrivalTime: '18:10',
-            standardFareIdr: 3500,
-            integratedFareIdr: 3500,
-            transfersCount: 1,
-            badges: ['💰 JAKLINGKO RP 3.500', 'FREE MIKROTRANS FEEDER'],
-            legs: [
-              {
-                type: 'TRANSIT',
-                mode: 5, // Mikrotrans JAK
-                routeId: 'tj:jak-48a',
-                routeShortName: 'JAK-48A',
-                routeColor: '#00CED1',
-                fromStopName: originStop.name,
-                toStopName: 'Manggarai Utara',
-                departureTime: '17:38',
-                arrivalTime: '17:48',
-                durationSeconds: 600,
-                distanceMeters: 2100,
-                intermediateStopCount: 2
-              },
-              {
-                type: 'WALK',
-                fromStopName: 'Manggarai Utara',
-                toStopName: 'Halte Manggarai Transjakarta',
-                departureTime: '17:48',
-                arrivalTime: '17:51',
-                durationSeconds: 180,
-                distanceMeters: 140,
-                isSheltered: true,
-                isStepFree: true
-              },
-              {
-                type: 'TRANSIT',
-                mode: 0, // BRT
-                routeId: 'tj:corridor-4',
-                routeShortName: '4',
-                routeColor: '#9C27B0',
-                fromStopName: 'Halte Manggarai',
-                toStopName: destinationStop.name,
-                departureTime: '17:53',
-                arrivalTime: '18:10',
-                durationSeconds: 1020,
-                distanceMeters: 3800,
-                intermediateStopCount: 3
-              }
-            ]
-          }
-        ];
+      if (!ladderResult) {
+        throw new Error('Router engine unavailable');
+      }
+
+      if (ladderResult.answerKind === 'same-place') {
+        set({
+          routingStatus: 'same-place',
+          answerKind: 'same-place',
+          itineraries: [],
+          selectedItinerary: null,
+          isComputingRoute: false,
+          error: null
+        });
+        return;
+      }
+
+      if (ladderResult.itineraries.length === 0) {
+        set({
+          routingStatus: 'no-route',
+          answerKind: null,
+          itineraries: [],
+          selectedItinerary: null,
+          isComputingRoute: false,
+          error: null
+        });
+        return;
       }
 
       // Apply JakLingko fare engine to ensure 100% accurate tariffs & savings
-      const calibrated = rawItineraries.map(itin => {
+      const calibrated = ladderResult.itineraries.map(itin => {
         const fare = calculateItineraryFare(itin.legs);
         return {
           ...itin,
@@ -346,13 +271,23 @@ export const useTransitStore = create<TransitStoreState>((set, get) => ({
       });
 
       set({
+        routingStatus: 'success',
+        answerKind: ladderResult.answerKind,
         itineraries: calibrated,
         selectedItinerary: calibrated[0] || null,
+        isComputingRoute: false,
+        error: null
+      });
+    } catch (err: any) {
+      console.error('Routing computation error:', err);
+      set({
+        routingStatus: 'error',
+        answerKind: null,
+        error: err?.message || 'Routing computation failed',
+        itineraries: [],
+        selectedItinerary: null,
         isComputingRoute: false
       });
-    } catch (err) {
-      console.error('Routing computation error:', err);
-      set({ isComputingRoute: false });
     }
   },
 

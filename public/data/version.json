@@ -1,8 +1,8 @@
 {
-  "graphVersion": "v1-65d482071f8e",
-  "generatedAt": "2026-11-10T16:22:02.239Z",
-  "totalStops": 8273,
-  "totalRoutes": 26,
-  "totalTransfers": 14,
-  "sizeBytes": 514630
+  "graphVersion": "v1-71cc44666a79",
+  "generatedAt": "2026-11-11T01:49:17.054Z",
+  "totalStops": 7966,
+  "totalRoutes": 436,
+  "totalTransfers": 52898,
+  "sizeBytes": 2319880
 }

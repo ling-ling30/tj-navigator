@@ -53,7 +53,9 @@ class JakartaTransitTelemetryClient {
     if (this.client) return;
 
     this.setStatus('CONNECTING');
-    console.log(`🔌 [MQTT] Connecting to Transjakarta live broker: ${brokerUrl}`);
+    if (import.meta.env?.DEV) {
+      console.log(`[MQTT] Connecting to Transjakarta live broker: ${brokerUrl}`);
+    }
 
     try {
       this.client = mqtt.connect(brokerUrl, {
@@ -66,7 +68,9 @@ class JakartaTransitTelemetryClient {
       });
 
       this.client.on('connect', () => {
-        console.log('⚡ [MQTT] Connected to live Transjakarta broker.');
+        if (import.meta.env?.DEV) {
+          console.log('[MQTT] Connected to live Transjakarta broker.');
+        }
         this.setStatus('LIVE');
         this.lastHeartbeatMs = Date.now();
         this.resubscribeTopics();
@@ -79,18 +83,15 @@ class JakartaTransitTelemetryClient {
       });
 
       this.client.on('error', (err) => {
-        console.warn(`⚠️ [MQTT] Broker connection error (${err.message}). Activating local radar probe simulator.`);
+        console.warn(`⚠️ [MQTT] Broker connection error (${err.message}). Live radar offline.`);
         this.setStatus('OFFLINE_FALLBACK');
-        this.startSimulation();
       });
 
       this.client.on('offline', () => {
         this.setStatus('OFFLINE_FALLBACK');
-        this.startSimulation();
       });
     } catch {
       this.setStatus('OFFLINE_FALLBACK');
-      this.startSimulation();
     }
 
     this.startWatchdog();
@@ -114,7 +115,7 @@ class JakartaTransitTelemetryClient {
     this.subscribedCorridors.forEach(code => {
       const topic = `tj/corridor/${code}/#`;
       this.client?.subscribe(topic, { qos: 0 }, (err) => {
-        if (!err) console.log(`📡 [MQTT] Subscribed to topic: ${topic}`);
+        if (!err && import.meta.env?.DEV) console.log(`[MQTT] Subscribed to topic: ${topic}`);
       });
     });
   }
@@ -157,7 +158,9 @@ class JakartaTransitTelemetryClient {
   private setupPageVisibility() {
     document.addEventListener('visibilitychange', () => {
       if (document.hidden) {
-        console.log('🌙 [Page Visibility] Document hidden. Pausing MQTT streaming to save battery.');
+        if (import.meta.env?.DEV) {
+          console.log('[Page Visibility] Document hidden. Pausing MQTT streaming to save battery.');
+        }
         if (this.client && this.client.connected) {
           this.client.end(false);
           this.client = null;
@@ -165,7 +168,9 @@ class JakartaTransitTelemetryClient {
         this.stopSimulation();
         this.setStatus('PAUSED');
       } else {
-        console.log('☀️ [Page Visibility] Document visible. Resuming live telemetry stream.');
+        if (import.meta.env?.DEV) {
+          console.log('[Page Visibility] Document visible. Resuming live telemetry stream.');
+        }
         this.connect();
       }
     });
@@ -177,9 +182,8 @@ class JakartaTransitTelemetryClient {
       const now = Date.now();
       // If 15 seconds without pings, kick off simulation / fallback
       if (this.activeStatus === 'LIVE' && now - this.lastHeartbeatMs > 15000) {
-        console.warn('⚠️ [MQTT Watchdog] Heartbeat expired (>15s). Switching to live probe fallback.');
+        console.warn('⚠️ [MQTT Watchdog] Heartbeat expired (>15s). Switching to offline status.');
         this.setStatus('OFFLINE_FALLBACK');
-        this.startSimulation();
       }
     }, 5000);
   }

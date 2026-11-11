@@ -12,8 +12,8 @@ export type TransitModeType = typeof TransitMode[keyof typeof TransitMode];
 // Compact tuple schema: [id, name, lat, lon, modeEnum]
 export type StopTuple = [string, string, number, number, number];
 
-// [id, shortName, longName, colorHex, stopIndices, headwaySeconds]
-export type RouteTuple = [string, string, string, string, number[], number];
+// [id, shortName, longName, colorHex, stopIndices, headwaySeconds, stopDistancesMeters?]
+export type RouteTuple = [string, string, string, string, number[], number, number[]?];
 
 // [fromIdx, toIdx, walkSec, distM, isPaidArea(0|1), gateBufferSec, peakPenaltySec, isSheltered(0|1), isStepFree(0|1)]
 export type TransferTuple = [number, number, number, number, number, number, number, number, number];
@@ -28,6 +28,8 @@ export interface CompiledTransitNetwork {
   routeShapes: Record<string, string>;
 }
 
+export type AnswerKind = 'direct' | 'relaxed' | 'closest-approach' | 'walk-only' | 'same-place';
+
 export interface StopEntity {
   index: number;
   id: string;
@@ -35,6 +37,8 @@ export interface StopEntity {
   lat: number;
   lon: number;
   mode: TransitModeType;
+  isCustomPoint?: boolean;
+  customLabel?: string;
 }
 
 export interface Leg {
@@ -59,6 +63,8 @@ export interface Leg {
   recountedDelaySeconds?: number;
   liveBusId?: string;
   liveBusLandmark?: string;
+  headwaySeconds?: number;
+  isUncoveredSegment?: boolean;
 }
 
 export interface Itinerary {
@@ -74,4 +80,13 @@ export interface Itinerary {
   transfersCount: number;
   legs: Leg[];
   badges: string[];
+  answerKind?: AnswerKind;
+  uncoveredDistanceMeters?: number;
+  uncoveredDurationMinutes?: number;
+  uncoveredOriginLat?: number;
+  uncoveredOriginLon?: number;
+  uncoveredDestLat?: number;
+  uncoveredDestLon?: number;
+  googleMapsUrl?: string;
+  relaxedWalkExtraMeters?: number;
 }

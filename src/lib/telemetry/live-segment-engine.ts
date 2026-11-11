@@ -47,6 +47,8 @@ export interface RecountedArrivalResult {
 
 const STORAGE_KEY_MULTIPLIERS = 'tj_recent_traffic_multipliers';
 
+const SEGMENT_TTL_MS = 30 * 60 * 1000; // 30 minutes TTL for dynamic traffic congestion multipliers
+
 class LiveSegmentEngine {
   private segments = new Map<string, SegmentRuntime>();
   private vehiclePositions = new Map<string, VehicleTelemetryPing>();
@@ -65,8 +67,12 @@ class LiveSegmentEngine {
       const saved = localStorage.getItem(STORAGE_KEY_MULTIPLIERS);
       if (saved) {
         const parsed = JSON.parse(saved);
+        const now = Date.now();
         for (const [key, val] of Object.entries(parsed)) {
-          this.segments.set(key, val as SegmentRuntime);
+          const seg = val as SegmentRuntime;
+          if (seg && typeof seg.lastUpdatedMs === 'number' && (now - seg.lastUpdatedMs) < SEGMENT_TTL_MS) {
+            this.segments.set(key, seg);
+          }
         }
       }
     } catch {}
@@ -149,14 +155,13 @@ class LiveSegmentEngine {
     return Array.from(this.vehiclePositions.values());
   }
 
-  /**
-   * Recount Arrival ETA: Bus position to Commuter's Boarding Halte
-   */
   public calculateArrivalEta(
     busStopIndex: number,
     boardingStopIndex: number,
     routeStopIds: string[],
-    rawApiEtaMinutes = 3
+    rawApiEtaMinutes = 3,
+    vehicleId?: string,
+    routeShortName?: string
   ): RecountedArrivalResult {
     const stopsAway = Math.max(0, boardingStopIndex - busStopIndex);
     let totalRecountedSec = 0;
@@ -188,15 +193,27 @@ class LiveSegmentEngine {
     const fromName = routeStopIds[busStopIndex] || 'Approaching';
     const toName = routeStopIds[Math.min(busStopIndex + 1, boardingStopIndex)] || 'Next Stop';
 
+    // Resolve vehicle identity dynamically from active tracked vehicles or parameters
+    let resolvedVehicleId = vehicleId;
+    let resolvedRoute = routeShortName;
+    if (!resolvedVehicleId && this.vehiclePositions.size > 0) {
+      const active = Array.from(this.vehiclePositions.values())[0];
+      resolvedVehicleId = active.vehicleId;
+      resolvedRoute = active.routeShortName;
+    }
+
+    // Dynamic confidence score based on stops away
+    const confidenceScore = Math.max(0.70, Math.min(0.98, Number((0.98 - stopsAway * 0.02).toFixed(2))));
+
     return {
-      vehicleId: 'TJ-0842',
-      routeShortName: '6C',
+      vehicleId: resolvedVehicleId || 'TJ-TRACKED',
+      routeShortName: resolvedRoute || 'BRT',
       minMinutes,
       maxMinutes,
       stopsAway,
       rawApiEtaMinutes,
       isRecounted: true,
-      confidenceScore: 0.94,
+      confidenceScore,
       bottleneckSummary: worstBottleneck
         ? `${worstBottleneck.name}: +${worstBottleneck.delayMin}m traffic delay`
         : undefined,

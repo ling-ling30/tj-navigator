@@ -15,19 +15,19 @@
       "peakHeadwaySeconds": 300,
       "offPeakHeadwaySeconds": 600,
       "stations": [
-        { "id": "mrt:LBB", "name": "Lebak Bulus Grab", "lat": -6.3117, "lon": 106.7744, "hopSeconds": 150 },
-        { "id": "mrt:FTM", "name": "Fatmawati Indomaret", "lat": -6.2925, "lon": 106.7937, "hopSeconds": 130 },
-        { "id": "mrt:CPR", "name": "Cipete Raya", "lat": -6.2778, "lon": 106.7972, "hopSeconds": 110 },
-        { "id": "mrt:HJN", "name": "Haji Nawi", "lat": -6.2667, "lon": 106.7972, "hopSeconds": 110 },
-        { "id": "mrt:BLA", "name": "Blok A", "lat": -6.2555, "lon": 106.7971, "hopSeconds": 120 },
-        { "id": "mrt:BLM", "name": "Blok M BCA", "lat": -6.2443, "lon": 106.7981, "hopSeconds": 110 },
-        { "id": "mrt:ASN", "name": "ASEAN", "lat": -6.2384, "lon": 106.7979, "hopSeconds": 130 },
-        { "id": "mrt:SNY", "name": "Senayan", "lat": -6.2268, "lon": 106.8016, "hopSeconds": 120 },
-        { "id": "mrt:IST", "name": "Istora Mandiri", "lat": -6.2238, "lon": 106.8087, "hopSeconds": 110 },
-        { "id": "mrt:BNH", "name": "Bendungan Hilir", "lat": -6.2162, "lon": 106.8188, "hopSeconds": 100 },
-        { "id": "mrt:STB", "name": "Setiabudi Astra", "lat": -6.2088, "lon": 106.8219, "hopSeconds": 110 },
-        { "id": "mrt:DKA", "name": "Dukuh Atas BNI", "lat": -6.2008, "lon": 106.8227, "hopSeconds": 120 },
-        { "id": "mrt:BHI", "name": "Bundaran HI Bank DKI", "lat": -6.1923, "lon": 106.8231, "hopSeconds": 0 }
+        { "id": "mrt:LBB", "name": "Lebak Bulus Grab", "lat": -6.3117, "lon": 106.7744, "hopSeconds": 150, "km": 0.0 },
+        { "id": "mrt:FTM", "name": "Fatmawati Indomaret", "lat": -6.2925, "lon": 106.7937, "hopSeconds": 130, "km": 1.8 },
+        { "id": "mrt:CPR", "name": "Cipete Raya", "lat": -6.2778, "lon": 106.7972, "hopSeconds": 110, "km": 3.5 },
+        { "id": "mrt:HJN", "name": "Haji Nawi", "lat": -6.2667, "lon": 106.7972, "hopSeconds": 110, "km": 4.8 },
+        { "id": "mrt:BLA", "name": "Blok A", "lat": -6.2555, "lon": 106.7971, "hopSeconds": 120, "km": 6.1 },
+        { "id": "mrt:BLM", "name": "Blok M BCA", "lat": -6.2443, "lon": 106.7981, "hopSeconds": 110, "km": 7.0 },
+        { "id": "mrt:ASN", "name": "ASEAN", "lat": -6.2384, "lon": 106.7979, "hopSeconds": 130, "km": 7.7 },
+        { "id": "mrt:SNY", "name": "Senayan", "lat": -6.2268, "lon": 106.8016, "hopSeconds": 120, "km": 9.3 },
+        { "id": "mrt:IST", "name": "Istora Mandiri", "lat": -6.2238, "lon": 106.8087, "hopSeconds": 110, "km": 10.7 },
+        { "id": "mrt:BNH", "name": "Bendungan Hilir", "lat": -6.2162, "lon": 106.8188, "hopSeconds": 100, "km": 12.1 },
+        { "id": "mrt:STB", "name": "Setiabudi Astra", "lat": -6.2088, "lon": 106.8219, "hopSeconds": 110, "km": 13.1 },
+        { "id": "mrt:DKA", "name": "Dukuh Atas BNI", "lat": -6.2008, "lon": 106.8227, "hopSeconds": 120, "km": 14.1 },
+        { "id": "mrt:BHI", "name": "Bundaran HI Bank DKI", "lat": -6.1923, "lon": 106.8231, "hopSeconds": 0, "km": 15.7 }
       ]
     }
   ]

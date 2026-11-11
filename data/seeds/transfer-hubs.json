@@ -71,6 +71,66 @@
         "peakPenaltySeconds": 45,
         "isSheltered": true,
         "isStepFree": true
+      },
+      {
+        "fromStopId": "tj:1-12",
+        "toStopId": "krl:SUD",
+        "distanceMeters": 180,
+        "baseDurationSeconds": 180,
+        "pathwayType": "STREET_WALK",
+        "isPaidAreaTransfer": false,
+        "gateBufferSeconds": 75,
+        "peakPenaltySeconds": 45,
+        "isSheltered": true,
+        "isStepFree": true
+      },
+      {
+        "fromStopId": "tj:1-12",
+        "toStopId": "tj:4-17",
+        "distanceMeters": 250,
+        "baseDurationSeconds": 240,
+        "pathwayType": "SKYWALK",
+        "isPaidAreaTransfer": true,
+        "gateBufferSeconds": 0,
+        "peakPenaltySeconds": 45,
+        "isSheltered": true,
+        "isStepFree": true
+      },
+      {
+        "fromStopId": "tj:4-17",
+        "toStopId": "tj:1-12",
+        "distanceMeters": 250,
+        "baseDurationSeconds": 240,
+        "pathwayType": "SKYWALK",
+        "isPaidAreaTransfer": true,
+        "gateBufferSeconds": 0,
+        "peakPenaltySeconds": 45,
+        "isSheltered": true,
+        "isStepFree": true
+      },
+      {
+        "fromStopId": "tj:4-17",
+        "toStopId": "lrt:DUK",
+        "distanceMeters": 150,
+        "baseDurationSeconds": 150,
+        "pathwayType": "SKYWALK",
+        "isPaidAreaTransfer": false,
+        "gateBufferSeconds": 60,
+        "peakPenaltySeconds": 30,
+        "isSheltered": true,
+        "isStepFree": true
+      },
+      {
+        "fromStopId": "lrt:DUK",
+        "toStopId": "tj:4-17",
+        "distanceMeters": 150,
+        "baseDurationSeconds": 150,
+        "pathwayType": "SKYWALK",
+        "isPaidAreaTransfer": false,
+        "gateBufferSeconds": 60,
+        "peakPenaltySeconds": 30,
+        "isSheltered": true,
+        "isStepFree": true
       }
     ]
   },
@@ -143,6 +203,18 @@
         "peakPenaltySeconds": 45,
         "isSheltered": true,
         "isStepFree": true
+      },
+      {
+        "fromStopId": "mrt:ASN",
+        "toStopId": "tj:13-1",
+        "distanceMeters": 190,
+        "baseDurationSeconds": 210,
+        "pathwayType": "STAIRS_ESCALATOR",
+        "isPaidAreaTransfer": false,
+        "gateBufferSeconds": 75,
+        "peakPenaltySeconds": 45,
+        "isSheltered": true,
+        "isStepFree": true
       }
     ]
   },
@@ -191,6 +263,18 @@
         "peakPenaltySeconds": 45,
         "isSheltered": true,
         "isStepFree": false
+      },
+      {
+        "fromStopId": "tj:8-6",
+        "toStopId": "krl:KBY",
+        "distanceMeters": 450,
+        "baseDurationSeconds": 450,
+        "pathwayType": "SKYWALK",
+        "isPaidAreaTransfer": false,
+        "gateBufferSeconds": 75,
+        "peakPenaltySeconds": 45,
+        "isSheltered": true,
+        "isStepFree": false
       }
     ]
   },
@@ -206,6 +290,18 @@
       {
         "fromStopId": "krl:MRI",
         "toStopId": "tj:4-13",
+        "distanceMeters": 180,
+        "baseDurationSeconds": 180,
+        "pathwayType": "UNDERGROUND_CONCOURSE",
+        "isPaidAreaTransfer": false,
+        "gateBufferSeconds": 75,
+        "peakPenaltySeconds": 60,
+        "isSheltered": true,
+        "isStepFree": true
+      },
+      {
+        "fromStopId": "tj:4-13",
+        "toStopId": "krl:MRI",
         "distanceMeters": 180,
         "baseDurationSeconds": 180,
         "pathwayType": "UNDERGROUND_CONCOURSE",
