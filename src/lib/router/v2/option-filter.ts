@@ -11,6 +11,9 @@ const COST_LIMIT_SLACK_SEC = 15 * 60;
 const TIME_TOLERANCE_SEC = 60;
 const WALK_TOLERANCE_M = 50;
 const LEAST_WALKING_MIN_GAIN_M = 100;
+/** An option with this much more walking than another must be at least this much faster to stay. */
+const EXCESS_WALK_M = 800;
+const EXCESS_WALK_TIME_GAIN_SEC = 5 * 60;
 
 export const Badge = {
   FASTEST: 'fastest',
@@ -45,6 +48,14 @@ function dominates(a: PlanOption, b: PlanOption): boolean {
   return noWorse && better;
 }
 
+/**
+ * True when `a` makes the traveller walk far more than `b` without being meaningfully faster.
+ * Saving a change or a few thousand rupiah is not worth a twenty-minute walk to most people.
+ */
+function walksMuchMoreForNothing(a: PlanOption, b: PlanOption): boolean {
+  return a.walkMeters - b.walkMeters >= EXCESS_WALK_M && b.typicalSec <= a.typicalSec + EXCESS_WALK_TIME_GAIN_SEC;
+}
+
 export function filterOptions(candidates: PlanOption[]): PlanOption[] {
   const bySignature = new Map<string, PlanOption>();
   for (const c of candidates) {
@@ -60,7 +71,8 @@ export function filterOptions(candidates: PlanOption[]): PlanOption[] {
     if (c.cost > limit) break;
     if (!distinct.some(kept => similarity(kept, c) >= SIMILARITY_KEEP_ONE)) distinct.push(c);
   }
-  const kept = distinct.filter(c => !distinct.some(other => other !== c && dominates(other, c))).slice(0, MAX_OPTIONS);
+  const sensible = distinct.filter(c => !distinct.some(other => other !== c && walksMuchMoreForNothing(c, other)));
+  const kept = sensible.filter(c => !sensible.some(other => other !== c && dominates(other, c))).slice(0, MAX_OPTIONS);
   assignBadges(kept);
   return kept;
 }

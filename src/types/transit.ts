@@ -65,7 +65,20 @@ export interface Leg {
   liveBusLandmark?: string;
   headwaySeconds?: number;
   isUncoveredSegment?: boolean;
+  /** Routing v2: every line that serves this leg, the first being the main one ("9, 9A atau 9E"). */
+  lineNames?: string[];
+  /** Routing v2: typical wait before boarding, already outside `durationSeconds`. */
+  waitSeconds?: number;
+  /** Routing v2: the leg runs every 30 minutes or less often. */
+  isInfrequent?: boolean;
+  /** Routing v2: mode group of the main line (see src/types/network-v2.ts). */
+  modeGroup?: number;
+  /** Routing v2: premium fare class of the main line, if any (PP, PP3, SH2). */
+  premiumFareClass?: string;
 }
+
+/** Routing v2 badge keys, each given to at most one option of a result. */
+export type OptionBadge = 'fastest' | 'fewest_transfers' | 'cheapest' | 'least_walking';
 
 export interface Itinerary {
   id: string;
@@ -89,4 +102,19 @@ export interface Itinerary {
   uncoveredDestLon?: number;
   googleMapsUrl?: string;
   relaxedWalkExtraMeters?: number;
+  /** Routing v2: door-to-door range, from no waiting at all to a full headway at every boarding. */
+  durationMinMinutes?: number;
+  durationMaxMinutes?: number;
+  /** Routing v2: total walking of the option. */
+  walkMeters?: number;
+  badgeKeys?: OptionBadge[];
+  /** Routing v2: the fare shown is the integrated (JakLingko) tariff. Every fare is an estimate. */
+  fareIsIntegrated?: boolean;
+}
+
+/** Routing v2: a switched-off mode group would be clearly faster. */
+export interface ModeSuggestionView {
+  modeGroups: number[];
+  savesMinutes: number;
+  itinerary: Itinerary;
 }

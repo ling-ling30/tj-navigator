@@ -17,6 +17,7 @@ const GTFS_ZIP = path.join(ROOT, 'tmp_gtfs.zip');
 const GTFS_DIR = path.join(ROOT, 'tmp_gtfs');
 const SEED_DIR = path.join(ROOT, 'data', 'seeds');
 const OUT_FILE = path.join(ROOT, 'public', 'data', 'network-v2.json');
+const VERSION_FILE = path.join(ROOT, 'public', 'data', 'network-v2.version.json');
 const GTFS_URL = 'https://gtfs.transjakarta.co.id/files/file_gtfs.zip';
 const VERSION = '2.0.0';
 
@@ -57,6 +58,8 @@ async function main(): Promise<void> {
     transfers
   };
   fs.writeFileSync(OUT_FILE, JSON.stringify(network));
+  // A tiny file the app checks to learn that a newer graph is out, without downloading the graph itself
+  fs.writeFileSync(VERSION_FILE, JSON.stringify({ version: VERSION, generatedAt: network.generatedAt, feedDate: network.feedDate }));
 
   const hops = stats.hopsAlongShape + stats.hopsFallback;
   console.log(`Wrote ${path.relative(ROOT, OUT_FILE)} (${(fs.statSync(OUT_FILE).size / 1024).toFixed(0)} KB)`);
