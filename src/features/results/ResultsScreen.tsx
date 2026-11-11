@@ -46,6 +46,8 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onSelectItinerary 
   } = useTransitSearch();
 
   const [isFilterOpen, setIsFilterOpen] = useState(false);
+  /** One row open at a time; a second tap closes it. */
+  const [expandedId, setExpandedId] = useState<string | null>(null);
 
   const handleCardClick = (itin: Itinerary) => {
     selectItinerary(itin);
@@ -200,7 +202,9 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onSelectItinerary 
               <ConnectionCard
                 key={itin.id}
                 itinerary={itin}
-                onSelect={handleCardClick}
+                expanded={expandedId === itin.id}
+                onToggle={toggled => setExpandedId(current => (current === toggled.id ? null : toggled.id))}
+                onOpenDetail={handleCardClick}
               />
             ))}
 

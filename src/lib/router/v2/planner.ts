@@ -6,14 +6,14 @@ import type { NetworkV2 } from '../../../types/network-v2';
 import { makeContext, type QueryContext } from './context';
 import {
   BALANCED, DEFAULT_TRAVEL_OPTIONS, DIVERSITY_RERUNS, RELAXED_RADII_M, SAME_PLACE_M, SEARCH_PROFILES,
-  SHOWN_LINE_RIDE_WEIGHT, TRANSFER_BUFFER_SEC, WALK_ONLY_MAX_M, WALKING,
+  MAX_SHOWN_LINE_RIDE_WEIGHT, SHOWN_LINE_RIDE_WEIGHT, TRANSFER_BUFFER_SEC, WALK_ONLY_MAX_M, WALKING,
   type CostProfile, type TravelOptions
 } from './cost-profiles';
 import { haversineMeters, WALK_DETOUR, WALK_SPEED_MPS } from './footpaths';
 import { ENDPOINT, LineScanner, MAX_RIDES, type AccessPoint, type RawPath, type ScanParams } from './line-scan';
 import { NetworkIndex } from './network-index';
-import { buildOption, type PlanOption, type RideLeg } from './option';
-import { filterOptions } from './option-filter';
+import { buildOption, type PlanOption } from './option';
+import { filterOptions, MIN_OPTIONS } from './option-filter';
 
 export interface PlaceInput { lat: number; lon: number; name?: string; stopIndex?: number }
 
@@ -130,13 +130,16 @@ export class Planner {
     // Re-runs that make the lines already shown less attractive, to surface other corridors
     const weights = new Float32Array(this.unitWeights);
     for (let i = 0; i < DIVERSITY_RERUNS && options.length > 0; i++) {
-      for (const o of options) for (const line of mainRideLines(o)) weights[line] = SHOWN_LINE_RIDE_WEIGHT;
+      // Each re-run makes the lines already shown costlier still, so the search has to find another way
+      for (const line of new Set(options.flatMap(rideLines))) {
+        weights[line] = Math.min(MAX_SHOWN_LINE_RIDE_WEIGHT, weights[line] * SHOWN_LINE_RIDE_WEIGHT);
+      }
       const extra = this.scanner.run(this.params(ctx, BALANCED, opts, access, egressSec, maxRides, weights)).map(build);
       const merged = filterOptions([...candidates, ...extra]);
       candidates.push(...extra);
       const grew = merged.some(m => !options.some(o => o.signature === m.signature));
       options = merged;
-      if (!grew) break;
+      if (!grew && options.length >= MIN_OPTIONS) break;
     }
     return options;
   }
@@ -188,11 +191,7 @@ export class Planner {
   }
 }
 
-/** The lines of an option's longest ride: the corridor a traveller would name it by. */
-function mainRideLines(option: PlanOption): number[] {
-  let main: RideLeg | null = null;
-  for (const leg of option.legs) {
-    if (leg.kind === 'ride' && (!main || leg.meters > main.meters)) main = leg;
-  }
-  return main ? main.lines : [];
+/** Every line an option rides. A re-run makes them costlier, so it looks for another way on each leg. */
+function rideLines(option: PlanOption): number[] {
+  return option.legs.flatMap(leg => (leg.kind === 'ride' ? leg.lines : []));
 }

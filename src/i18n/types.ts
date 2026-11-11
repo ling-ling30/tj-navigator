@@ -72,6 +72,8 @@ export interface TranslationDictionary {
   'results.status_delayed': string;
   'results.status_headway': string;
   'results.walk_chip': string;
+  'results.view_detail': string;
+  'results.step_ride_meta': string;
   'results.filter_title': string;
   'results.filter_max_transfers': string;
   'results.filter_apply': string;

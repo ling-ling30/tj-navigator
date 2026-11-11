@@ -1,15 +1,20 @@
 import React from 'react';
 import { Card } from '../../components/ui/Card';
+import { Button } from '../../components/ui/Button';
+import { ConnectionSteps } from './ConnectionSteps';
 import { RouteLegPreview } from './RouteLegPreview';
 import type { Itinerary, OptionBadge } from '../../types/transit';
 import { useT } from '../../hooks/useT';
 
 export interface ConnectionCardProps {
   itinerary: Itinerary;
-  onSelect: (itinerary: Itinerary) => void;
+  /** The row is open and shows its steps. */
+  expanded: boolean;
+  onToggle: (itinerary: Itinerary) => void;
+  onOpenDetail: (itinerary: Itinerary) => void;
 }
 
-export const ConnectionCard: React.FC<ConnectionCardProps> = ({ itinerary, onSelect }) => {
+export const ConnectionCard: React.FC<ConnectionCardProps> = ({ itinerary, expanded, onToggle, onOpenDetail }) => {
   const { t } = useT();
 
   // Line 1: Times, typical duration in bold, range beside it when min and max differ by >= 3 min
@@ -72,7 +77,8 @@ export const ConnectionCard: React.FC<ConnectionCardProps> = ({ itinerary, onSel
     <Card
       variant="interactive"
       padding="md"
-      onClick={() => onSelect(itinerary)}
+      onClick={() => onToggle(itinerary)}
+      aria-expanded={expanded}
       className="flex flex-col gap-2"
     >
       {/* Line 1: Times, Duration (bold), Range */}
@@ -106,6 +112,22 @@ export const ConnectionCard: React.FC<ConnectionCardProps> = ({ itinerary, onSel
         )}
         {facts.join(' · ')}
       </div>
+
+      {expanded && (
+        <>
+          <ConnectionSteps legs={itinerary.legs} />
+          <Button
+            variant="primary"
+            size="compact"
+            onClick={event => {
+              event.stopPropagation();
+              onOpenDetail(itinerary);
+            }}
+          >
+            {t('results.view_detail')}
+          </Button>
+        </>
+      )}
     </Card>
   );
 };

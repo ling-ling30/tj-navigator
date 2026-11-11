@@ -72,6 +72,8 @@ export const idDictionary: TranslationDictionary = {
   'results.status_delayed': 'Terlambat +{minutes} mnt',
   'results.status_headway': 'Tiap {minutes} mnt',
   'results.walk_chip': 'Jalan {minutes} mnt',
+  'results.view_detail': 'Lihat detail',
+  'results.step_ride_meta': '{stops} halte · {minutes} mnt',
   'results.filter_title': 'Filter Hasil',
   'results.filter_max_transfers': 'Maksimal Transit',
   'results.filter_apply': 'Terapkan',

@@ -22,6 +22,11 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
 
 /** Each step: [label, action]. Actions run in the page. `click:Text` clicks the first control containing the text. */
 const SCENARIOS = {
+  expand: [
+    ['e1-results', 'click:Cari Rute'],
+    ['e2-expanded', 'clickCard'],
+    ['e3-detail', 'click:Lihat detail'],
+  ],
   default: [
     ['01-home', null],
     ['02-options-sheet', 'click:Opsi perjalanan'],
@@ -78,7 +83,8 @@ function cdp(ws) {
 const PAGE_HELPERS = `
   window.__click = text => {
     const all = [...document.querySelectorAll('button, [role=button], a')];
-    const el = all.find(e => e.innerText && e.innerText.includes(text));
+    // The smallest control that carries the text: a button inside a card, not the card around it
+    const el = all.filter(e => e.innerText && e.innerText.includes(text)).sort((x, y) => x.innerText.length - y.innerText.length)[0];
     if (!el) return 'NOT FOUND: ' + text;
     el.click(); return 'clicked ' + text;
   };

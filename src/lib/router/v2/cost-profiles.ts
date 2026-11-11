@@ -22,7 +22,9 @@ export const SEARCH_PROFILES: readonly CostProfile[] = [
 
 /** Riding on a line already shown costs this much more in a re-run, which steers it to another corridor. */
 export const SHOWN_LINE_RIDE_WEIGHT = 1.5;
-export const DIVERSITY_RERUNS = 2;
+/** The weight grows with every re-run, up to this, which all but rules the line out. */
+export const MAX_SHOWN_LINE_RIDE_WEIGHT = 6;
+export const DIVERSITY_RERUNS = 6;
 
 export type WalkingTolerance = 'sedikit' | 'normal' | 'jauh';
 export type TransferTime = 'normal' | 'longgar';

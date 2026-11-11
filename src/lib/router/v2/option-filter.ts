@@ -1,12 +1,12 @@
-/** The filter chain: from all candidates to the few options worth showing. docs/ROUTING-V2-SPEC.md, section 4. */
+/** The filter chain: from all candidates to the options worth showing. docs/ROUTING-V2-SPEC.md, section 4. */
 import type { PlanOption, RideLeg } from './option';
 
-export const MAX_OPTIONS = 5;
-/** Two options that share this much of their riding on the same lines are the same option to a traveller. */
-const SIMILARITY_KEEP_ONE = 0.85;
-/** An option costlier than `best × ratio + slack` is not worth showing (OpenTripPlanner's default limit). */
-const COST_LIMIT_RATIO = 1.5;
-const COST_LIMIT_SLACK_SEC = 15 * 60;
+/** The traveller asked for a real choice: show this many whenever the network offers them. */
+export const MIN_OPTIONS = 5;
+export const MAX_OPTIONS = 6;
+/** An option costlier than `best × ratio + slack` is not worth showing. */
+const COST_LIMIT_RATIO = 2;
+const COST_LIMIT_SLACK_SEC = 30 * 60;
 /** Differences smaller than these do not count when deciding that one option beats another on everything. */
 const TIME_TOLERANCE_SEC = 60;
 const WALK_TOLERANCE_M = 50;
@@ -24,19 +24,14 @@ export const Badge = {
 
 const ridesOf = (o: PlanOption) => o.legs.filter((l): l is RideLeg => l.kind === 'ride');
 
-/** Share of the longer option's riding distance that both options cover on a common line. */
-export function similarity(a: PlanOption, b: PlanOption): number {
-  const longest = Math.max(a.rideMeters, b.rideMeters);
-  if (longest === 0) return 1;
-  const used = new Set<RideLeg>();
-  let shared = 0;
-  for (const ra of ridesOf(a)) {
-    const match = ridesOf(b).find(rb => !used.has(rb) && rb.lines.some(line => ra.lines.includes(line)));
-    if (!match) continue;
-    used.add(match);
-    shared += Math.min(ra.meters, match.meters);
-  }
-  return shared / longest;
+/**
+ * Two options look the same to a traveller when they ride the same lines in the same order,
+ * whichever stops they change at. Only the better one is kept.
+ */
+export function sameLines(a: PlanOption, b: PlanOption): boolean {
+  const ra = ridesOf(a);
+  const rb = ridesOf(b);
+  return ra.length === rb.length && ra.every((leg, i) => leg.lines.some(line => rb[i].lines.includes(line)));
 }
 
 /** True when `a` is at least as good as `b` on time, transfers, walking and fare, and clearly better on one. */
@@ -69,12 +64,17 @@ export function filterOptions(candidates: PlanOption[]): PlanOption[] {
   const distinct: PlanOption[] = [];
   for (const c of sorted) {
     if (c.cost > limit) break;
-    if (!distinct.some(kept => similarity(kept, c) >= SIMILARITY_KEEP_ONE)) distinct.push(c);
+    if (!distinct.some(kept => sameLines(kept, c))) distinct.push(c);
   }
-  const sensible = distinct.filter(c => !distinct.some(other => other !== c && walksMuchMoreForNothing(c, other)));
-  const kept = sensible.filter(c => !sensible.some(other => other !== c && dominates(other, c))).slice(0, MAX_OPTIONS);
-  assignBadges(kept);
-  return kept;
+  const kept = distinct.filter(c => !distinct.some(other => other !== c && walksMuchMoreForNothing(c, other)));
+
+  // Options that another one beats on everything are clutter, but only once the traveller has enough to choose from
+  for (let i = kept.length - 1; i >= 0 && kept.length > MIN_OPTIONS; i--) {
+    if (kept.some(other => other !== kept[i] && dominates(other, kept[i]))) kept.splice(i, 1);
+  }
+  const shown = kept.slice(0, MAX_OPTIONS);
+  assignBadges(shown);
+  return shown;
 }
 
 function assignBadges(options: PlanOption[]): void {

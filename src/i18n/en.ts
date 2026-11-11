@@ -72,6 +72,8 @@ export const enDictionary: TranslationDictionary = {
   'results.status_delayed': 'Delayed +{minutes} min',
   'results.status_headway': 'Every {minutes} min',
   'results.walk_chip': 'Walk {minutes} min',
+  'results.view_detail': 'View details',
+  'results.step_ride_meta': '{stops} stops · {minutes} min',
   'results.filter_title': 'Filter Results',
   'results.filter_max_transfers': 'Maximum Transfers',
   'results.filter_apply': 'Apply',
