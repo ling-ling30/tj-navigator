@@ -1,0 +1,11 @@
+{
+  "_comment": "Stop ids used by transfer-hubs.json that were invented by the old graph builder. Each maps to the real GTFS stop name whose platforms take its place.",
+  "tj:1-4": ["CSW 1"],
+  "tj:13-1": ["CSW 2"],
+  "tj:1-12": ["Dukuh Atas"],
+  "tj:4-17": ["Galunggung"],
+  "tj:13-2": ["Velbak"],
+  "tj:8-6": ["Kebayoran Lama"],
+  "tj:4-13": ["Plaza St. Manggarai", "Timur St. Manggarai"],
+  "tj:4-8": ["Pemuda Rawamangun"]
+}

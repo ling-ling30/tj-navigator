@@ -124,3 +124,16 @@ The monetary cost in Indonesian Rupiah (IDR) for a leg or journey:
 
 ### IntegratedFare (JakLingko)
 The multi-modal integrated tariff capping the maximum fare across participating modes (Transjakarta, MRT, LRT) within a 3-hour window to Rp 10.000.
+
+---
+
+## Routing v2 terms
+
+### Mode Group
+One of the six choices a traveller can switch on or off: BRT, Bus, Mikrotrans, KRL, MRT, LRT. A line belongs to exactly one mode group. Walking belongs to none and is always allowed.
+
+### Travel Options
+The traveller's standing preferences for a search: maximum transfers, walking tolerance, transfer time, and whether premium buses are included.
+
+### Mode Suggestion
+A single labelled hint shown when a mode the traveller switched off would give a clearly faster journey. It never replaces the options found with the chosen modes.

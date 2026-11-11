@@ -7,7 +7,8 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "preview": "vite preview",
-    "build:data": "node scripts/build-graph.ts"
+    "build:data": "node scripts/build-graph.ts",
+    "build:data:v2": "node scripts/graph-v2/build.ts"
   },
   "dependencies": {
     "@fontsource-variable/plus-jakarta-sans": "^5.3.0",
