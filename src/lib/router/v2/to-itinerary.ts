@@ -121,7 +121,7 @@ export function toItinerary(
       routeId: line[0],
       routeShortName: line[1],
       routeColor: line[3],
-      lineNames: leg.lines.map(l => ix.net.lines[l][1]),
+      lineNames: Array.from(new Set(leg.lines.map(l => ix.net.lines[l][1]))),
       premiumFareClass: PREMIUM_FARE_CLASSES.has(line[5]) ? line[5] : undefined,
       fromStopName: stops[leg.boardStop][1], fromStopId: stops[leg.boardStop][0],
       toStopName: stops[leg.alightStop][1], toStopId: stops[leg.alightStop][0],

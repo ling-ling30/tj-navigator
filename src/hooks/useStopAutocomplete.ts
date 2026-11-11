@@ -16,6 +16,8 @@ const POPULAR_HUBS = [
   { name: 'Stasiun Bundaran HI', id: 'mrt:BHI', mode: 3, desc: 'MRT Jalur Utara-Selatan' },
   { name: 'Halte Blok M', id: 'tj:1-1', mode: 0, desc: 'Terminal Blok M · Koridor 1' },
   { name: 'Stasiun Manggarai', id: 'krl:MRI', mode: 2, desc: 'Sentral Integrasi Commuter Line' },
+  { name: 'Stasiun Tanah Abang', id: 'krl:THB', mode: 2, desc: 'Transit KRL Rangkasbitung & Cikarang' },
+  { name: 'Stasiun Duri', id: 'krl:DU', mode: 2, desc: 'Transit KRL Tangerang & Cikarang' },
   { name: 'Stasiun Bekasi', id: 'krl:BKS', mode: 2, desc: 'Commuter Line Cikarang' }
 ];
 

@@ -131,6 +131,30 @@
         "peakPenaltySeconds": 30,
         "isSheltered": true,
         "isStepFree": true
+      },
+      {
+        "fromStopId": "krl:BNC",
+        "toStopId": "mrt:DKA",
+        "distanceMeters": 340,
+        "baseDurationSeconds": 290,
+        "pathwayType": "SHELTERED_WALKWAY",
+        "isPaidAreaTransfer": false,
+        "gateBufferSeconds": 75,
+        "peakPenaltySeconds": 45,
+        "isSheltered": true,
+        "isStepFree": true
+      },
+      {
+        "fromStopId": "mrt:DKA",
+        "toStopId": "krl:BNC",
+        "distanceMeters": 340,
+        "baseDurationSeconds": 290,
+        "pathwayType": "SHELTERED_WALKWAY",
+        "isPaidAreaTransfer": false,
+        "gateBufferSeconds": 75,
+        "peakPenaltySeconds": 45,
+        "isSheltered": true,
+        "isStepFree": true
       }
     ]
   },
@@ -379,6 +403,101 @@
         "gateBufferSeconds": 45,
         "peakPenaltySeconds": 30,
         "isSheltered": true,
+        "isStepFree": true
+      }
+    ]
+  },
+  {
+    "id": "hub:pasar-senen",
+    "name": "Stasiun Pasar Senen - Terminal Senen Hub",
+    "description": "Pedestrian connection between KRL Pasar Senen and Transjakarta BRT Senen TOYOTA Rangga / Senen Raya.",
+    "memberStops": [
+      "krl:PSE",
+      "tj:senen-toyota",
+      "tj:senen-raya"
+    ],
+    "edges": [
+      {
+        "fromStopId": "krl:PSE",
+        "toStopId": "tj:senen-toyota",
+        "distanceMeters": 470,
+        "baseDurationSeconds": 380,
+        "pathwayType": "STREET_WALK",
+        "isPaidAreaTransfer": false,
+        "gateBufferSeconds": 75,
+        "peakPenaltySeconds": 45,
+        "isSheltered": false,
+        "isStepFree": true
+      },
+      {
+        "fromStopId": "tj:senen-toyota",
+        "toStopId": "krl:PSE",
+        "distanceMeters": 470,
+        "baseDurationSeconds": 380,
+        "pathwayType": "STREET_WALK",
+        "isPaidAreaTransfer": false,
+        "gateBufferSeconds": 75,
+        "peakPenaltySeconds": 45,
+        "isSheltered": false,
+        "isStepFree": true
+      },
+      {
+        "fromStopId": "krl:PSE",
+        "toStopId": "tj:senen-raya",
+        "distanceMeters": 510,
+        "baseDurationSeconds": 410,
+        "pathwayType": "STREET_WALK",
+        "isPaidAreaTransfer": false,
+        "gateBufferSeconds": 75,
+        "peakPenaltySeconds": 45,
+        "isSheltered": false,
+        "isStepFree": true
+      },
+      {
+        "fromStopId": "tj:senen-raya",
+        "toStopId": "krl:PSE",
+        "distanceMeters": 510,
+        "baseDurationSeconds": 410,
+        "pathwayType": "STREET_WALK",
+        "isPaidAreaTransfer": false,
+        "gateBufferSeconds": 75,
+        "peakPenaltySeconds": 45,
+        "isSheltered": false,
+        "isStepFree": true
+      }
+    ]
+  },
+  {
+    "id": "hub:tanjung-priok",
+    "name": "Stasiun Tanjung Priok - Halte Tanjung Priok Hub",
+    "description": "Walkway across Terminal Tanjung Priok connecting KRL Tanjung Priok Line with Transjakarta Corridors 10 and 12.",
+    "memberStops": [
+      "krl:TPK",
+      "tj:tanjung-priok"
+    ],
+    "edges": [
+      {
+        "fromStopId": "krl:TPK",
+        "toStopId": "tj:tanjung-priok",
+        "distanceMeters": 520,
+        "baseDurationSeconds": 420,
+        "pathwayType": "STREET_WALK",
+        "isPaidAreaTransfer": false,
+        "gateBufferSeconds": 75,
+        "peakPenaltySeconds": 45,
+        "isSheltered": false,
+        "isStepFree": true
+      },
+      {
+        "fromStopId": "tj:tanjung-priok",
+        "toStopId": "krl:TPK",
+        "distanceMeters": 520,
+        "baseDurationSeconds": 420,
+        "pathwayType": "STREET_WALK",
+        "isPaidAreaTransfer": false,
+        "gateBufferSeconds": 75,
+        "peakPenaltySeconds": 45,
+        "isSheltered": false,
         "isStepFree": true
       }
     ]
