@@ -5,20 +5,23 @@
  */
 import { DayBit } from '../../../types/network-v2';
 
-export const HopClass = { BUSWAY: 0, STREET: 1, MIKRO: 2, TOLL: 3, KRL: 4, MRT: 5, LRT: 6 } as const;
+export const HopClass = { BUSWAY: 0, STREET: 1, MIKRO: 2, TOLL: 3, KRL: 4, MRT: 5, LRT_JAKARTA: 6, LRT_JABODEBEK: 7 } as const;
 
 /**
  * Commercial speed in km/h (stops included): [off-peak, peak].
- * PROVISIONAL starting values, pending wayfinder/routing-v2 tickets 13 (live bus speeds) and 14 (published figures).
+ * Calibrated on published end-to-end times (wayfinder/routing-v2/tickets/14-real-speed-references.md):
+ * corridor 1 for the busway; S61, S11, P11 and B51 for street and toll (best fit, about 18 % rms error);
+ * operator figures for rail. Check with: npx vite-node scripts/routing-v2/calibrate.ts
  */
 export const SPEED_KMH: Record<number, readonly [number, number]> = {
-  [HopClass.BUSWAY]: [22, 18],
-  [HopClass.STREET]: [17, 13],
-  [HopClass.MIKRO]: [14, 11],
-  [HopClass.TOLL]: [45, 30],
-  [HopClass.KRL]: [38, 38],
-  [HopClass.MRT]: [32, 32],
-  [HopClass.LRT]: [30, 30]
+  [HopClass.BUSWAY]: [22, 19],
+  [HopClass.STREET]: [18, 13],
+  [HopClass.MIKRO]: [16, 13],
+  [HopClass.TOLL]: [35, 27],
+  [HopClass.KRL]: [39, 35],
+  [HopClass.MRT]: [31, 31],
+  [HopClass.LRT_JAKARTA]: [27, 27],
+  [HopClass.LRT_JABODEBEK]: [40, 40]
 };
 
 /** A hop this long on an express service is treated as a toll or highway stretch. */
@@ -32,11 +35,11 @@ const MIN_HOP_SEC = 15;
 const HOUR = 3600;
 const PEAK_PERIODS: ReadonlyArray<readonly [number, number]> = [[6 * HOUR, 9 * HOUR], [16 * HOUR, 20 * HOUR]];
 
-export function hopClassOf(serviceClass: string, meters: number): number {
+export function hopClassOf(serviceClass: string, meters: number, fareClass = ''): number {
   switch (serviceClass) {
     case 'KRL': return HopClass.KRL;
     case 'MRT': return HopClass.MRT;
-    case 'LRT': return HopClass.LRT;
+    case 'LRT': return fareClass === 'LRT_JKT' ? HopClass.LRT_JAKARTA : HopClass.LRT_JABODEBEK;
     case 'BRT': return HopClass.BUSWAY;
     case 'MIKROTRANS': return HopClass.MIKRO;
     default:

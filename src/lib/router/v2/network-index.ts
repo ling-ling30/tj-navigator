@@ -59,6 +59,7 @@ export class NetworkIndex {
     net.patterns.forEach((p, pi) => {
       const [lineIdx, dir, , stopIdx, hopMeters] = p;
       const serviceClass = net.lines[lineIdx][6];
+      const fareClass = net.lines[lineIdx][5];
       this.patLine[pi] = lineIdx;
       this.patDir[pi] = dir;
       for (let i = 0; i < stopIdx.length; i++) {
@@ -68,7 +69,7 @@ export class NetworkIndex {
         perStop[stopIdx[i]]++;
         if (i + 1 === stopIdx.length) continue;
         const meters = hopMeters[i];
-        const hopClass = hopClassOf(serviceClass, meters);
+        const hopClass = hopClassOf(serviceClass, meters, fareClass);
         this.posHopM[pos] = meters;
         this.posHopSecOffPeak[pos] = hopSeconds(meters, hopClass, false);
         this.posHopSecPeak[pos] = hopSeconds(meters, hopClass, true);

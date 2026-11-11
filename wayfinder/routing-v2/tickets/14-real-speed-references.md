@@ -190,3 +190,19 @@ These figures replace the constant ~10–12 km/h GTFS template times with realis
 3. **Off-Peak Layover / "Ngetem" Delays on Non-BRT and Mikrotrans**: Official speed numbers reflect moving and commercial runtimes, but off-peak feeder services occasionally incur unscheduled waiting time at terminus turning loops if drivers regulate headway manually.
 4. **Non-Subsidized Royaltrans Route Timetables**: Precise published runtimes for non-subsidized Royaltrans premium lines (e.g. 1T/1K Cibubur–Blok M) remain unconfirmed by direct operator timetable sheets, though they track closely with toll express patterns (P11/S61).
 
+
+---
+
+## Reading by the decider (Claude, 2026-11-11)
+
+The figures were used to calibrate `src/lib/router/v2/time-model.ts`; the links were not opened by the decider. The check is `npx vite-node scripts/routing-v2/calibrate.ts`, which compares the model with the published one-way times:
+
+| Route | Off-peak: model / published | Peak: model / published |
+|---|---|---|
+| Corridor 1, Blok M – Kota | 32 / 34 min | 37 / 41 min |
+| S61, Alam Sutera – Blok M | 76 / 70 min | 103 / 93 min |
+| S11, BSD – Jelambar | 74 / 88 min | 99 / 135 min |
+| P11, Bogor – Blok M | 104 / 88 min | 136 / 115 min |
+| B51, Cikarang – Cawang | 79 / 105 min | 103 / 125 min |
+
+One toll speed cannot fit both a fast toll road (Jagorawi, P11) and a slow one (Jakarta–Tangerang, S11), so express routes are off by up to about a quarter either way. Rail matches the operators' figures (MRT 30 min, Bogor – Jakarta Kota 85 to 95 min).

@@ -39,6 +39,9 @@ Reached when `docs/ROUTING-V2-SPEC.md` and an ADR exist, every ticket below is c
 - [Golden commutes: real trips the owner knows, as the benchmark](tickets/05-golden-commutes.md): `scripts/routing-v2/bench.ts` with the owner's commute, trunk trips, behaviour checks and structural checks. (2026-11-11)
 - [How alternatives are found, and what makes a route good](tickets/07-alternatives-and-cost-model.md): generalised cost, four profiles plus re-runs, filter chain, pooled lines, continuation past a terminus; 2+ options 32 % → 90 %, circuity p90 2,73 → 1,92. Decided by Claude. (2026-11-11)
 - [Engine prototype on the golden commutes](tickets/10-engine-prototype-on-golden-commutes.md): the prototype became the engine (`src/lib/router/v2`); all golden trips pass. (2026-11-11)
+- [Can live bus positions give real speeds](tickets/13-live-bus-speeds.md): the live stream is real (`/mobile_armada/#`, about 3.800 vehicles) but the app listens on a topic that never publishes; its raw speed table is not usable for calibration as it stands. (2026-11-11)
+- [Real speeds and travel times from published sources](tickets/14-real-speed-references.md): published end-to-end times for corridor 1, four express routes and all rail lines; used to calibrate the speed table. (2026-11-11)
+- [What one option is, and how time is modelled](tickets/06-connection-and-time-model.md): one option is one path with a typical time and a range; riding time from distance and a calibrated speed per kind of service; waiting from the real headways. Decided by Claude. (2026-11-11)
 - [Official fare rules for every operator](tickets/03-official-fare-rules.md): fare classes exist in the feed (Rp 3.500, free, Rp 15.000, Rp 20.000, Rp 35.000); the engine overcharges in-halte changes, undercharges premium lines, and mixes up the two LRTs. (2026-11-11)
 - [Fare model](tickets/09-fare-model.md): fare class per line from the feed, time-aware, paid-area changes free, integrated tariff as the lower price, every price an estimate; the street-transfer rule sits behind one switch. Decided by Claude. (2026-11-11)
 
@@ -51,20 +54,22 @@ Reached when `docs/ROUTING-V2-SPEC.md` and an ADR exist, every ticket below is c
 | [#3](tickets/03-official-fare-rules.md) | Official fare rules for every operator | research | AFK | — | closed |
 | [#4](tickets/04-gtfs-feed-capability-audit.md) | What the raw GTFS can support, and how wrong today's engine is | task | AFK | — | closed |
 | [#5](tickets/05-golden-commutes.md) | Golden commutes: real trips the owner knows, as the benchmark | task | HITL | — | closed |
-| [#6](tickets/06-connection-and-time-model.md) | What one option is, and how time is modelled | grilling | HITL | #1, #4, #13, #14 | open |
+| [#6](tickets/06-connection-and-time-model.md) | What one option is, and how time is modelled | grilling | HITL | #1, #4, #13, #14 | closed |
 | [#7](tickets/07-alternatives-and-cost-model.md) | How alternatives are found, and what makes a route good | grilling | HITL | #2, #4, #6 | closed |
 | [#8](tickets/08-modes-and-travel-options.md) | Mode choice and travel options | grilling | HITL | #1 | closed |
 | [#9](tickets/09-fare-model.md) | Fare model | grilling | HITL | #3 | closed |
 | [#10](tickets/10-engine-prototype-on-golden-commutes.md) | Engine prototype on the golden commutes | prototype | HITL | #5, #6, #7 | closed |
 | [#11](tickets/11-results-list-like-db-navigator.md) | Results list like DB Navigator | prototype | HITL | #1, #6, #8 | open |
 | [#12](tickets/12-spec-and-build-slices.md) | Spec, ADR and build slices | task | AFK | #7, #8, #9, #10, #11 | open |
-| [#13](tickets/13-live-bus-speeds.md) | Can live bus positions give real speeds | task | AFK | — | open |
-| [#14](tickets/14-real-speed-references.md) | Real speeds and travel times from published sources | research | AFK | — | open |
+| [#13](tickets/13-live-bus-speeds.md) | Can live bus positions give real speeds | task | AFK | — | closed |
+| [#14](tickets/14-real-speed-references.md) | Real speeds and travel times from published sources | research | AFK | — | closed |
 
 Draft of the destination document: [docs/ROUTING-V2-SPEC.md](../../docs/ROUTING-V2-SPEC.md) (speed table still open).
 
 ## Not yet specified
 
+- **Live data is dead in the app today:** the telemetry client subscribes to a topic that never publishes. The real one is `/mobile_armada/#`. Re-wiring live arrivals (and the Live radar screen) on the real stream, and using it to refine speeds per corridor.
+- **Rail coverage:** the KRL seed has three lines and approximate station positions; Tangerang and Tanjung Priok lines are missing. A proper rail data source is needed for BRT + KRL trips to be trustworthy.
 - Real timetables for KRL, MRT and LRT (source, licence, size) and whether rail legs then get "earlier / later" like DB Navigator.
 - "Arrive by" search and last-departure warnings: depends on the time model.
 - How live bus positions (MQTT) change ranking and waiting time, beyond showing an ETA.

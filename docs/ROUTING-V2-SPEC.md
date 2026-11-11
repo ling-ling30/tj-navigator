@@ -1,6 +1,6 @@
 # Routing v2 spec (draft)
 
-> Status: decided by Claude under the owner's delegation (2026-11-11). Graph and engine are **built and benchmarked** (slices 1–4); the app still runs the old engine until slice 5. Open: the speed table (⏳, waits for the speed tickets in `wayfinder/routing-v2/`).
+> Status: decided by Claude under the owner's delegation (2026-11-11). Graph and engine are **built and benchmarked** (slices 1–4); the app still runs the old engine until slice 5. The speed table is calibrated on published end-to-end times.
 > Reference product: DB Navigator. Decisions and their evidence live in the tickets of the [Routing v2 map](../wayfinder/routing-v2/map.md); this file is what gets built.
 
 ## 1. Why the current engine fails (measured)
@@ -30,13 +30,17 @@
 
 **Riding time.** Per hop: distance along the route ÷ speed for the hop's class and time of day. Distance comes from the GTFS shape between the two stops (straight line × 1,3 when a trip has no shape). The feed's own stop times are not used.
 
-| Hop class | Applies to | Speed ⏳ |
+| Hop class | Applies to | km/h, off-peak / peak |
 |---|---|---|
-| busway | BRT corridor lines | from speed tickets |
-| street | other Transjakarta buses in mixed traffic | from speed tickets |
-| mikro | Mikrotrans | from speed tickets |
-| toll | hops of 2,5 km or more on Transjabodetabek, Royaltrans, airport lines | from speed tickets |
-| krl, mrt, lrt | rail | official station times where published |
+| busway | BRT corridor lines | 22 / 19 |
+| street | other Transjakarta buses in mixed traffic | 18 / 13 |
+| mikro | Mikrotrans | 16 / 13 |
+| toll | hops of 2,5 km or more on Transjabodetabek and Royaltrans lines | 35 / 27 |
+| krl | KRL | 39 / 35 |
+| mrt | MRT | 31 |
+| lrt | LRT Jakarta 27, LRT Jabodebek 40 | |
+
+Basis: published end-to-end times (corridor 1, S61, S11, P11, B51, rail operators). `npx vite-node scripts/routing-v2/calibrate.ts` prints model against published; express routes fit within about a quarter.
 
 Speeds are a table in one file (`time-model.ts`), with peak (weekdays 06:00–09:00 and 16:00–20:00) and off-peak values, so calibration never needs a graph rebuild.
 

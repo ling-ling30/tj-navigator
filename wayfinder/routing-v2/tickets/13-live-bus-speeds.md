@@ -104,3 +104,10 @@ The persistent collector script is available at:
 2. **Instantaneous Speedometer Field**: The telemetry message does not provide a direct `speed` field in the payload; speed must be derived from consecutive coordinates $(\Delta d / \Delta t)$.
 3. **Rail Modes (KRL Commuterline, MRT Jakarta, LRT)**: The broker only broadcasts PT Transportasi Jakarta road vehicles (BRT, feeder, Mikrotrans). Train speeds cannot be obtained from this telemetry source.
 
+
+---
+
+## Reading by the decider (Claude, 2026-11-11)
+
+- **The stream is real and usable.** The live topic is `/mobile_armada/#`, with route, trip, position and next halte for about 3.800 vehicles. The app listens on `tj/corridor/<n>/#`, which never publishes, so the app's live features have never received data. Fixing that is its own piece of work (see the map, "Not yet specified").
+- **The speed table above is not used as it stands.** "Moving" speed leaves out every stop, and "overall" speed includes parked and laid-over vehicles (40 % of samples stand still), so the true in-service speed lies between the two. The ten-minute sample was also taken off-peak only. The calibration therefore rests on published end-to-end times (the speed references ticket); the collector script stays as the way to get per-corridor speeds later.
