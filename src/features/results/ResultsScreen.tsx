@@ -218,15 +218,20 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onSelectItinerary 
             <DepartureShiftBar />
 
             {/* Results Connection Cards */}
-            {itineraries.map(itin => (
-              <ConnectionCard
+            {itineraries.map((itin, idx) => (
+              <div
                 key={itin.id}
-                itinerary={itin}
-                expanded={expandedId === itin.id}
-                onToggle={handleToggle}
-                live={liveByOption[itin.id]}
-                onOpenDetail={handleCardClick}
-              />
+                className="reveal-enter"
+                style={{ '--enter-delay': `${Math.min(idx, 5) * 35}ms` } as React.CSSProperties}
+              >
+                <ConnectionCard
+                  itinerary={itin}
+                  expanded={expandedId === itin.id}
+                  onToggle={handleToggle}
+                  live={liveByOption[itin.id]}
+                  onOpenDetail={handleCardClick}
+                />
+              </div>
             ))}
 
             {/* Suggestion Row under the list */}

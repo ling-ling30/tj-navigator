@@ -14,13 +14,15 @@ export const Card: React.FC<CardProps> = ({
   ...props
 }) => {
   const baseStyles =
-    'rounded-[var(--radius-card)] border border-[var(--border)] transition-colors duration-150';
+    'rounded-[var(--radius-card)] border border-[var(--border)]';
 
   const variantStyles = {
-    surface: 'bg-[var(--surface)] text-[var(--text-primary)]',
-    raised: 'bg-[var(--surface-raised)] text-[var(--text-primary)]',
+    surface:
+      'bg-[var(--surface)] text-[var(--text-primary)] transition-[background-color,border-color] duration-150 ease-[var(--ease-out)]',
+    raised:
+      'bg-[var(--surface-raised)] text-[var(--text-primary)] transition-[background-color,border-color] duration-150 ease-[var(--ease-out)]',
     interactive:
-      'bg-[var(--surface)] text-[var(--text-primary)] hover:bg-[var(--surface-raised)] active:bg-[var(--surface-active)] cursor-pointer'
+      'bg-[var(--surface)] text-[var(--text-primary)] tactile-row hover:bg-[var(--surface-raised)] hover:border-[var(--border-strong)] active:bg-[var(--surface-active)] cursor-pointer'
   }[variant];
 
   const paddingStyles = {

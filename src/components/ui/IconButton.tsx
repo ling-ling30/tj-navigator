@@ -15,7 +15,7 @@ export const IconButton: React.FC<IconButtonProps> = ({
   ...props
 }) => {
   const baseStyles =
-    'inline-flex items-center justify-center min-w-[var(--touch-target-min)] min-h-[var(--touch-target-min)] w-12 h-12 rounded-[var(--radius-control)] transition-colors duration-150 select-none cursor-pointer disabled:cursor-not-allowed disabled:opacity-50';
+    'inline-flex items-center justify-center min-w-[var(--touch-target-min)] min-h-[var(--touch-target-min)] w-12 h-12 rounded-[var(--radius-control)] tactile-press select-none cursor-pointer disabled:cursor-not-allowed disabled:opacity-50';
 
   const variantStyles = {
     primary:

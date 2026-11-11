@@ -117,13 +117,19 @@ export const SearchScreen: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setIsTimePickerOpen(true)}
-                className="inline-flex items-center gap-2 min-h-[var(--button-compact-height)] px-3 rounded-[var(--radius-control)] border border-[var(--border)] bg-[var(--surface)] text-[13px] leading-[18px] font-medium text-[var(--text-secondary)] hover:bg-[var(--surface-raised)] cursor-pointer"
+                className="inline-flex items-center gap-2 min-h-[var(--button-compact-height)] px-3 rounded-[var(--radius-control)] border border-[var(--border)] bg-[var(--surface)] text-[13px] leading-[18px] font-medium text-[var(--text-secondary)] hover:bg-[var(--surface-raised)] hover:border-[var(--border-strong)] active:bg-[var(--surface-active)] tactile-press cursor-pointer"
               >
                 <svg className="w-4 h-4 text-[var(--text-secondary)] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
                 <span>{timeLabel}</span>
-                <svg className="w-3.5 h-3.5 text-[var(--text-muted)] shrink-0 ml-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg
+                  className="w-3.5 h-3.5 text-[var(--text-muted)] shrink-0 ml-0.5 tactile-chevron"
+                  data-open={isTimePickerOpen}
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
                 </svg>
               </button>
@@ -131,7 +137,7 @@ export const SearchScreen: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setIsOptionsOpen(true)}
-                className="inline-flex items-center gap-2 min-h-[var(--button-compact-height)] px-3 rounded-[var(--radius-control)] border border-[var(--border)] bg-[var(--surface)] text-[13px] leading-[18px] font-medium text-[var(--text-secondary)] hover:bg-[var(--surface-raised)] cursor-pointer"
+                className="inline-flex items-center gap-2 min-h-[var(--button-compact-height)] px-3 rounded-[var(--radius-control)] border border-[var(--border)] bg-[var(--surface)] text-[13px] leading-[18px] font-medium text-[var(--text-secondary)] hover:bg-[var(--surface-raised)] hover:border-[var(--border-strong)] active:bg-[var(--surface-active)] tactile-press cursor-pointer"
               >
                 <svg className="w-4 h-4 text-[var(--text-secondary)] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />

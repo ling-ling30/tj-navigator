@@ -107,7 +107,7 @@ export const CustomPointEditor: React.FC<CustomPointEditorProps> = ({ coord, onS
         <button
           type="button"
           onClick={() => setSaveAsFav(!saveAsFav)}
-          className={`text-[12px] ml-auto font-medium cursor-pointer ${saveAsFav ? 'text-[var(--action-primary)] font-bold' : 'text-[var(--text-secondary)]'}`}
+          className={`text-[12px] ml-auto px-2 py-1 rounded-[var(--radius-control)] hover:bg-[var(--surface-raised)] tactile-press font-medium cursor-pointer ${saveAsFav ? 'text-[var(--action-primary)] font-bold' : 'text-[var(--text-secondary)]'}`}
         >
           {saveAsFav ? '✓ ' + t('picker.save_favorite') : '+ ' + t('picker.save_favorite')}
         </button>

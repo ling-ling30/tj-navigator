@@ -27,7 +27,7 @@ export const Field: React.FC<FieldProps> = ({
         </label>
       )}
 
-      <div className="relative flex items-center min-h-[var(--control-height)] h-12 w-full rounded-[var(--radius-control)] border border-[var(--border-strong)] bg-[var(--surface)] focus-within:border-[var(--action-primary)] transition-colors duration-150">
+      <div className="relative flex items-center min-h-[var(--control-height)] h-12 w-full rounded-[var(--radius-control)] border border-[var(--border-strong)] bg-[var(--surface)] focus-within:border-[var(--action-primary)] transition-[border-color] duration-150 ease-[var(--ease-out)]">
         {prefixIcon && (
           <div className="flex items-center justify-center w-10 shrink-0 text-[var(--text-muted)]">
             {prefixIcon}
@@ -47,7 +47,7 @@ export const Field: React.FC<FieldProps> = ({
           <button
             type="button"
             onClick={onClear}
-            className="flex items-center justify-center min-w-[36px] min-h-[36px] w-9 h-9 rounded-full text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors cursor-pointer mr-1"
+            className="flex items-center justify-center min-w-[36px] min-h-[36px] w-9 h-9 rounded-full text-[var(--text-muted)] hover:bg-[var(--surface-raised)] hover:text-[var(--text-primary)] tactile-press cursor-pointer mr-1"
             aria-label="Hapus teks"
           >
             <svg

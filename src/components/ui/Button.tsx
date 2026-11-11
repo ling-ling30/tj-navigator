@@ -17,7 +17,7 @@ export const Button: React.FC<ButtonProps> = ({
   ...props
 }) => {
   const baseStyles =
-    'inline-flex items-center justify-center font-semibold transition-colors duration-150 select-none cursor-pointer disabled:cursor-not-allowed disabled:opacity-50 text-[14px] leading-[20px] rounded-[var(--radius-control)]';
+    'inline-flex items-center justify-center font-semibold tactile-press select-none cursor-pointer disabled:cursor-not-allowed disabled:opacity-50 text-[14px] leading-[20px] rounded-[var(--radius-control)]';
 
   const sizeStyles =
     size === 'normal'

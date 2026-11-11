@@ -14,7 +14,7 @@ export const Chip: React.FC<ChipProps> = ({
   ...props
 }) => {
   const baseStyles =
-    'inline-flex items-center justify-center min-h-[var(--button-compact-height)] px-3 py-1.5 rounded-[var(--radius-control)] text-[13px] leading-[18px] font-medium transition-colors duration-150 select-none cursor-pointer whitespace-nowrap border';
+    'inline-flex items-center justify-center min-h-[var(--button-compact-height)] px-3 py-1.5 rounded-[var(--radius-control)] text-[13px] leading-[18px] font-medium tactile-press select-none cursor-pointer whitespace-nowrap border';
 
   const stateStyles = active
     ? 'bg-[var(--action-primary-surface)] text-[var(--action-primary)] border-[var(--action-primary)] font-semibold'
@@ -30,7 +30,7 @@ export const Chip: React.FC<ChipProps> = ({
       {showCheckmark && active && (
         <svg
           aria-hidden="true"
-          className="w-3.5 h-3.5 mr-1 shrink-0"
+          className="w-3.5 h-3.5 mr-1 shrink-0 tactile-check-enter"
           viewBox="0 0 20 20"
           fill="currentColor"
         >

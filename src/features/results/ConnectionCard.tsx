@@ -90,7 +90,7 @@ export const ConnectionCard: React.FC<ConnectionCardProps> = ({ itinerary, expan
           {itinerary.departureTime} → {itinerary.arrivalTime}
         </span>
 
-        <div className="flex items-baseline gap-1.5 shrink-0">
+        <div className="flex items-center gap-1.5 shrink-0">
           <span className="text-[15px] leading-[20px] font-bold text-[var(--text-primary)] tabular-nums">
             {itinerary.totalDurationMinutes} mnt
           </span>
@@ -99,6 +99,16 @@ export const ConnectionCard: React.FC<ConnectionCardProps> = ({ itinerary, expan
               {itinerary.durationMinMinutes}–{itinerary.durationMaxMinutes} mnt
             </span>
           )}
+          <svg
+            aria-hidden="true"
+            className="w-3.5 h-3.5 text-[var(--text-muted)] tactile-chevron shrink-0"
+            data-open={expanded}
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+          </svg>
         </div>
       </div>
 
@@ -116,8 +126,12 @@ export const ConnectionCard: React.FC<ConnectionCardProps> = ({ itinerary, expan
         {facts.join(' · ')}
       </div>
 
-      {expanded && (
-        <>
+      <div
+        className="accordion-panel"
+        data-open={expanded}
+        aria-hidden={!expanded}
+      >
+        <div className="accordion-inner flex flex-col gap-2">
           {typeof live === 'object' && (
             <div className="text-[13px] leading-[18px] font-semibold text-[var(--status-on-time)]">
               {t('live.total', { minutes: live.totalMinutes })}
@@ -127,6 +141,7 @@ export const ConnectionCard: React.FC<ConnectionCardProps> = ({ itinerary, expan
           <Button
             variant="primary"
             size="compact"
+            tabIndex={expanded ? 0 : -1}
             onClick={event => {
               event.stopPropagation();
               onOpenDetail(itinerary);
@@ -134,8 +149,8 @@ export const ConnectionCard: React.FC<ConnectionCardProps> = ({ itinerary, expan
           >
             {t('results.view_detail')}
           </Button>
-        </>
-      )}
+        </div>
+      </div>
     </Card>
   );
 };

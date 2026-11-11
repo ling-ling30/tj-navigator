@@ -111,17 +111,16 @@ export const ConnectionFilterSheet: React.FC<ConnectionFilterSheetProps> = ({
             type="button"
             role="switch"
             aria-checked={travelOptions.includePremium}
+            data-checked={travelOptions.includePremium}
             aria-label={t('options.premium_bus')}
             onClick={() => setTravelOptions({ includePremium: !travelOptions.includePremium })}
-            className={`relative inline-flex h-7 w-12 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-150 select-none ${
+            className={`relative inline-flex h-7 w-12 shrink-0 cursor-pointer rounded-full border-2 border-transparent tactile-switch-track select-none ${
               travelOptions.includePremium ? 'bg-[var(--action-primary)]' : 'bg-[var(--border-strong)]'
             }`}
           >
             <span
               aria-hidden="true"
-              className={`pointer-events-none inline-block h-6 w-6 transform rounded-full bg-[var(--surface)] shadow-sm transition duration-150 ${
-                travelOptions.includePremium ? 'translate-x-5' : 'translate-x-0'
-              }`}
+              className="pointer-events-none inline-block h-6 w-6 rounded-full bg-[var(--surface)] shadow-sm tactile-switch-thumb"
             />
           </button>
         </div>

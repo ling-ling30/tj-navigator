@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Card } from '../../components/ui/Card';
 import { IconButton } from '../../components/ui/IconButton';
 import type { StopEntity } from '../../types/transit';
@@ -20,15 +20,29 @@ export const SearchHeroCard: React.FC<SearchHeroCardProps> = ({
   onSwap
 }) => {
   const { t } = useT();
+  const [swapTurns, setSwapTurns] = useState(0);
+
+  const handleRowKeyDown = (action: () => void) => (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      action();
+    }
+  };
+
+  const handleSwapClick = () => {
+    setSwapTurns(prev => prev + 1);
+    onSwap();
+  };
 
   return (
-    <Card variant="surface" padding="none" className="relative flex flex-col">
+    <Card variant="surface" padding="none" className="relative flex flex-col overflow-hidden">
       {/* Origin Row */}
       <div
         role="button"
         tabIndex={0}
         onClick={onSelectOrigin}
-        className="flex items-center h-14 px-4 gap-3 cursor-pointer hover:bg-[var(--surface-raised)] transition-colors border-b border-[var(--rule)]"
+        onKeyDown={handleRowKeyDown(onSelectOrigin)}
+        className="flex items-center h-14 px-4 gap-3 cursor-pointer tactile-row hover:bg-[var(--surface-raised)] active:bg-[var(--surface-active)] border-b border-[var(--rule)]"
       >
         <div className="w-2.5 h-2.5 rounded-full border-2 border-[var(--action-primary)] shrink-0" />
         <div className="flex-1 min-w-0 pr-12">
@@ -49,10 +63,16 @@ export const SearchHeroCard: React.FC<SearchHeroCardProps> = ({
         <IconButton
           label={t('search.swap_stops')}
           variant="secondary"
-          onClick={onSwap}
-          className="rounded-full border border-[var(--border)]"
+          onClick={handleSwapClick}
+          className="rounded-full border border-[var(--border)] shadow-[var(--shadow-subtle)]"
         >
-          ⇄
+          <span
+            aria-hidden="true"
+            className="tactile-swap-icon"
+            style={{ transform: `rotate(${swapTurns * 180}deg)` }}
+          >
+            ⇄
+          </span>
         </IconButton>
       </div>
 
@@ -61,7 +81,8 @@ export const SearchHeroCard: React.FC<SearchHeroCardProps> = ({
         role="button"
         tabIndex={0}
         onClick={onSelectDestination}
-        className="flex items-center h-14 px-4 gap-3 cursor-pointer hover:bg-[var(--surface-raised)] transition-colors"
+        onKeyDown={handleRowKeyDown(onSelectDestination)}
+        className="flex items-center h-14 px-4 gap-3 cursor-pointer tactile-row hover:bg-[var(--surface-raised)] active:bg-[var(--surface-active)]"
       >
         <div className="w-2.5 h-2.5 rounded-full bg-[var(--action-primary)] shrink-0" />
         <div className="flex-1 min-w-0 pr-12">

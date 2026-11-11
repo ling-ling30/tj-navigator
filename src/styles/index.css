@@ -64,3 +64,199 @@ html, body {
 .tabular-nums {
   font-variant-numeric: tabular-nums;
 }
+
+/* --- Tactile Motion Primitives (/emil-design-eng) --- */
+.tactile-press {
+  transition-property: transform, background-color, border-color, color, opacity, box-shadow;
+  transition-duration: var(--duration-press);
+  transition-timing-function: var(--ease-out);
+  transform-origin: center;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.tactile-press:active:not(:disabled):not([aria-disabled="true"]) {
+  transform: scale(0.97);
+}
+
+.tactile-row {
+  transition-property: transform, background-color, border-color, box-shadow;
+  transition-duration: var(--duration-press);
+  transition-timing-function: var(--ease-out);
+  transform-origin: center;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.tactile-row:active:not([aria-disabled="true"]):not(:has(button:active, a:active)) {
+  transform: scale(0.988);
+}
+
+.tactile-chevron {
+  transition-property: transform;
+  transition-duration: 200ms;
+  transition-timing-function: var(--ease-out);
+}
+
+.tactile-chevron[data-open="true"] {
+  transform: rotate(180deg);
+}
+
+.tactile-swap-icon {
+  display: inline-block;
+  transition-property: transform;
+  transition-duration: 240ms;
+  transition-timing-function: var(--ease-in-out);
+}
+
+.tactile-check-enter {
+  transition-property: opacity, transform;
+  transition-duration: 150ms;
+  transition-timing-function: var(--ease-out);
+}
+
+@starting-style {
+  .tactile-check-enter {
+    opacity: 0;
+    transform: scale(0.88);
+  }
+}
+
+.tactile-switch-track {
+  transition-property: background-color, border-color;
+  transition-duration: 180ms;
+  transition-timing-function: var(--ease-out);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.tactile-switch-thumb {
+  transform: translateX(0);
+  transition-property: transform;
+  transition-duration: 200ms;
+  transition-timing-function: var(--ease-out);
+}
+
+.tactile-switch-track[data-checked="true"] > .tactile-switch-thumb {
+  transform: translateX(20px);
+}
+
+.tactile-switch-track:active > .tactile-switch-thumb {
+  transform: translateX(0) scale(0.92);
+}
+
+.tactile-switch-track[data-checked="true"]:active > .tactile-switch-thumb {
+  transform: translateX(20px) scale(0.92);
+}
+
+.sheet-backdrop {
+  opacity: 0;
+  transition-property: opacity;
+  transition-duration: var(--duration-sheet-exit);
+  transition-timing-function: var(--ease-out);
+}
+
+.sheet-backdrop[data-state="open"] {
+  opacity: 1;
+  transition-duration: var(--duration-sheet);
+}
+
+.sheet-panel {
+  transform: translateY(100%);
+  transition-property: transform;
+  transition-duration: var(--duration-sheet-exit);
+  transition-timing-function: var(--ease-drawer);
+  will-change: transform;
+}
+
+.sheet-panel[data-state="open"] {
+  transform: translateY(0);
+  transition-duration: var(--duration-sheet);
+}
+
+.sheet-panel[data-dragging="true"] {
+  transition-duration: 0ms;
+}
+
+.accordion-panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  visibility: hidden;
+  transition-property: grid-template-rows, opacity, visibility;
+  transition-duration: 200ms, 160ms, 0ms;
+  transition-delay: 0ms, 0ms, 200ms;
+  transition-timing-function: var(--ease-out);
+}
+
+.accordion-panel[data-open="true"] {
+  grid-template-rows: 1fr;
+  opacity: 1;
+  visibility: visible;
+  transition-duration: 220ms, 180ms, 0ms;
+  transition-delay: 0ms, 0ms, 0ms;
+}
+
+.accordion-inner {
+  overflow: hidden;
+  min-height: 0;
+}
+
+.reveal-enter {
+  opacity: 1;
+  transform: translateY(0);
+  transition-property: opacity, transform;
+  transition-duration: 220ms;
+  transition-timing-function: var(--ease-out);
+  transition-delay: var(--enter-delay, 0ms);
+}
+
+@starting-style {
+  .reveal-enter {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .tactile-hover-subtle:hover:not(:disabled):not([aria-disabled="true"]) {
+    background-color: var(--surface-raised);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tactile-press:active:not(:disabled):not([aria-disabled="true"]),
+  .tactile-row:active:not([aria-disabled="true"]),
+  .tactile-switch-track:active > .tactile-switch-thumb,
+  .tactile-switch-track[data-checked="true"]:active > .tactile-switch-thumb {
+    transform: none;
+  }
+
+  .sheet-panel {
+    transform: none;
+    opacity: 0;
+    transition-property: opacity;
+  }
+
+  .sheet-panel[data-state="open"] {
+    opacity: 1;
+  }
+
+  .reveal-enter,
+  .tactile-check-enter {
+    transition-delay: 0ms;
+  }
+
+  @starting-style {
+    .reveal-enter,
+    .tactile-check-enter {
+      transform: none;
+    }
+  }
+
+  .accordion-panel {
+    transition-property: opacity, visibility;
+  }
+
+  .tactile-chevron,
+  .tactile-swap-icon {
+    transition-duration: 1ms;
+  }
+}

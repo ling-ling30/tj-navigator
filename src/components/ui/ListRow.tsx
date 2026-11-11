@@ -36,9 +36,9 @@ export const ListRow: React.FC<ListRowProps> = ({
             }
           : undefined
       }
-      className={`flex items-center min-h-[var(--touch-target-min)] py-3 px-4 gap-3 border-b border-[var(--rule)] last:border-b-0 transition-colors duration-150 ${
+      className={`flex items-center min-h-[var(--touch-target-min)] py-3 px-4 gap-3 border-b border-[var(--rule)] last:border-b-0 ${
         isInteractive
-          ? 'cursor-pointer hover:bg-[var(--surface-raised)] active:bg-[var(--surface-active)]'
+          ? 'tactile-row cursor-pointer hover:bg-[var(--surface-raised)] active:bg-[var(--surface-active)]'
           : ''
       } ${className}`.trim()}
     >

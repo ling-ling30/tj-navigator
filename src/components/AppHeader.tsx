@@ -66,7 +66,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
             <button
               type="button"
               onClick={toggleTheme}
-              className="min-h-[var(--touch-target-min)] px-2.5 flex items-center justify-center text-[12px] leading-[16px] font-bold text-[var(--action-primary)] hover:bg-[var(--surface-raised)] rounded-[var(--radius-control)] cursor-pointer transition-colors"
+              className="min-h-[var(--touch-target-min)] px-2.5 flex items-center justify-center text-[12px] leading-[16px] font-bold text-[var(--action-primary)] hover:bg-[var(--surface-raised)] active:bg-[var(--surface-active)] rounded-[var(--radius-control)] cursor-pointer tactile-press"
               aria-label="Ganti Tema / Switch Theme"
             >
               {theme === 'dark' ? t('theme.toggle_light') : t('theme.toggle_dark')}
@@ -74,7 +74,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
             <button
               type="button"
               onClick={toggleLocale}
-              className="min-w-[var(--touch-target-min)] min-h-[var(--touch-target-min)] px-2.5 flex items-center justify-center text-[12px] leading-[16px] font-bold text-[var(--action-primary)] hover:bg-[var(--surface-raised)] rounded-[var(--radius-control)] cursor-pointer transition-colors"
+              className="min-w-[var(--touch-target-min)] min-h-[var(--touch-target-min)] px-2.5 flex items-center justify-center text-[12px] leading-[16px] font-bold text-[var(--action-primary)] hover:bg-[var(--surface-raised)] active:bg-[var(--surface-active)] rounded-[var(--radius-control)] cursor-pointer tactile-press"
               aria-label="Ganti Bahasa / Switch Language"
             >
               {locale === 'id' ? 'EN' : 'ID'}
