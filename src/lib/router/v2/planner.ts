@@ -5,7 +5,7 @@
 import type { NetworkV2 } from '../../../types/network-v2';
 import { makeContext, type QueryContext } from './context';
 import {
-  BALANCED, DEFAULT_TRAVEL_OPTIONS, DIVERSITY_RERUNS, RELAXED_RADII_M, SAME_PLACE_M, SEARCH_PROFILES,
+  BALANCED, DEFAULT_TRAVEL_OPTIONS, DIVERSITY_RERUNS, LINE_BAN_PASSES, MAX_LINE_BAN_RUNS, RELAXED_RADII_M, SAME_PLACE_M, SEARCH_PROFILES,
   MAX_SHOWN_LINE_RIDE_WEIGHT, SHOWN_LINE_RIDE_WEIGHT, TRANSFER_BUFFER_SEC, WALK_ONLY_MAX_M, WALKING,
   type CostProfile, type TravelOptions
 } from './cost-profiles';
@@ -13,7 +13,7 @@ import { haversineMeters, WALK_DETOUR, WALK_SPEED_MPS } from './footpaths';
 import { ENDPOINT, LineScanner, MAX_RIDES, type AccessPoint, type RawPath, type ScanParams } from './line-scan';
 import { NetworkIndex } from './network-index';
 import { buildOption, type PlanOption } from './option';
-import { filterOptions, MIN_OPTIONS } from './option-filter';
+import { filterOptions, MAX_OPTIONS } from './option-filter';
 
 export interface PlaceInput { lat: number; lon: number; name?: string; stopIndex?: number }
 
@@ -127,8 +127,27 @@ export class Planner {
     }
     let options = filterOptions(candidates);
 
+    // Take away one leg's lines at a time: the best way without them is usually a sensible alternative
+    const tried = new Set<string>();
+    for (let pass = 0; pass < LINE_BAN_PASSES && options.length > 0; pass++) {
+      let ran = false;
+      for (const lines of options.flatMap(o => o.legs.flatMap(leg => (leg.kind === 'ride' ? [leg.lines] : [])))) {
+        const key = [...lines].sort((a, b) => a - b).join(',');
+        if (tried.has(key) || tried.size >= MAX_LINE_BAN_RUNS) continue;
+        tried.add(key);
+        const allowed = new Uint8Array(ctx.lineAllowed);
+        for (const line of lines) allowed[line] = 0;
+        const without = { ...this.params(ctx, BALANCED, opts, access, egressSec, maxRides, this.unitWeights), lineAllowed: allowed };
+        candidates.push(...this.scanner.run(without).map(build));
+        ran = true;
+      }
+      if (!ran) break;
+      options = filterOptions(candidates);
+    }
+
     // Re-runs that make the lines already shown less attractive, to surface other corridors
     const weights = new Float32Array(this.unitWeights);
+    let dryRuns = 0;
     for (let i = 0; i < DIVERSITY_RERUNS && options.length > 0; i++) {
       // Each re-run makes the lines already shown costlier still, so the search has to find another way
       for (const line of new Set(options.flatMap(rideLines))) {
@@ -139,7 +158,9 @@ export class Planner {
       candidates.push(...extra);
       const grew = merged.some(m => !options.some(o => o.signature === m.signature));
       options = merged;
-      if (!grew && options.length >= MIN_OPTIONS) break;
+      // Stop when the list is full, or when two re-runs in a row found nothing new
+      dryRuns = grew ? 0 : dryRuns + 1;
+      if (options.length >= MAX_OPTIONS || dryRuns >= 2) break;
     }
     return options;
   }

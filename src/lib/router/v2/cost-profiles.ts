@@ -24,7 +24,10 @@ export const SEARCH_PROFILES: readonly CostProfile[] = [
 export const SHOWN_LINE_RIDE_WEIGHT = 1.5;
 /** The weight grows with every re-run, up to this, which all but rules the line out. */
 export const MAX_SHOWN_LINE_RIDE_WEIGHT = 6;
-export const DIVERSITY_RERUNS = 6;
+export const DIVERSITY_RERUNS = 4;
+/** Alternatives by taking one leg's lines away: how many rounds of it, and how many searches at most. */
+export const LINE_BAN_PASSES = 2;
+export const MAX_LINE_BAN_RUNS = 16;
 
 export type WalkingTolerance = 'sedikit' | 'normal' | 'jauh';
 export type TransferTime = 'normal' | 'longgar';

@@ -154,7 +154,7 @@ console.log('\nDIRECT RIDE ON ONE LINE');
 console.log(`  a direct ride (on any line) offered for ${share(directOffered, DIRECT_SAMPLES)} of ${DIRECT_SAMPLES} pairs on one pattern (target 100 %)`);
 directMisses.slice(0, 8).forEach(m => console.log(`    miss: ${m}`));
 console.log(`\nVARIETY on ${PAIRS} random pairs at least ${MIN_STRAIGHT_M / 1000} km apart, weekday 08:00`);
-console.log(`  2+ options ${share(optionCounts.filter(c => c >= 2).length, PAIRS)} (target 60 %) | 3+ options ${share(optionCounts.filter(c => c >= 3).length, PAIRS)} (target 30 %) | 5+ options ${share(optionCounts.filter(c => c >= 5).length, PAIRS)}`);
+console.log(`  2+ options ${share(optionCounts.filter(c => c >= 2).length, PAIRS)} (target 60 %) | 3+ options ${share(optionCounts.filter(c => c >= 3).length, PAIRS)} (target 30 %) | 5+ options ${share(optionCounts.filter(c => c >= 5).length, PAIRS)} | 8+ options ${share(optionCounts.filter(c => c >= 8).length, PAIRS)}`);
 console.log(`  answer kinds ${JSON.stringify(kinds)} | no option at all ${empty}`);
 console.log(`DIRECTNESS  circuity of the first option p50 ${percentile(circuity, 0.5).toFixed(2)} | p90 ${percentile(circuity, 0.9).toFixed(2)} (target p90 2.0)`);
 console.log(`SANITY  options with two walks in a row ${doubleWalks} (target 0)`);

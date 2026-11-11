@@ -3,10 +3,13 @@ import type { PlanOption, RideLeg } from './option';
 
 /** The traveller asked for a real choice: show this many whenever the network offers them. */
 export const MIN_OPTIONS = 5;
-export const MAX_OPTIONS = 6;
+export const MAX_OPTIONS = 10;
 /** An option costlier than `best × ratio + slack` is not worth showing. */
 const COST_LIMIT_RATIO = 2;
 const COST_LIMIT_SLACK_SEC = 30 * 60;
+/** Reasonable means not much slower than the fastest option: at most this ratio plus this slack. */
+const SLOWER_THAN_FASTEST_RATIO = 1.5;
+const SLOWER_THAN_FASTEST_SLACK_SEC = 10 * 60;
 /** Differences smaller than these do not count when deciding that one option beats another on everything. */
 const TIME_TOLERANCE_SEC = 60;
 const WALK_TOLERANCE_M = 50;
@@ -66,7 +69,11 @@ export function filterOptions(candidates: PlanOption[]): PlanOption[] {
     if (c.cost > limit) break;
     if (!distinct.some(kept => sameLines(kept, c))) distinct.push(c);
   }
-  const kept = distinct.filter(c => !distinct.some(other => other !== c && walksMuchMoreForNothing(c, other)));
+  const fastest = Math.min(...distinct.map(c => c.typicalSec));
+  const slowest = fastest * SLOWER_THAN_FASTEST_RATIO + SLOWER_THAN_FASTEST_SLACK_SEC;
+  const kept = distinct.filter(c =>
+    c.typicalSec <= slowest && !distinct.some(other => other !== c && walksMuchMoreForNothing(c, other))
+  );
 
   // Options that another one beats on everything are clutter, but only once the traveller has enough to choose from
   for (let i = kept.length - 1; i >= 0 && kept.length > MIN_OPTIONS; i--) {
