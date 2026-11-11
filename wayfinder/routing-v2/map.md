@@ -59,7 +59,7 @@ Reached when `docs/ROUTING-V2-SPEC.md` and an ADR exist, every ticket below is c
 | [#8](tickets/08-modes-and-travel-options.md) | Mode choice and travel options | grilling | HITL | #1 | closed |
 | [#9](tickets/09-fare-model.md) | Fare model | grilling | HITL | #3 | closed |
 | [#10](tickets/10-engine-prototype-on-golden-commutes.md) | Engine prototype on the golden commutes | prototype | HITL | #5, #6, #7 | closed |
-| [#11](tickets/11-results-list-like-db-navigator.md) | Results list like DB Navigator | prototype | HITL | #1, #6, #8 | open |
+| [#11](tickets/11-results-list-like-db-navigator.md) | Results list like DB Navigator | prototype | HITL | #1, #6, #8 | closed |
 | [#12](tickets/12-spec-and-build-slices.md) | Spec, ADR and build slices | task | AFK | #7, #8, #9, #10, #11 | open |
 | [#13](tickets/13-live-bus-speeds.md) | Can live bus positions give real speeds | task | AFK | — | closed |
 | [#14](tickets/14-real-speed-references.md) | Real speeds and travel times from published sources | research | AFK | — | closed |
