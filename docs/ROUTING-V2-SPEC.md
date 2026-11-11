@@ -1,6 +1,6 @@
 # Routing v2 spec (draft)
 
-> Status: **draft**, decided by Claude under the owner's delegation (2026-11-11). Open items are marked ⏳ and wait for the speed tickets in `wayfinder/routing-v2/`.
+> Status: decided by Claude under the owner's delegation (2026-11-11). Graph and engine are **built and benchmarked** (slices 1–4); the app still runs the old engine until slice 5. Open: the speed table (⏳, waits for the speed tickets in `wayfinder/routing-v2/`).
 > Reference product: DB Navigator. Decisions and their evidence live in the tickets of the [Routing v2 map](../wayfinder/routing-v2/map.md); this file is what gets built.
 
 ## 1. Why the current engine fails (measured)
@@ -42,9 +42,11 @@ Speeds are a table in one file (`time-model.ts`), with peak (weekdays 06:00–09
 
 **Waiting.** Expected wait = half the headway of the pattern in the time window of the query (`frequencies.txt`, by day type), capped at 15 minutes. A pattern with no window at that time does not run and is skipped. A leg with a headway of 30 minutes or more carries a warning ("jarang, tiap 60 mnt").
 
-**Common lines.** Patterns that serve the same boarding stop and alighting stop in the same order, with a ride time within 20 % (or 3 minutes) of the chosen one, form one leg. Its wait uses the pooled frequency: wait = 1 ÷ (2 × Σ 1/headway). Its label lists the line names.
+**Common lines.** Patterns that serve the same boarding stop and alighting stop in the same order, in the same fare class, with a ride time within 20 % (or 3 minutes) of the chosen one, form one leg. Its wait uses the pooled frequency: wait = 1 ÷ (2 × Σ 1/headway). Its label lists the line names. Pooling across lines happens after the search, for the real boarding and alighting stops; during the search only patterns of the same line pool, so a rare line never borrows a busy line's frequency.
 
-**Walking.** 4,5 km/h with a detour factor of 1,3 (unchanged). Access and egress up to 1,5 km (normal). Transfer walks use the existing transfer edges (400 m).
+**Continuation.** Feeds split a line at its terminus (corridor 1 at Kali Besar). Boarding the next pattern of the same line at that terminus is the same ride: no penalty, no new fare, one leg.
+
+**Walking.** 4,5 km/h with a detour factor of 1,3 (unchanged). Access and egress up to 1,5 km (normal). A chosen stop is a named place: no walk to it, and the stops around it may be used too. Footpaths between stops (400 m, eight nearest, same-name stops, platforms of one halte, rail stations with a gate allowance) are derived when the graph loads, not shipped in the file.
 
 **Duration shown.** Typical = riding + walking + expected waits. Range = from "no waiting at all" to "a full headway at every boarding" (each capped). Shown as "58 mnt" with "52–70 mnt" beside it.
 
@@ -95,17 +97,17 @@ Decided in [Fare model](../wayfinder/routing-v2/tickets/09-fare-model.md). Every
 ## 7. Compiled graph v2
 
 ```
-stops:     [id, name, lat, lon]
+stops:     [id, name, lat, lon, halte]   (halte = GTFS parent station, a paid area)
 lines:     [id, shortName, longName, color, modeGroup, fareClass, serviceClass]
-patterns:  [lineIdx, direction, headsign, stopIdx[], hopMeters[], hopClass[],
-            windows[[dayType, startSec, endSec, headwaySec], ...]]
-transfers: [fromStop, toStop, walkSec, meters, isPaidArea, isSheltered, isStepFree]
+patterns:  [lineIdx, direction, headsign, stopIdx[], hopMeters[],
+            windows[[dayMask, startSec, endSec, headwaySec], ...]]
+transfers: [fromStop, toStop, walkSec, meters, flags]   (curated only)
 ```
 
 - Day types: weekday, saturday, sunday (from `calendar.txt` service ids).
 - The invented corridor routes and their synthetic stops are removed; hub seeds are re-pointed to the real GTFS stops by name and distance. Rail seeds stay.
 - At load, the worker builds typed-array indexes: stop → (pattern, position) and stop → transfers.
-- Expected size: about 2,5 MB uncompressed (today 2,2 MB).
+- Size: 750 KB uncompressed (the old graph is 2,2 MB), because footpaths are derived at load and the hop class is derived from the line.
 
 ## 8. Code layout
 

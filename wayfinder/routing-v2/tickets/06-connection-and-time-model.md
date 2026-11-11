@@ -34,3 +34,13 @@ DB Navigator lists timetabled departures: each row is one train at one time. Jak
 ## Resolved when
 
 The model is decided, new terms are in `GLOSSARY.md`, and an ADR is offered if the choice is hard to reverse.
+
+## Decision so far (Claude, 2026-11-11; the ticket stays open until the speed tickets report)
+
+Built as described in the starting position, with these facts added:
+
+- One option is one path; duration is a typical figure with a range (no waiting … a full headway at every boarding).
+- Riding time = distance along the GTFS shape ÷ speed of the hop class. 98,6 % of hops are measured along a shape.
+- Waiting = half the pooled headway of the current window, capped at 15 minutes; a pattern with no window at that time does not run; headways of 30 minutes or more are flagged as infrequent.
+- A chosen stop is a named place: the traveller is at it, and may also walk to stops around it.
+- Open: the speed table in `src/lib/router/v2/time-model.ts` is provisional.

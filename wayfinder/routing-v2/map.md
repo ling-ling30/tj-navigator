@@ -36,6 +36,9 @@ Reached when `docs/ROUTING-V2-SPEC.md` and an ADR exist, every ticket below is c
 - [Which technique gives several different options on a headway network in a browser](tickets/02-alternatives-on-frequency-networks.md): several profiled single-criterion runs plus penalty re-runs and an OTP2-style filter chain; McRAPTOR and range queries rejected; lines sharing a stop pair pool their frequencies. (2026-11-11)
 - [What the raw GTFS can support, and how wrong today's engine is](tickets/04-gtfs-feed-capability-audit.md): 68 % of queries give one distinct option; 166 of 241 routes loop; one-pattern-per-route loses stops; invented corridors shadow real ones; feed times are a constant-speed template (verified by the decider). (2026-11-11)
 - [Mode choice and travel options](tickets/08-modes-and-travel-options.md): six multi-select mode groups filtered inside the search, a labelled suggestion when a switched-off mode is clearly faster, and an options sheet (max transfers, walking, transfer time, premium). Decided by Claude. (2026-11-11)
+- [Golden commutes: real trips the owner knows, as the benchmark](tickets/05-golden-commutes.md): `scripts/routing-v2/bench.ts` with the owner's commute, trunk trips, behaviour checks and structural checks. (2026-11-11)
+- [How alternatives are found, and what makes a route good](tickets/07-alternatives-and-cost-model.md): generalised cost, four profiles plus re-runs, filter chain, pooled lines, continuation past a terminus; 2+ options 32 % → 90 %, circuity p90 2,73 → 1,92. Decided by Claude. (2026-11-11)
+- [Engine prototype on the golden commutes](tickets/10-engine-prototype-on-golden-commutes.md): the prototype became the engine (`src/lib/router/v2`); all golden trips pass. (2026-11-11)
 - [Official fare rules for every operator](tickets/03-official-fare-rules.md): fare classes exist in the feed (Rp 3.500, free, Rp 15.000, Rp 20.000, Rp 35.000); the engine overcharges in-halte changes, undercharges premium lines, and mixes up the two LRTs. (2026-11-11)
 - [Fare model](tickets/09-fare-model.md): fare class per line from the feed, time-aware, paid-area changes free, integrated tariff as the lower price, every price an estimate; the street-transfer rule sits behind one switch. Decided by Claude. (2026-11-11)
 
@@ -47,12 +50,12 @@ Reached when `docs/ROUTING-V2-SPEC.md` and an ADR exist, every ticket below is c
 | [#2](tickets/02-alternatives-on-frequency-networks.md) | Which technique gives several different options on a headway network in a browser | research | AFK | — | closed |
 | [#3](tickets/03-official-fare-rules.md) | Official fare rules for every operator | research | AFK | — | closed |
 | [#4](tickets/04-gtfs-feed-capability-audit.md) | What the raw GTFS can support, and how wrong today's engine is | task | AFK | — | closed |
-| [#5](tickets/05-golden-commutes.md) | Golden commutes: real trips the owner knows, as the benchmark | task | HITL | — | open |
+| [#5](tickets/05-golden-commutes.md) | Golden commutes: real trips the owner knows, as the benchmark | task | HITL | — | closed |
 | [#6](tickets/06-connection-and-time-model.md) | What one option is, and how time is modelled | grilling | HITL | #1, #4, #13, #14 | open |
-| [#7](tickets/07-alternatives-and-cost-model.md) | How alternatives are found, and what makes a route good | grilling | HITL | #2, #4, #6 | open |
+| [#7](tickets/07-alternatives-and-cost-model.md) | How alternatives are found, and what makes a route good | grilling | HITL | #2, #4, #6 | closed |
 | [#8](tickets/08-modes-and-travel-options.md) | Mode choice and travel options | grilling | HITL | #1 | closed |
 | [#9](tickets/09-fare-model.md) | Fare model | grilling | HITL | #3 | closed |
-| [#10](tickets/10-engine-prototype-on-golden-commutes.md) | Engine prototype on the golden commutes | prototype | HITL | #5, #6, #7 | open |
+| [#10](tickets/10-engine-prototype-on-golden-commutes.md) | Engine prototype on the golden commutes | prototype | HITL | #5, #6, #7 | closed |
 | [#11](tickets/11-results-list-like-db-navigator.md) | Results list like DB Navigator | prototype | HITL | #1, #6, #8 | open |
 | [#12](tickets/12-spec-and-build-slices.md) | Spec, ADR and build slices | task | AFK | #7, #8, #9, #10, #11 | open |
 | [#13](tickets/13-live-bus-speeds.md) | Can live bus positions give real speeds | task | AFK | — | open |
