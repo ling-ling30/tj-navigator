@@ -21,6 +21,7 @@ Reached when `docs/LIVE-COMPANION-SPEC.md` is decided and built in slices, and t
 
 ## Decisions so far
 
+- [Where real arrival times for KRL, MRT and LRT can come from](tickets/01-rail-live-or-timetable.md): no rail operator offers an open live source (the KRL partner API is private and not allowed); rail arrival times come from the operators' timetables. (2026-11-11)
 - [What a web app can do to alert a traveller during a trip](tickets/04-trip-alerts-on-the-web.md): with the screen off a web app cannot follow location or alert; only Web Push works, and it needs a server. (2026-11-11)
 - [Trip mode: telling the traveller what to do next](tickets/08-trip-mode.md): web trip mode with the screen on (states per leg, sound, vibration, spoken alerts, re-planning); a native wrapper for locked-screen alerts waits for the owner because it needs paid store accounts. Decided by Claude. (2026-11-11)
 
@@ -28,7 +29,7 @@ Reached when `docs/LIVE-COMPANION-SPEC.md` is decided and built in slices, and t
 
 | # | Decision | Type | Mode | Blocked by | Status |
 | --- | --- | --- | --- | --- | --- |
-| [#1](tickets/01-rail-live-or-timetable.md) | Where real arrival times for KRL, MRT and LRT can come from | research | AFK | — | open |
+| [#1](tickets/01-rail-live-or-timetable.md) | Where real arrival times for KRL, MRT and LRT can come from | research | AFK | — | closed |
 | [#2](tickets/02-free-map-and-walking-paths.md) | A free map and walking paths for a public app | research | AFK | — | open |
 | [#3](tickets/03-place-search.md) | Finding a place by name without a paid service | research | AFK | — | open |
 | [#4](tickets/04-trip-alerts-on-the-web.md) | What a web app can do to alert a traveller during a trip | research | AFK | — | closed |
