@@ -74,3 +74,10 @@ Decided in [Trip mode](../wayfinder/live-companion/tickets/08-trip-mode.md): on 
 - The traffic model has been measured on one off-peak afternoon. A peak-hour recording is needed before trusting it at rush hour.
 - Trip alerts stop when the screen locks.
 - OpenFreeMap can go away; the fallback is self-hosted tiles.
+
+## 8. Data cost of the live feed (measured 2026-11-11)
+
+- Following one line costs about 44 KB per second (corridor 9: 39 buses, 3,4 KB per message, 13 messages a second), which is 2,6 MB a minute. The whole feed is several megabytes a second. The app must not keep lines open on mobile data.
+- The topic carries a grid cell: `/mobile_armada/<lat index>-<lon index>/<route>/<trip>/<bus>`. Measured mapping: lat index ≈ (−6,0254 − lat) ÷ 0,0099 and lon index ≈ (lon − 106,6173) ÷ 0,01004, so a cell is about 1,1 km. The cell in the topic can lag the position by one cell, so neighbouring cells are included.
+- **Rule for the app:** listen in short bursts of about 15 seconds, only to the cells along the legs of the option that is open and only to the lines that serve those legs; repeat every two minutes while that option stays open.
+- Route shapes for placing buses: `public/data/shapes-v2.json`, 373 KB, 81.496 points for 705 patterns, polyline-encoded, with the vertex of every stop.
