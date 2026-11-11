@@ -2,9 +2,17 @@ import { useState, useMemo } from 'react';
 import { useTransitStore } from '../lib/store/transit-store';
 import type { Itinerary } from '../types/transit';
 
+export type SortStrategy = 'best' | 'fastest' | 'fewest_transfers' | 'cheapest' | 'least_walking';
+
 export interface SearchFilters {
-  maxTransfers: number | null;
-  sortBy: 'fastest' | 'fewest_transfers' | 'cheapest';
+  sortBy: SortStrategy;
+}
+
+function totalWalk(itin: Itinerary): number {
+  if (itin.walkMeters !== undefined) return itin.walkMeters;
+  return itin.legs
+    .filter(l => l.type === 'WALK')
+    .reduce((sum, l) => sum + (l.distanceMeters || 0), 0);
 }
 
 export function useTransitSearch() {
@@ -17,31 +25,41 @@ export function useTransitSearch() {
     calculateJourney,
     selectItinerary,
     setScreen,
-    error
+    error,
+    routingStatus,
+    answerKind,
+    modesGaveNothing,
+    suggestion,
+    applySuggestion
   } = useTransitStore();
 
   const [filters, setFilters] = useState<SearchFilters>({
-    maxTransfers: null,
     sortBy: 'fastest'
   });
 
   const filteredItineraries = useMemo<Itinerary[]>(() => {
-    let result = [...itineraries];
+    const list = [...itineraries];
 
-    if (filters.maxTransfers !== null) {
-      result = result.filter(itin => itin.transfersCount <= filters.maxTransfers!);
+    if (filters.sortBy === 'best') {
+      return list;
     }
-
     if (filters.sortBy === 'fastest') {
-      result.sort((a, b) => a.totalDurationMinutes - b.totalDurationMinutes);
-    } else if (filters.sortBy === 'fewest_transfers') {
-      result.sort((a, b) => a.transfersCount - b.transfersCount);
-    } else if (filters.sortBy === 'cheapest') {
-      result.sort((a, b) => (a.integratedFareIdr || a.standardFareIdr) - (b.integratedFareIdr || b.standardFareIdr));
+      return list.sort((a, b) => a.totalDurationMinutes - b.totalDurationMinutes);
+    }
+    if (filters.sortBy === 'fewest_transfers') {
+      return list.sort((a, b) => a.transfersCount - b.transfersCount);
+    }
+    if (filters.sortBy === 'cheapest') {
+      return list.sort(
+        (a, b) => (a.integratedFareIdr || a.standardFareIdr) - (b.integratedFareIdr || b.standardFareIdr)
+      );
+    }
+    if (filters.sortBy === 'least_walking') {
+      return list.sort((a, b) => totalWalk(a) - totalWalk(b));
     }
 
-    return result;
-  }, [itineraries, filters]);
+    return list;
+  }, [itineraries, filters.sortBy]);
 
   return {
     originStop,
@@ -56,6 +74,10 @@ export function useTransitSearch() {
     filters,
     setFilters,
     error,
-    routingStatus: (useTransitStore() as any).routingStatus
+    routingStatus,
+    answerKind,
+    modesGaveNothing,
+    suggestion,
+    applySuggestion
   };
 }

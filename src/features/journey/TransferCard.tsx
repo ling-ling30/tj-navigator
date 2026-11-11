@@ -19,14 +19,13 @@ export const TransferCard: React.FC<TransferCardProps> = ({ leg, googleMapsUrl }
       ? `${leg.distanceMeters} m`
       : `${walkMinutes * 70} m`;
 
-  const isFreeTransfer = leg.isPaidAreaTransfer;
+  const isFreeTransfer = Boolean(leg.isPaidAreaTransfer);
 
   if (leg.isUncoveredSegment) {
     return (
       <div className="flex flex-col gap-2 p-3 my-2 rounded-[var(--radius-card)] bg-[var(--surface-raised)] border border-[var(--action-primary)]">
-        <div className="flex items-center gap-2 text-[13px] leading-[18px] font-bold text-[var(--action-primary)]">
-          <span>⚠️</span>
-          <span>{t('ladder.uncovered_segment')}</span>
+        <div className="text-[13px] leading-[18px] font-bold text-[var(--action-primary)]">
+          {t('ladder.uncovered_segment')}
         </div>
 
         <div className="text-[13px] leading-[18px] text-[var(--text-primary)] font-medium">
@@ -48,7 +47,7 @@ export const TransferCard: React.FC<TransferCardProps> = ({ leg, googleMapsUrl }
             className="inline-block mt-1"
           >
             <Button variant="secondary" size="compact" className="w-full text-[12px]">
-              🌐 {t('ladder.open_maps_cta')}
+              {t('ladder.open_maps_cta')}
             </Button>
           </a>
         )}
@@ -77,7 +76,7 @@ export const TransferCard: React.FC<TransferCardProps> = ({ leg, googleMapsUrl }
         </span>
       </div>
 
-      {/* Facilities / Interchange Guide */}
+      {/* Facilities / Interchange Guide - only rendered if true */}
       {(leg.isSheltered || leg.isStepFree) && (
         <div className="text-[13px] leading-[18px] text-[var(--text-secondary)]">
           {leg.isSheltered && `${t('journey.facility_sheltered')} `}
@@ -85,7 +84,7 @@ export const TransferCard: React.FC<TransferCardProps> = ({ leg, googleMapsUrl }
         </div>
       )}
 
-      {/* Card tap instruction */}
+      {/* Card tap or paid area instruction */}
       <div className="flex items-center gap-2 text-[13px] leading-[18px] font-semibold text-[var(--text-primary)] pt-1 border-t border-[var(--rule)]">
         <svg
           aria-hidden="true"
@@ -98,7 +97,7 @@ export const TransferCard: React.FC<TransferCardProps> = ({ leg, googleMapsUrl }
         </svg>
         <span>
           {isFreeTransfer
-            ? t('journey.tap_transfer_free')
+            ? t('journey.paid_area_transfer')
             : t('journey.tap_instruction')}
         </span>
       </div>

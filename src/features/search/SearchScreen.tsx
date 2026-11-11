@@ -5,6 +5,7 @@ import { Button } from '../../components/ui/Button';
 import { SearchHeroCard } from './SearchHeroCard';
 import { ModeFilterBar } from './ModeFilterBar';
 import { TimePickerModal } from './TimePickerModal';
+import { ConnectionFilterSheet } from '../results/ConnectionFilterSheet';
 import { RecentSearches, saveRecentTrip, type RecentTrip } from './RecentSearches';
 import { FareTipCard } from './FareTipCard';
 import { useT } from '../../hooks/useT';
@@ -14,6 +15,7 @@ export const SearchScreen: React.FC = () => {
   const {
     originStop,
     destinationStop,
+    departAtMs,
     swapStops,
     calculateJourney,
     setScreen,
@@ -24,9 +26,18 @@ export const SearchScreen: React.FC = () => {
     network
   } = useTransitStore();
 
-  const [selectedMode, setSelectedMode] = useState<number | null>(null);
-  const [timeLabel, setTimeLabel] = useState(t('search.depart_now'));
   const [isTimePickerOpen, setIsTimePickerOpen] = useState(false);
+  const [isOptionsOpen, setIsOptionsOpen] = useState(false);
+
+  const timeLabel = departAtMs === null
+    ? t('search.depart_now')
+    : t('search.depart_time', {
+        time: new Date(departAtMs).toLocaleTimeString('id-ID', {
+          hour: '2-digit',
+          minute: '2-digit',
+          hour12: false
+        })
+      });
 
   const isSameStop = Boolean(
     originStop && destinationStop && originStop.id === destinationStop.id
@@ -72,7 +83,7 @@ export const SearchScreen: React.FC = () => {
     <div className="flex flex-col min-h-screen bg-[var(--ground)]">
       <AppHeader />
 
-      {/* Main Content Area - Responsive 12-col grid on desktop */}
+      {/* Main Content Area */}
       <main className="flex-1 p-4 md:p-6 lg:p-8 max-w-md md:max-w-2xl lg:max-w-5xl mx-auto w-full pb-24">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
           {/* Left / Primary Column */}
@@ -93,8 +104,8 @@ export const SearchScreen: React.FC = () => {
               </div>
             )}
 
-            {/* Departure Time Filter Chip */}
-            <div>
+            {/* Departure Time & Options Buttons */}
+            <div className="flex items-center gap-2 flex-wrap">
               <button
                 type="button"
                 onClick={() => setIsTimePickerOpen(true)}
@@ -108,12 +119,20 @@ export const SearchScreen: React.FC = () => {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
                 </svg>
               </button>
+
+              <button
+                type="button"
+                onClick={() => setIsOptionsOpen(true)}
+                className="inline-flex items-center gap-2 min-h-[var(--button-compact-height)] px-3 rounded-[var(--radius-control)] border border-[var(--border)] bg-[var(--surface)] text-[13px] leading-[18px] font-medium text-[var(--text-secondary)] hover:bg-[var(--surface-raised)] cursor-pointer"
+              >
+                <svg className="w-4 h-4 text-[var(--text-secondary)] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
+                </svg>
+                <span>{t('options.title')}</span>
+              </button>
             </div>
 
-            <ModeFilterBar
-              selectedMode={selectedMode}
-              onSelectMode={setSelectedMode}
-            />
+            <ModeFilterBar />
           </div>
 
           {/* Right Column: Recent Searches & Fare Tip Note */}
@@ -141,7 +160,11 @@ export const SearchScreen: React.FC = () => {
       <TimePickerModal
         isOpen={isTimePickerOpen}
         onClose={() => setIsTimePickerOpen(false)}
-        onSelectTime={setTimeLabel}
+      />
+
+      <ConnectionFilterSheet
+        isOpen={isOptionsOpen}
+        onClose={() => setIsOptionsOpen(false)}
       />
     </div>
   );

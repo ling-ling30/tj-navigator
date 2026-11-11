@@ -105,9 +105,9 @@
   --ease-out-snappy: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* --- Dark Theme (Follows System Preferences) --- */
+/* --- Dark Theme (Follows System Preferences or data-theme="dark") --- */
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme="light"]) {
     --ground: #090D16;
     --surface: #131A29;
     --surface-raised: #1C2638;
@@ -142,4 +142,40 @@
     --shadow-floating: 0 4px 12px -2px rgba(0, 0, 0, 0.4);
     --shadow-sheet: 0 -4px 20px -2px rgba(0, 0, 0, 0.5);
   }
+}
+
+:root[data-theme="dark"] {
+  --ground: #090D16;
+  --surface: #131A29;
+  --surface-raised: #1C2638;
+  --surface-active: #28354D;
+
+  --border: #242F44;
+  --border-strong: #374663;
+  --rule: #1E283A;
+
+  --text-primary: #F8FAFC;
+  --text-secondary: #CBD5E1;
+  --text-muted: #94A3B8;
+  --text-inverse: #0F172A;
+
+  --action-primary: #38BDF8;
+  --action-primary-hover: #7DD3FC;
+  --action-primary-active: #BAE6FD;
+  --action-primary-surface: #082F49;
+
+  --status-on-time: #4ADE80;
+  --status-on-time-surface: #064E3B;
+  --status-on-time-text: #D1FAE5;
+
+  --status-delayed: #F87171;
+  --status-delayed-surface: #7F1D1D;
+  --status-delayed-text: #FEE2E2;
+
+  --status-warning: #FBBF24;
+  --status-warning-surface: #78350F;
+  --status-warning-text: #FEF3C7;
+
+  --shadow-floating: 0 4px 12px -2px rgba(0, 0, 0, 0.4);
+  --shadow-sheet: 0 -4px 20px -2px rgba(0, 0, 0, 0.5);
 }

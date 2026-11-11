@@ -4,11 +4,22 @@ import { Skeleton } from '../../components/ui/Skeleton';
 import { EmptyState } from '../../components/ui/EmptyState';
 import { ErrorState } from '../../components/ui/ErrorState';
 import { Button } from '../../components/ui/Button';
+import { Chip } from '../../components/ui/Chip';
+import { ModeFilterBar } from '../search/ModeFilterBar';
 import { ConnectionCard } from './ConnectionCard';
 import { ConnectionFilterSheet } from './ConnectionFilterSheet';
-import { useTransitSearch } from '../../hooks/useTransitSearch';
+import { useTransitSearch, type SortStrategy } from '../../hooks/useTransitSearch';
 import type { Itinerary } from '../../types/transit';
 import { useT } from '../../hooks/useT';
+
+const MODE_GROUP_NAMES: Record<number, string> = {
+  0: 'BRT',
+  1: 'Bus',
+  2: 'Mikrotrans',
+  3: 'KRL',
+  4: 'MRT',
+  5: 'LRT'
+};
 
 export interface ResultsScreenProps {
   onSelectItinerary?: (itinerary: Itinerary) => void;
@@ -27,7 +38,11 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onSelectItinerary 
     filters,
     setFilters,
     error,
-    routingStatus
+    routingStatus,
+    answerKind,
+    modesGaveNothing,
+    suggestion,
+    applySuggestion
   } = useTransitSearch();
 
   const [isFilterOpen, setIsFilterOpen] = useState(false);
@@ -44,6 +59,18 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onSelectItinerary 
   );
   const isNoRoute = routingStatus === 'no-route' || itineraries.length === 0;
   const isError = routingStatus === 'error' || Boolean(error);
+
+  const sortChoices: Array<{ label: string; value: SortStrategy }> = [
+    { label: t('results.sort_best'), value: 'best' },
+    { label: t('results.sort_fastest'), value: 'fastest' },
+    { label: t('results.sort_fewest_transfers'), value: 'fewest_transfers' },
+    { label: t('results.sort_cheapest'), value: 'cheapest' },
+    { label: t('results.sort_least_walking'), value: 'least_walking' }
+  ];
+
+  const suggestionModesText = suggestion
+    ? suggestion.modeGroups.map(g => MODE_GROUP_NAMES[g] || '').join(' & ')
+    : '';
 
   return (
     <div className="flex flex-col min-h-screen bg-[var(--ground)]">
@@ -65,7 +92,7 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onSelectItinerary 
         </div>
 
         <IconButton
-          label={t('results.filter_title')}
+          label={t('options.title')}
           variant="ghost"
           onClick={() => setIsFilterOpen(true)}
           className="text-[16px]"
@@ -77,28 +104,43 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onSelectItinerary 
             stroke="currentColor"
             viewBox="0 0 24 24"
           >
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
           </svg>
         </IconButton>
       </header>
 
-      {/* Result Status Bar */}
-      <div className="border-b border-[var(--rule)] bg-[var(--surface-raised)]">
-        <div className="max-w-md md:max-w-2xl lg:max-w-3xl mx-auto flex items-center justify-between px-4 py-2 text-[13px] leading-[18px] text-[var(--text-secondary)] font-medium">
-          <span>{t('results.title')}</span>
-          <span className="tabular-nums">
-            {t('results.count', { count: itineraries.length })}
-          </span>
+      {/* Mode Filter Bar under Header */}
+      <div className="border-b border-[var(--border)] bg-[var(--surface)] px-4 py-2">
+        <div className="max-w-md md:max-w-2xl lg:max-w-3xl mx-auto">
+          <ModeFilterBar showTitle={false} />
         </div>
       </div>
 
+      {/* Sort Strategy Toolbar */}
+      {!isNoRoute && !isError && !isSameStop && (
+        <div className="border-b border-[var(--rule)] bg-[var(--surface-raised)] px-4 py-2">
+          <div className="max-w-md md:max-w-2xl lg:max-w-3xl mx-auto flex items-center gap-2 overflow-x-auto no-scrollbar">
+            {sortChoices.map(opt => (
+              <Chip
+                key={opt.value}
+                active={filters.sortBy === opt.value}
+                onClick={() => setFilters({ sortBy: opt.value })}
+              >
+                {opt.label}
+              </Chip>
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* Main List Area */}
       <main className="flex-1 p-4 md:p-6 flex flex-col gap-3 max-w-md md:max-w-2xl lg:max-w-3xl mx-auto w-full pb-12">
+
         {isComputingRoute ? (
           <div className="flex flex-col gap-3">
-            <Skeleton height="110px" rounded="card" />
-            <Skeleton height="110px" rounded="card" />
-            <Skeleton height="110px" rounded="card" />
+            <Skeleton height="100px" rounded="card" />
+            <Skeleton height="100px" rounded="card" />
+            <Skeleton height="100px" rounded="card" />
           </div>
         ) : isError ? (
           <ErrorState
@@ -129,32 +171,31 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onSelectItinerary 
           />
         ) : (
           <>
-            {itineraries[0]?.answerKind === 'relaxed' && (
-              <div className="p-3 rounded-[var(--radius-card)] bg-[var(--surface-raised)] border border-[var(--border)] text-[13px] leading-[18px] text-[var(--text-primary)] font-medium flex items-center gap-2">
-                <span className="text-[16px]">🚶</span>
-                <span>{t('ladder.relaxed_banner')}</span>
+            {/* Tone-step Banners (One at a time) */}
+            {modesGaveNothing ? (
+              <div className="p-3 rounded-[var(--radius-card)] bg-[var(--surface-raised)] border border-[var(--border)] text-[13px] leading-[18px] text-[var(--text-secondary)] font-medium">
+                {t('results.banner_modes_nothing')}
               </div>
-            )}
-
-            {itineraries[0]?.answerKind === 'closest-approach' && (
-              <div className="p-3.5 rounded-[var(--radius-card)] bg-[var(--surface-raised)] border border-[var(--action-primary)] text-[13px] leading-[18px] text-[var(--text-primary)] space-y-1.5">
-                <div className="font-bold flex items-center gap-1.5 text-[var(--action-primary)]">
-                  <span className="text-[16px]">⚠️</span>
-                  <span>{t('ladder.closest_banner')}</span>
+            ) : answerKind === 'relaxed' ? (
+              <div className="p-3 rounded-[var(--radius-card)] bg-[var(--surface-raised)] border border-[var(--border)] text-[13px] leading-[18px] text-[var(--text-secondary)] font-medium">
+                {t('results.banner_relaxed')}
+              </div>
+            ) : answerKind === 'closest-approach' ? (
+              <div className="p-3 rounded-[var(--radius-card)] bg-[var(--surface-raised)] border border-[var(--border)] text-[13px] leading-[18px] text-[var(--text-secondary)] font-medium space-y-1">
+                <div className="font-semibold text-[var(--text-primary)]">
+                  {t('ladder.closest_banner')}
                 </div>
-                <div className="text-[12px] text-[var(--text-secondary)]">
+                <div className="text-[12px] text-[var(--text-secondary)] font-normal">
                   {t('ladder.closest_hint')}
                 </div>
               </div>
-            )}
-
-            {itineraries[0]?.answerKind === 'walk-only' && (
-              <div className="p-3 rounded-[var(--radius-card)] bg-[var(--surface-raised)] border border-[var(--border)] text-[13px] leading-[18px] text-[var(--text-primary)] font-medium flex items-center gap-2">
-                <span className="text-[16px]">🚶</span>
-                <span>{t('ladder.walk_only_banner')}</span>
+            ) : answerKind === 'walk-only' ? (
+              <div className="p-3 rounded-[var(--radius-card)] bg-[var(--surface-raised)] border border-[var(--border)] text-[13px] leading-[18px] text-[var(--text-secondary)] font-medium">
+                {t('ladder.walk_only_banner')}
               </div>
-            )}
+            ) : null}
 
+            {/* Results Connection Cards */}
             {itineraries.map(itin => (
               <ConnectionCard
                 key={itin.id}
@@ -162,16 +203,34 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onSelectItinerary 
                 onSelect={handleCardClick}
               />
             ))}
+
+            {/* Suggestion Row under the list */}
+            {suggestion && (
+              <div className="p-3.5 rounded-[var(--radius-card)] bg-[var(--surface-raised)] border border-[var(--border)] flex items-center justify-between gap-3">
+                <div className="text-[13px] leading-[18px] text-[var(--text-secondary)] font-medium">
+                  {t('results.suggestion_faster', {
+                    minutes: suggestion.savesMinutes,
+                    modes: suggestionModesText
+                  })}
+                </div>
+                <Button
+                  variant="secondary"
+                  size="compact"
+                  onClick={applySuggestion}
+                  className="shrink-0"
+                >
+                  {t('results.suggestion_add', { modes: suggestionModesText })}
+                </Button>
+              </div>
+            )}
           </>
         )}
       </main>
 
-      {/* Filter Sheet */}
+      {/* Travel Options Sheet */}
       <ConnectionFilterSheet
         isOpen={isFilterOpen}
         onClose={() => setIsFilterOpen(false)}
-        filters={filters}
-        onChangeFilters={setFilters}
       />
     </div>
   );

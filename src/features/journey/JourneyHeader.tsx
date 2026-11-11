@@ -16,99 +16,81 @@ export const JourneyHeader: React.FC<JourneyHeaderProps> = ({
 }) => {
   const { t } = useT();
 
-  const fareAmount = itinerary.integratedFareIdr || itinerary.standardFareIdr;
+  const fareAmount = itinerary.integratedFareIdr ?? itinerary.standardFareIdr;
   const fareDisplay =
     fareAmount > 0
-      ? `Rp ${fareAmount.toLocaleString('id-ID')}`
+      ? t('results.fare_estimate', { amount: fareAmount.toLocaleString('id-ID') })
       : t('results.fare_free');
 
   const durationText = t('results.duration', {
     minutes: itinerary.totalDurationMinutes
   });
 
+  const showRange =
+    itinerary.durationMinMinutes !== undefined &&
+    itinerary.durationMaxMinutes !== undefined &&
+    itinerary.durationMaxMinutes - itinerary.durationMinMinutes >= 3;
+
   const transferText =
     itinerary.transfersCount === 0
-      ? t('results.direct')
-      : t('results.transfers', { count: itinerary.transfersCount });
+      ? t('results.direct_plain')
+      : itinerary.transfersCount === 1
+      ? t('results.transfers_count', { count: 1 })
+      : t('results.transfers_count', { count: itinerary.transfersCount });
+
+  const firstRide = itinerary.legs.find(l => l.type === 'TRANSIT');
+  const headwayMin = firstRide?.headwaySeconds ? Math.round(firstRide.headwaySeconds / 60) : null;
 
   return (
     <Card variant="surface" padding="md" className="flex flex-col gap-3">
       {/* Route title */}
       <div className="flex items-center gap-2 text-[16px] leading-[24px] font-bold text-[var(--text-primary)]">
         <span className="truncate">{originName}</span>
-        <svg
-          aria-hidden="true"
-          className="w-4 h-4 text-[var(--text-muted)] shrink-0"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-        </svg>
+        <span className="text-[var(--text-muted)] shrink-0">→</span>
         <span className="truncate">{destName}</span>
       </div>
 
       <div className="h-px bg-[var(--rule)]" />
 
-      {/* Metrics Row */}
-      <div className="flex items-center justify-between text-[14px] leading-[20px]">
-        <div className="flex items-center gap-2">
+      {/* Metrics Row: Times, Duration, Range, Fare, Integrated Fare Tag */}
+      <div className="flex items-center justify-between text-[14px] leading-[20px] flex-wrap gap-2">
+        <div className="flex items-center gap-1.5 flex-wrap">
           <span className="font-bold tabular-nums text-[var(--text-primary)]">
-            {itinerary.departureTime}
+            {itinerary.departureTime} → {itinerary.arrivalTime}
           </span>
-          <svg
-            aria-hidden="true"
-            className="w-3.5 h-3.5 text-[var(--text-muted)] shrink-0"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-          </svg>
-          <span className="font-bold tabular-nums text-[var(--text-primary)]">
-            {itinerary.arrivalTime}
-          </span>
-          <span className="text-[13px] leading-[18px] font-medium text-[var(--text-secondary)] tabular-nums">
+          <span className="text-[13px] leading-[18px] font-semibold text-[var(--text-primary)] tabular-nums">
             ({durationText})
           </span>
+          {showRange && (
+            <span className="text-[12px] leading-[16px] text-[var(--text-secondary)] tabular-nums">
+              {itinerary.durationMinMinutes}–{itinerary.durationMaxMinutes} mnt
+            </span>
+          )}
         </div>
 
-        <div className="font-bold tabular-nums text-[var(--text-primary)]">
-          {fareDisplay}
+        <div className="flex items-center gap-1.5 shrink-0">
+          <span className="font-bold tabular-nums text-[var(--text-primary)]">
+            {fareDisplay}
+          </span>
+          {itinerary.fareIsIntegrated && (
+            <span className="text-[11px] leading-[14px] font-medium text-[var(--action-primary)] bg-[var(--action-primary-surface)] px-1.5 py-0.5 rounded-[var(--radius-badge)]">
+              {t('results.fare_integrated_tag')}
+            </span>
+          )}
         </div>
       </div>
 
-      {/* Badges / Status row */}
+      {/* Sub-row: Transfers & First ride frequency */}
       <div className="flex items-center justify-between text-[13px] leading-[18px]">
-        <span className="text-[var(--text-muted)] font-medium">
+        <span className="text-[var(--text-secondary)] font-medium">
           {transferText}
         </span>
 
-        {(() => {
-          const hasLiveData = itinerary.legs.some(l => l.liveBusId || l.recountedDelaySeconds !== undefined);
-          const transitLeg = itinerary.legs.find(l => l.type === 'TRANSIT' && l.headwaySeconds);
-          const headwayMin = transitLeg?.headwaySeconds ? Math.round(transitLeg.headwaySeconds / 60) : null;
-
-          if (hasLiveData) {
-            return itinerary.trafficDelayMinutes > 0 ? (
-              <span className="text-[var(--status-delayed-text)] bg-[var(--status-delayed-surface)] px-2 py-0.5 rounded-[var(--radius-badge)] font-semibold tabular-nums">
-                {t('results.status_delayed', { minutes: itinerary.trafficDelayMinutes })}
-              </span>
-            ) : (
-              <span className="text-[var(--status-on-time-text)] bg-[var(--status-on-time-surface)] px-2 py-0.5 rounded-[var(--radius-badge)] font-semibold">
-                ● {t('results.status_ontime')}
-              </span>
-            );
-          }
-          if (headwayMin) {
-            return (
-              <span className="text-[var(--text-secondary)] bg-[var(--surface-raised)] px-2 py-0.5 rounded-[var(--radius-badge)] font-medium tabular-nums">
-                {t('results.status_headway', { minutes: headwayMin })}
-              </span>
-            );
-          }
-          return null;
-        })()}
+        {headwayMin && (
+          <span className="text-[var(--text-secondary)] bg-[var(--surface-raised)] px-2 py-0.5 rounded-[var(--radius-badge)] font-medium tabular-nums">
+            {t('results.status_headway', { minutes: headwayMin })}
+          </span>
+        )}
       </div>
     </Card>
   );

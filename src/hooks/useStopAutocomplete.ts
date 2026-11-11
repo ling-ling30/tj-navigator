@@ -15,7 +15,8 @@ const POPULAR_HUBS = [
   { name: 'Halte CSW 1 (ASEAN)', id: 'tj:1-4', mode: 0, desc: 'Integrasi CSW Skybridge' },
   { name: 'Stasiun Bundaran HI', id: 'mrt:BHI', mode: 3, desc: 'MRT Jalur Utara-Selatan' },
   { name: 'Halte Blok M', id: 'tj:1-1', mode: 0, desc: 'Terminal Blok M · Koridor 1' },
-  { name: 'Stasiun Manggarai', id: 'krl:MRI', mode: 2, desc: 'Sentral Integrasi Commuter Line' }
+  { name: 'Stasiun Manggarai', id: 'krl:MRI', mode: 2, desc: 'Sentral Integrasi Commuter Line' },
+  { name: 'Stasiun Bekasi', id: 'krl:BKS', mode: 2, desc: 'Commuter Line Cikarang' }
 ];
 
 export function cleanText(text: string): string {

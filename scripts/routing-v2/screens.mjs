@@ -24,8 +24,25 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
 const SCENARIOS = {
   default: [
     ['01-home', null],
-    ['02-results', 'click:Cari Rute'],
-    ['03-journey', 'clickCard'],
+    ['02-options-sheet', 'click:Opsi perjalanan'],
+    ['03-options-walking', 'click:Sedikit'],
+    ['04-options-close', 'click:Terapkan'],
+    ['05-toggle-mode-off', 'click:KRL'],
+    ['06-toggle-mode-reset', 'click:Semua'],
+    ['07-results', 'click:Cari Rute'],
+    ['08-journey', 'clickCard'],
+    ['09-back-to-results', 'click:‹'],
+    ['10-back-to-home', 'click:‹'],
+    ['11-home-light', 'click:Terang'],
+    ['12-open-picker', 'click:Halte Asal'],
+    ['13-pick-bekasi', 'click:Bekasi'],
+    ['14-off-krl', 'click:KRL'],
+    ['15-off-mrt', 'click:MRT'],
+    ['16-off-lrt', 'click:LRT'],
+    ['17-off-mikro', 'click:Mikrotrans'],
+    ['18-results-suggestion-light', 'click:Cari Rute'],
+    ['19-apply-suggestion-light', 'click:Tambahkan KRL'],
+    ['20-journey-light', 'clickCard'],
   ]
 };
 

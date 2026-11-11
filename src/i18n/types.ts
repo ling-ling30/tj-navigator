@@ -8,6 +8,8 @@ export interface TranslationDictionary {
   'nav.close': string;
   'nav.refresh': string;
   'lang.toggle': string;
+  'theme.toggle_light': string;
+  'theme.toggle_dark': string;
 
   // Search Screen
   'search.origin_label': string;
@@ -20,6 +22,8 @@ export interface TranslationDictionary {
   'search.arrive_by': string;
   'search.modes_header': string;
   'search.mode_all': string;
+  'search.mode_brt': string;
+  'search.mode_bus': string;
   'search.mode_tj': string;
   'search.mode_krl': string;
   'search.mode_mrt': string;
@@ -27,6 +31,24 @@ export interface TranslationDictionary {
   'search.mode_mikro': string;
   'search.recents_header': string;
   'search.cta_button': string;
+
+  // Travel Options
+  'options.title': string;
+  'options.max_transfers': string;
+  'options.transfers_direct': string;
+  'options.transfers_1': string;
+  'options.transfers_2': string;
+  'options.transfers_any': string;
+  'options.walking': string;
+  'options.walking_sedikit': string;
+  'options.walking_normal': string;
+  'options.walking_jauh': string;
+  'options.transfer_time': string;
+  'options.transfer_time_normal': string;
+  'options.transfer_time_longgar': string;
+  'options.premium_bus': string;
+  'options.premium_bus_note': string;
+  'options.apply': string;
 
   // Stop Picker
   'picker.search_placeholder': string;
@@ -44,6 +66,8 @@ export interface TranslationDictionary {
   'results.fare_integrated': string;
   'results.fastest_badge': string;
   'results.least_transfers': string;
+  'results.least_walking_badge': string;
+  'results.cheapest_badge': string;
   'results.status_ontime': string;
   'results.status_delayed': string;
   'results.status_headway': string;
@@ -51,6 +75,22 @@ export interface TranslationDictionary {
   'results.filter_title': string;
   'results.filter_max_transfers': string;
   'results.filter_apply': string;
+  'results.banner_modes_nothing': string;
+  'results.banner_relaxed': string;
+  'results.sort_label': string;
+  'results.sort_best': string;
+  'results.sort_fastest': string;
+  'results.sort_fewest_transfers': string;
+  'results.sort_cheapest': string;
+  'results.sort_least_walking': string;
+  'results.direct_plain': string;
+  'results.transfers_count': string;
+  'results.walk_distance': string;
+  'results.fare_estimate': string;
+  'results.infrequent_headway': string;
+  'results.suggestion_faster': string;
+  'results.suggestion_add': string;
+  'results.fare_integrated_tag': string;
 
   // Journey Detail & Stepper
   'journey.title': string;
@@ -58,6 +98,13 @@ export interface TranslationDictionary {
   'journey.door': string;
   'journey.direction': string;
   'journey.walk_distance': string;
+  'journey.ride_board': string;
+  'journey.conjunction_or': string;
+  'journey.headway_label': string;
+  'journey.wait_label': string;
+  'journey.infrequent_warning': string;
+  'journey.premium_bus_tag': string;
+  'journey.paid_area_transfer': string;
   'journey.intermediate_stops': string;
   'journey.intermediate_hide': string;
   'journey.tap_instruction': string;
