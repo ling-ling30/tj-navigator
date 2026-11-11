@@ -125,7 +125,7 @@ export const JourneyDetailScreen: React.FC<JourneyDetailScreenProps> = ({ onBack
         dotColor: 'var(--text-primary)',
         time: leg.arrivalTime,
         title: leg.toStopName,
-        subtitle: t('journey.exit_instruction'),
+        subtitle: leg.toStopId ? t('journey.exit_instruction') : t('journey.arrive_destination'),
         isLast: true
       });
     }

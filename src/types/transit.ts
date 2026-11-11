@@ -39,6 +39,7 @@ export interface StopEntity {
   mode: TransitModeType;
   isCustomPoint?: boolean;
   customLabel?: string;
+  description?: string;
 }
 
 export interface Leg {

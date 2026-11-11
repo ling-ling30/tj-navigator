@@ -53,6 +53,22 @@ export interface TranslationDictionary {
   // Stop Picker
   'picker.search_placeholder': string;
   'picker.results_header': string;
+  'picker.stops_header': string;
+  'picker.addresses_header': string;
+  'picker.address_searching': string;
+  'picker.address_search_action': string;
+  'picker.address_search_hint': string;
+  'picker.address_offline': string;
+  'picker.address_error': string;
+  'picker.address_none': string;
+  'picker.address_attribution': string;
+  'picker.place_kind_mall': string;
+  'picker.place_kind_street': string;
+  'picker.place_kind_hospital': string;
+  'picker.place_kind_education': string;
+  'picker.place_kind_building': string;
+  'picker.place_kind_area': string;
+  'picker.place_kind_place': string;
   'picker.nearby_header': string;
   'picker.no_results': string;
 
@@ -126,6 +142,8 @@ export interface TranslationDictionary {
   'journey.facility_sheltered': string;
   'journey.facility_step_free': string;
   'journey.exit_instruction': string;
+  'journey.walk_to_destination': string;
+  'journey.arrive_destination': string;
   'journey.radar_cta': string;
 
   // Live Radar

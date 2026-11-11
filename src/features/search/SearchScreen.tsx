@@ -49,7 +49,9 @@ export const SearchScreen: React.FC = () => {
         originName: originStop.name,
         destName: destinationStop.name,
         originId: originStop.id,
-        destId: destinationStop.id
+        destId: destinationStop.id,
+        originStop: originStop.isCustomPoint ? originStop : undefined,
+        destStop: destinationStop.isCustomPoint ? destinationStop : undefined
       });
       calculateJourney();
       setScreen('RESULTS');
@@ -64,16 +66,22 @@ export const SearchScreen: React.FC = () => {
     if (originIdx !== -1) {
       const s = network.stops[originIdx];
       setOriginStop({ index: originIdx, id: s[0], name: s[1], lat: s[2], lon: s[3], mode: s[4] as any });
+    } else if (trip.originStop) {
+      setOriginStop(trip.originStop);
     }
     if (destIdx !== -1) {
       const s = network.stops[destIdx];
       setDestinationStop({ index: destIdx, id: s[0], name: s[1], lat: s[2], lon: s[3], mode: s[4] as any });
+    } else if (trip.destStop) {
+      setDestinationStop(trip.destStop);
     }
     saveRecentTrip({
       originName: trip.originName,
       destName: trip.destName,
       originId: trip.originId,
-      destId: trip.destId
+      destId: trip.destId,
+      originStop: trip.originStop,
+      destStop: trip.destStop
     });
     calculateJourney();
     setScreen('RESULTS');

@@ -12,10 +12,10 @@ export const idDictionary: TranslationDictionary = {
   'theme.toggle_dark': 'Gelap',
 
   // Search Screen
-  'search.origin_label': 'Halte Asal',
-  'search.origin_placeholder': 'Pilih halte keberangkatan...',
-  'search.dest_label': 'Halte Tujuan',
-  'search.dest_placeholder': 'Pilih halte tujuan...',
+  'search.origin_label': 'Titik Asal',
+  'search.origin_placeholder': 'Pilih halte atau alamat...',
+  'search.dest_label': 'Titik Tujuan',
+  'search.dest_placeholder': 'Pilih halte atau alamat...',
   'search.swap_stops': 'Tukar posisi asal dan tujuan',
   'search.depart_now': 'Berangkat: Sekarang',
   'search.depart_time': 'Berangkat pada {time}',
@@ -51,10 +51,26 @@ export const idDictionary: TranslationDictionary = {
   'options.apply': 'Terapkan',
 
   // Stop Picker
-  'picker.search_placeholder': 'Cari halte, stasiun, atau rute...',
+  'picker.search_placeholder': 'Cari halte, stasiun, atau alamat...',
   'picker.results_header': 'Hasil Pencarian',
+  'picker.stops_header': 'Halte & Stasiun',
+  'picker.addresses_header': 'Alamat & Tempat',
+  'picker.address_searching': 'Mencari alamat...',
+  'picker.address_search_action': 'Cari alamat atau tempat: "{query}"',
+  'picker.address_search_hint': 'Tekan Enter atau ketuk untuk mencari alamat jalan & tempat',
+  'picker.address_offline': 'Sedang offline: pencarian alamat butuh internet. Halte, Lokasi Saya, dan koordinat tetap bisa dipakai.',
+  'picker.address_error': 'Gagal mencari alamat saat ini. Ketuk untuk coba lagi.',
+  'picker.address_none': 'Alamat tidak ditemukan di Jabodetabek. Coba tambah nama jalan/kecamatan, atau tempel koordinat.',
+  'picker.address_attribution': 'Data alamat © kontributor OpenStreetMap',
+  'picker.place_kind_mall': 'Mal',
+  'picker.place_kind_street': 'Jalan',
+  'picker.place_kind_hospital': 'Rumah Sakit',
+  'picker.place_kind_education': 'Kampus',
+  'picker.place_kind_building': 'Gedung',
+  'picker.place_kind_area': 'Area',
+  'picker.place_kind_place': 'Alamat',
   'picker.nearby_header': 'Halte Terdekat',
-  'picker.no_results': 'Tidak ada halte yang cocok',
+  'picker.no_results': 'Tidak ada halte atau alamat yang cocok',
 
   // Results & Itineraries
   'results.title': 'Pilihan Rute',
@@ -126,6 +142,8 @@ export const idDictionary: TranslationDictionary = {
   'journey.facility_sheltered': 'JPO / Skybridge terlindung dari hujan.',
   'journey.facility_step_free': 'Tersedia lift & ramp ramah difabel.',
   'journey.exit_instruction': 'Pintu keluar & integrasi area halte/stasiun',
+  'journey.walk_to_destination': 'Jalan kaki menuju titik tujuan',
+  'journey.arrive_destination': 'Tiba di titik tujuan',
   'journey.radar_cta': 'Pantau Keberangkatan Radar',
 
   // Live Radar

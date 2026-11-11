@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Card } from '../../components/ui/Card';
+import type { StopEntity } from '../../types/transit';
 import { useT } from '../../hooks/useT';
 
 export interface RecentTrip {
@@ -8,6 +9,8 @@ export interface RecentTrip {
   destName: string;
   originId: string;
   destId: string;
+  originStop?: StopEntity;
+  destStop?: StopEntity;
   timestamp: number;
 }
 

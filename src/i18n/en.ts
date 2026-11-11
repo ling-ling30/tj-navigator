@@ -12,10 +12,10 @@ export const enDictionary: TranslationDictionary = {
   'theme.toggle_dark': 'Dark',
 
   // Search Screen
-  'search.origin_label': 'Origin Stop',
-  'search.origin_placeholder': 'Choose departure stop...',
-  'search.dest_label': 'Destination Stop',
-  'search.dest_placeholder': 'Choose destination stop...',
+  'search.origin_label': 'Origin',
+  'search.origin_placeholder': 'Choose stop or address...',
+  'search.dest_label': 'Destination',
+  'search.dest_placeholder': 'Choose stop or address...',
   'search.swap_stops': 'Swap origin and destination',
   'search.depart_now': 'Depart: Now',
   'search.depart_time': 'Depart at {time}',
@@ -51,10 +51,26 @@ export const enDictionary: TranslationDictionary = {
   'options.apply': 'Apply',
 
   // Stop Picker
-  'picker.search_placeholder': 'Search stop, station, or route...',
+  'picker.search_placeholder': 'Search stop, station, or address...',
   'picker.results_header': 'Search Results',
+  'picker.stops_header': 'Stops & Stations',
+  'picker.addresses_header': 'Addresses & Places',
+  'picker.address_searching': 'Searching addresses...',
+  'picker.address_search_action': 'Search address or place: "{query}"',
+  'picker.address_search_hint': 'Press Enter or tap to look up street addresses and landmarks',
+  'picker.address_offline': 'Offline: address lookup needs internet. Stops, My Location, and pasted coordinates still work.',
+  'picker.address_error': 'Could not look up address right now. Tap to try again.',
+  'picker.address_none': 'No matching addresses found in Jabodetabek. Try adding a street or district name, or paste coordinates.',
+  'picker.address_attribution': 'Address data © OpenStreetMap contributors',
+  'picker.place_kind_mall': 'Mall',
+  'picker.place_kind_street': 'Street',
+  'picker.place_kind_hospital': 'Hospital',
+  'picker.place_kind_education': 'Campus',
+  'picker.place_kind_building': 'Building',
+  'picker.place_kind_area': 'Area',
+  'picker.place_kind_place': 'Address',
   'picker.nearby_header': 'Nearby Stops',
-  'picker.no_results': 'No matching stops found',
+  'picker.no_results': 'No matching stops or addresses found',
 
   // Results & Itineraries
   'results.title': 'Route Options',
@@ -126,6 +142,8 @@ export const enDictionary: TranslationDictionary = {
   'journey.facility_sheltered': 'Covered pedestrian bridge / skybridge.',
   'journey.facility_step_free': 'Wheelchair accessible with elevator & ramps.',
   'journey.exit_instruction': 'Exit gate & station integration area',
+  'journey.walk_to_destination': 'Walk to your destination',
+  'journey.arrive_destination': 'Arrive at destination',
   'journey.radar_cta': 'Track Live Departure Radar',
 
   // Live Radar

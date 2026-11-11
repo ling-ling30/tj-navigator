@@ -8,6 +8,7 @@ import { StopSearchResults } from './StopSearchResults';
 import { LocationDetectorRow } from './LocationDetectorRow';
 import { CustomPointEditor } from './CustomPointEditor';
 import { useStopAutocomplete, type EnrichedStop } from '../../hooks/useStopAutocomplete';
+import { useAddressSearch } from '../../hooks/useAddressSearch';
 import { TransitMode } from '../../types/transit';
 import { useT } from '../../hooks/useT';
 
@@ -29,6 +30,11 @@ export const StopPickerModal: React.FC<StopPickerModalProps> = ({
   const [selectedMode, setSelectedMode] = useState<number | null>(null);
 
   const { results, curatedStops, parsedCoordinate } = useStopAutocomplete(query, selectedMode);
+  const {
+    addresses,
+    status: addressStatus,
+    searchNow: searchAddressNow
+  } = useAddressSearch(query, results.length > 0, Boolean(parsedCoordinate));
 
   const handleSelect = (stop: EnrichedStop) => {
     onSelect(stop);
@@ -69,6 +75,13 @@ export const StopPickerModal: React.FC<StopPickerModalProps> = ({
             value={query}
             onChange={e => setQuery(e.target.value)}
             onClear={() => setQuery('')}
+            onKeyDown={e => {
+              if (e.key === 'Enter' && query.trim().length >= 3 && !parsedCoordinate) {
+                e.preventDefault();
+                searchAddressNow();
+              }
+            }}
+            enterKeyHint="search"
             autoFocus
           />
 
@@ -101,7 +114,10 @@ export const StopPickerModal: React.FC<StopPickerModalProps> = ({
           ) : query.trim().length > 0 ? (
             <StopSearchResults
               stops={results}
+              addresses={addresses}
+              addressStatus={addressStatus}
               query={query}
+              onSearchAddress={searchAddressNow}
               onSelect={handleSelect}
             />
           ) : (

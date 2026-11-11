@@ -20,6 +20,8 @@ export const TransferCard: React.FC<TransferCardProps> = ({ leg, googleMapsUrl }
       : `${walkMinutes * 70} m`;
 
   const isFreeTransfer = Boolean(leg.isPaidAreaTransfer);
+  const isFinalDestinationWalk = !leg.toStopId;
+  const isStopToStopTransfer = Boolean(leg.fromStopId && leg.toStopId);
 
   if (leg.isUncoveredSegment) {
     return (
@@ -76,30 +78,48 @@ export const TransferCard: React.FC<TransferCardProps> = ({ leg, googleMapsUrl }
         </span>
       </div>
 
-      {/* Facilities / Interchange Guide - only rendered if true */}
-      {(leg.isSheltered || leg.isStepFree) && (
+      {/* Facilities / Interchange Guide - only rendered for stop-to-stop transfers */}
+      {isStopToStopTransfer && (leg.isSheltered || leg.isStepFree) && (
         <div className="text-[13px] leading-[18px] text-[var(--text-secondary)]">
           {leg.isSheltered && `${t('journey.facility_sheltered')} `}
           {leg.isStepFree && t('journey.facility_step_free')}
         </div>
       )}
 
-      {/* Card tap or paid area instruction */}
+      {/* Card tap, paid area, or destination walk note */}
       <div className="flex items-center gap-2 text-[13px] leading-[18px] font-semibold text-[var(--text-primary)] pt-1 border-t border-[var(--rule)]">
-        <svg
-          aria-hidden="true"
-          className="w-4 h-4 text-[var(--action-primary)] shrink-0"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
-        </svg>
-        <span>
-          {isFreeTransfer
-            ? t('journey.paid_area_transfer')
-            : t('journey.tap_instruction')}
-        </span>
+        {isFinalDestinationWalk ? (
+          <>
+            <svg
+              aria-hidden="true"
+              className="w-4 h-4 text-[var(--action-primary)] shrink-0"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+            <span>{t('journey.walk_to_destination')}</span>
+          </>
+        ) : (
+          <>
+            <svg
+              aria-hidden="true"
+              className="w-4 h-4 text-[var(--action-primary)] shrink-0"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+            </svg>
+            <span>
+              {isFreeTransfer
+                ? t('journey.paid_area_transfer')
+                : t('journey.tap_instruction')}
+            </span>
+          </>
+        )}
       </div>
     </div>
   );
