@@ -9,6 +9,7 @@ import { ModeFilterBar } from '../search/ModeFilterBar';
 import { ConnectionCard } from './ConnectionCard';
 import { ConnectionFilterSheet } from './ConnectionFilterSheet';
 import { DepartureShiftBar } from './DepartureShiftBar';
+import { useTransitStore } from '../../lib/store/transit-store';
 import { useTransitSearch, type SortStrategy } from '../../hooks/useTransitSearch';
 import type { Itinerary } from '../../types/transit';
 import { useT } from '../../hooks/useT';
@@ -49,6 +50,16 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onSelectItinerary 
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   /** One row open at a time; a second tap closes it. */
   const [expandedId, setExpandedId] = useState<string | null>(null);
+
+  const liveByOption = useTransitStore(state => state.liveByOption);
+  const measureLive = useTransitStore(state => state.measureLive);
+
+  /** Opening a row also measures it from the live bus positions. */
+  const handleToggle = (itin: Itinerary) => {
+    const opening = expandedId !== itin.id;
+    setExpandedId(opening ? itin.id : null);
+    if (opening) void measureLive(itin);
+  };
 
   const handleCardClick = (itin: Itinerary) => {
     selectItinerary(itin);
@@ -206,7 +217,8 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onSelectItinerary 
                 key={itin.id}
                 itinerary={itin}
                 expanded={expandedId === itin.id}
-                onToggle={toggled => setExpandedId(current => (current === toggled.id ? null : toggled.id))}
+                onToggle={handleToggle}
+                live={liveByOption[itin.id]}
                 onOpenDetail={handleCardClick}
               />
             ))}

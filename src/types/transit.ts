@@ -75,6 +75,21 @@ export interface Leg {
   modeGroup?: number;
   /** Routing v2: premium fare class of the main line, if any (PP, PP3, SH2). */
   premiumFareClass?: string;
+  /** Routing v2: what the live module needs to follow this ride. Absent on rail, which has no live feed. */
+  live?: LiveLegRef;
+}
+
+/** Where a ride runs, so live bus positions can be placed on it. */
+export interface LiveLegRef {
+  /** Index of the pattern in the graph and in shapes-v2.json. */
+  pattern: number;
+  /** Boarding and alighting stop, as positions in that pattern's stop list. */
+  boardStop: number;
+  alightStop: number;
+  /** Route codes of every line that serves the leg, as the live feed names them. */
+  routes: string[];
+  /** Stop ids (as the feed names them) from the start of the pattern up to the boarding stop: a bus whose next stop is one of these is coming this way. */
+  approachStops: string[];
 }
 
 /** Routing v2 badge keys, each given to at most one option of a result. */

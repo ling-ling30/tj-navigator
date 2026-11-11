@@ -81,3 +81,20 @@ Decided in [Trip mode](../wayfinder/live-companion/tickets/08-trip-mode.md): on 
 - The topic carries a grid cell: `/mobile_armada/<lat index>-<lon index>/<route>/<trip>/<bus>`. Measured mapping: lat index ≈ (−6,0254 − lat) ÷ 0,0099 and lon index ≈ (lon − 106,6173) ÷ 0,01004, so a cell is about 1,1 km. The cell in the topic can lag the position by one cell, so neighbouring cells are included.
 - **Rule for the app:** listen in short bursts of about 15 seconds, only to the cells along the legs of the option that is open and only to the lines that serve those legs; repeat every two minutes while that option stays open.
 - Route shapes for placing buses: `public/data/shapes-v2.json`, 373 KB, 81.496 points for 705 patterns, polyline-encoded, with the vertex of every stop.
+
+## 9. What the first live build does, and what the replay ruled out (2026-11-11)
+
+**Built: the next bus at the first boarding stop.** Opening a result row makes the app listen to the feed for 15 seconds, only around the approach to that stop and only to the lines of that ride. Buses are placed on the route shape; a bus counts as coming when the stop it says is next lies on the approach. Their distance to the stop, at the speed the plan assumes for that road, gives "Bus berikutnya sekitar 4 mnt lagi, lalu 12 mnt". The option's total is recomputed with that real wait. Rail rides say "Sesuai jadwal".
+
+Checked by replaying the 40-minute recording through the app's own code (`npx vite-node scripts/live-eta/replay.ts`, 600 stops):
+
+| The bus really comes in | App, after 15 s: typical / bad error | Operator ETA: typical / bad error |
+|---|---|---|
+| 0–2 min | 0,5 / 3,3 min | 0,6 / 8,8 min |
+| 2–5 min | 1,1 / 3,3 min | 1,0 / 4,6 min |
+| 5–10 min | 1,6 / 5,3 min | 2,3 / 6,2 min |
+| 10–20 min | 3,7 / 8,7 min | 4,7 / 10,9 min |
+
+In 87 of 600 cases the app saw no bus coming; in 23 of those a bus did arrive within ten minutes.
+
+**Ruled out: riding time from a short listen.** The same replay tested a live riding time taken from the buses on the stretch. It was worse than the planned time at every listening length tried, from 15 seconds (typical error 3,9 minutes against 2,3 for the plan) to 5 minutes (2,8 against 2,1). A few buses over a short time cannot tell a red light from a jam. That figure was removed. Riding time in traffic needs either the ten-minute traffic cells of section 2, which the data budget of section 8 does not allow on a phone, or typical speeds by hour learned from recordings. A rush-hour recording is the next step for that.

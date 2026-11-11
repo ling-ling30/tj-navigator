@@ -4,6 +4,7 @@ import { Button } from '../../components/ui/Button';
 import { ConnectionSteps } from './ConnectionSteps';
 import { RouteLegPreview } from './RouteLegPreview';
 import type { Itinerary, OptionBadge } from '../../types/transit';
+import type { LiveState } from '../../lib/store/transit-store';
 import { useT } from '../../hooks/useT';
 
 export interface ConnectionCardProps {
@@ -12,9 +13,11 @@ export interface ConnectionCardProps {
   expanded: boolean;
   onToggle: (itinerary: Itinerary) => void;
   onOpenDetail: (itinerary: Itinerary) => void;
+  /** Live figures for this option, once measured. */
+  live?: LiveState;
 }
 
-export const ConnectionCard: React.FC<ConnectionCardProps> = ({ itinerary, expanded, onToggle, onOpenDetail }) => {
+export const ConnectionCard: React.FC<ConnectionCardProps> = ({ itinerary, expanded, onToggle, onOpenDetail, live }) => {
   const { t } = useT();
 
   // Line 1: Times, typical duration in bold, range beside it when min and max differ by >= 3 min
@@ -115,7 +118,12 @@ export const ConnectionCard: React.FC<ConnectionCardProps> = ({ itinerary, expan
 
       {expanded && (
         <>
-          <ConnectionSteps legs={itinerary.legs} />
+          {typeof live === 'object' && (
+            <div className="text-[13px] leading-[18px] font-semibold text-[var(--status-on-time)]">
+              {t('live.total', { minutes: live.totalMinutes })}
+            </div>
+          )}
+          <ConnectionSteps legs={itinerary.legs} live={live} />
           <Button
             variant="primary"
             size="compact"

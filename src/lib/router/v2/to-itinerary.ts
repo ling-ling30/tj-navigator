@@ -45,6 +45,20 @@ function intermediateNames(ix: NetworkIndex, leg: RideLeg): string[] {
   return names;
 }
 
+const BUS_LINE_PREFIX = 'tj:';
+
+/** Only buses have a live feed, and only a ride on one pattern can be followed along its shape. */
+function liveRef(ix: NetworkIndex, leg: RideLeg): Leg['live'] {
+  const routes = leg.lines.map(l => ix.net.lines[l][0]).filter(id => id.startsWith(BUS_LINE_PREFIX)).map(id => id.slice(BUS_LINE_PREFIX.length));
+  if (routes.length === 0 || leg.segments.length !== 1) return undefined;
+  const [board, alight] = leg.segments[0];
+  const pattern = ix.posPattern[board];
+  const start = ix.patStart[pattern];
+  const approachStops: string[] = [];
+  for (let pos = start; pos <= board; pos++) approachStops.push(ix.net.stops[ix.posStop[pos]][0].slice(BUS_LINE_PREFIX.length));
+  return { pattern, boardStop: board - start, alightStop: alight - start, routes, approachStops };
+}
+
 export function toItinerary(
   ix: NetworkIndex, option: PlanOption, index: number, departSec: number, originName: string, destinationName: string
 ): Itinerary {
@@ -115,7 +129,8 @@ export function toItinerary(
       isPaidAreaTransfer: leg.paidEntry,
       headwaySeconds: Number.isFinite(leg.headwaySec) ? Math.round(leg.headwaySec) : undefined,
       waitSeconds: Math.round(leg.waitSec),
-      isInfrequent: leg.infrequent
+      isInfrequent: leg.infrequent,
+      live: liveRef(ix, leg)
     });
   }
   return itinerary;

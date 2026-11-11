@@ -6,6 +6,7 @@ import type { PlanRequest } from '../router/v2/planner-api';
 import { loadNetworkV2 } from '../storage/network-v2-db';
 import { jakartaTelemetry, type ConnectionStatus } from '../telemetry/mqtt-client';
 import type { VehicleTelemetryPing } from '../telemetry/live-segment-engine';
+import type { LiveOption } from '../live/measure';
 import { initPlanner, planJourney } from './planner-client';
 import { ALL_MODE_GROUPS, loadTravelPrefs, saveTravelPrefs } from './travel-prefs';
 
@@ -13,6 +14,9 @@ export type RoutingStatus = 'idle' | 'computing' | 'success' | 'no-route' | 'sam
 export type { AnswerKind } from '../../types/transit';
 
 type Screen = 'HOME' | 'RESULTS' | 'RADAR';
+/** 'measuring' while the feed is being listened to; 'unavailable' when it gave nothing. */
+export type LiveState = LiveOption | 'measuring' | 'unavailable';
+const LIVE_FRESH_MS = 2 * 60 * 1000;
 
 interface TransitStoreState {
   /** Stops and lines in the shape the stop picker reads; built from graph v2. */
@@ -37,6 +41,8 @@ interface TransitStoreState {
   suggestion: ModeSuggestionView | null;
   /** The chosen modes gave nothing; the options shown ignore the mode choice. */
   modesGaveNothing: boolean;
+  /** Live figures per option id, from one short listen to the bus feed. */
+  liveByOption: Record<string, LiveState>;
 
   vehicles: VehicleTelemetryPing[];
   connectionStatus: ConnectionStatus;
@@ -58,6 +64,8 @@ interface TransitStoreState {
   setDepartAt: (epochMs: number | null) => void;
   /** Switches on the mode groups of the suggestion and searches again. */
   applySuggestion: () => void;
+  /** Measures the option from live bus positions, unless it was measured in the last two minutes. */
+  measureLive: (itinerary: Itinerary) => Promise<void>;
   openLiveRadar: (vehicleId?: string) => void;
   closeLiveRadar: () => void;
   setScreen: (screen: Screen) => void;
@@ -104,6 +112,7 @@ export const useTransitStore = create<TransitStoreState>((set, get) => ({
   departAtMs: null,
   suggestion: null,
   modesGaveNothing: false,
+  liveByOption: {},
 
   vehicles: [],
   connectionStatus: 'CONNECTING',
@@ -185,6 +194,7 @@ export const useTransitStore = create<TransitStoreState>((set, get) => ({
         selectedItinerary: view.itineraries[0] ?? null,
         suggestion: view.suggestion ?? null,
         modesGaveNothing: view.modesGaveNothing,
+        liveByOption: {},
         isComputingRoute: false,
         error: null
       });
@@ -237,6 +247,26 @@ export const useTransitStore = create<TransitStoreState>((set, get) => ({
     const { suggestion, selectedModes } = get();
     if (!suggestion) return;
     get().setSelectedModes([...new Set([...selectedModes, ...suggestion.modeGroups])]);
+  },
+
+  measureLive: async itinerary => {
+    const known = get().liveByOption[itinerary.id];
+    const fresh = typeof known === 'object' && Date.now() - known.measuredAtMs < LIVE_FRESH_MS;
+    if (known === 'measuring' || fresh) return;
+    const seq = searchSeq;
+    const put = (state: LiveState) => {
+      // A newer search replaced the options this measurement belongs to
+      if (seq === searchSeq) set({ liveByOption: { ...get().liveByOption, [itinerary.id]: state } });
+    };
+    put('measuring');
+    try {
+      // Loaded on demand: the feed client is only needed once a traveller opens an option
+      const { measureOption } = await import('../live/measure');
+      put((await measureOption(itinerary)) ?? 'unavailable');
+    } catch (err) {
+      console.error('Live measurement failed:', err);
+      put('unavailable');
+    }
   },
 
   openLiveRadar: vehicleId => {

@@ -22,6 +22,11 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
 
 /** Each step: [label, action]. Actions run in the page. `click:Text` clicks the first control containing the text. */
 const SCENARIOS = {
+  live: [
+    ['v1-results', 'click:Cari Rute'],
+    ['v2-opened', 'clickCard'],
+    ['v3-live-after-20s', 'wait:20000'],
+  ],
   later: [
     ['l1-results', 'click:Cari Rute'],
     ['l2-later', 'click:Lebih lambat'],
@@ -94,7 +99,8 @@ const PAGE_HELPERS = `
     el.click(); return 'clicked ' + text;
   };
   window.__clickCard = () => {
-    const el = document.querySelector('main [role=button], main [tabindex="0"], main .cursor-pointer');
+    // A result row is the control that can be opened
+    const el = document.querySelector('main [aria-expanded]');
     if (!el) return 'NO CARD';
     el.click(); return 'clicked card';
   };
@@ -128,7 +134,8 @@ async function main() {
 
     for (const [label, action] of scenario) {
       if (action) {
-        const expr = action === 'clickCard' ? 'window.__clickCard()' : `window.__click(${JSON.stringify(action.slice(6))})`;
+        if (action.startsWith('wait:')) { await sleep(Number(action.slice(5))); }
+        const expr = action.startsWith('wait:') ? '"waited"' : action === 'clickCard' ? 'window.__clickCard()' : `window.__click(${JSON.stringify(action.slice(6))})`;
         console.log(`  action ${action}: ${await evaluate(expr)}`);
         await sleep(1200);
       }
