@@ -13,6 +13,7 @@ import { haversineMeters, WALK_DETOUR, WALK_SPEED_MPS } from './footpaths';
 import { ENDPOINT, LineScanner, MAX_RIDES, type AccessPoint, type RawPath, type ScanParams } from './line-scan';
 import { NetworkIndex } from './network-index';
 import { buildOption, type PlanOption } from './option';
+import { dayBitOf } from './time-model';
 import { filterOptions, MAX_OPTIONS } from './option-filter';
 
 export interface PlaceInput { lat: number; lon: number; name?: string; stopIndex?: number }
@@ -37,6 +38,8 @@ export interface PlanResult {
   suggestion?: ModeSuggestion;
   /** The chosen modes gave nothing; the options shown ignore the mode choice. */
   modesGaveNothing?: boolean;
+  /** Nothing runs at the time asked for: the options are for this later departure (epoch milliseconds). */
+  laterDepartureMs?: number;
 }
 
 const ALL_MODE_GROUPS = 6;
@@ -44,6 +47,9 @@ const SUGGESTION_MIN_GAIN_SEC = 15 * 60;
 const SUGGESTION_MIN_GAIN_RATIO = 0.25;
 /** A closest-approach answer must bring the traveller at least this much nearer, or it is not worth riding. */
 const CLOSEST_APPROACH_MIN_GAIN = 0.2;
+/** Plan a little after a line starts, so its first vehicle is already on the road. */
+const SERVICE_START_MARGIN_SEC = 5 * 60;
+const MAX_LATER_ATTEMPTS = 8;
 
 export class Planner {
   readonly ix: NetworkIndex;
@@ -56,7 +62,39 @@ export class Planner {
     this.unitWeights = new Float32Array(this.ix.lineCount).fill(1);
   }
 
+  /**
+   * Plans for the time asked. When service has ended for the day and nothing gets the traveller there,
+   * it answers with the first departure that does, and says so.
+   */
   plan(query: PlanQuery): PlanResult {
+    const now = this.planAt(query);
+    if (now.answerKind !== 'closest-approach') return now;
+    for (const later of this.nextServiceStarts(query.departAt)) {
+      const result = this.planAt({ ...query, departAt: later });
+      if (result.answerKind === 'direct' || result.answerKind === 'relaxed') return { ...result, laterDepartureMs: later.getTime() };
+    }
+    return now;
+  }
+
+  /** The moments, from `from` to the end of the next day, at which some line starts running. */
+  private nextServiceStarts(from: Date): Date[] {
+    const starts: Date[] = [];
+    for (let dayOffset = 0; dayOffset <= 1; dayOffset++) {
+      const day = new Date(from.getFullYear(), from.getMonth(), from.getDate() + dayOffset);
+      const dayBit = dayBitOf(day);
+      const seconds = new Set<number>();
+      for (const pattern of this.ix.net.patterns) {
+        for (const [mask, start] of pattern[5]) if ((mask & dayBit) !== 0) seconds.add(start);
+      }
+      for (const sec of [...seconds].sort((a, b) => a - b)) {
+        const at = new Date(day.getTime() + (sec + SERVICE_START_MARGIN_SEC) * 1000);
+        if (at.getTime() > from.getTime()) starts.push(at);
+      }
+    }
+    return starts.slice(0, MAX_LATER_ATTEMPTS);
+  }
+
+  private planAt(query: PlanQuery): PlanResult {
     const opts: TravelOptions = { ...DEFAULT_TRAVEL_OPTIONS, ...query.options };
     const { origin, destination } = query;
     const straight = haversineMeters(origin.lat, origin.lon, destination.lat, destination.lon);

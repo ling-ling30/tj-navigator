@@ -12,6 +12,8 @@ export interface PlanView {
   answerKind: AnswerKind;
   suggestion?: ModeSuggestionView;
   modesGaveNothing: boolean;
+  /** Nothing runs at the time asked for: the options are for this later departure (epoch milliseconds). */
+  laterDepartureMs?: number;
 }
 
 const LEGACY_MODE: Record<number, TransitModeType> = {
@@ -155,6 +157,7 @@ export function toPlanView(
     itineraries: result.options.map(convert),
     answerKind: result.answerKind,
     modesGaveNothing: result.modesGaveNothing === true,
+    laterDepartureMs: result.laterDepartureMs,
     suggestion: result.suggestion && {
       modeGroups: result.suggestion.modeGroups,
       savesMinutes: minutes(result.suggestion.savesSec),

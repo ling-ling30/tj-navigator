@@ -73,6 +73,8 @@ export const enDictionary: TranslationDictionary = {
   'results.status_headway': 'Every {minutes} min',
   'results.walk_chip': 'Walk {minutes} min',
   'results.view_detail': 'View details',
+  'results.banner_no_service_now': 'Nothing runs at this hour. These are the first routes available, leaving {time}.',
+  'app.disclaimer': 'An independent app, not affiliated with Transjakarta, KAI Commuter, MRT Jakarta or LRT. Times and fares are estimates.',
   'live.measuring': 'Measuring traffic from bus positions…',
   'live.total': 'About {minutes} min right now',
   'live.next_bus': 'Next bus in about {minutes} min',

@@ -39,7 +39,8 @@ export function createPlannerApi() {
       if (import.meta.env?.DEV) {
         console.log(`[Planner] ${result.options.length} option(s), ${result.answerKind}, ${(performance.now() - started).toFixed(0)} ms`);
       }
-      return toPlanView(planner.ix, result, secondsOfDay(departAt), request.origin, request.destination);
+      const used = result.laterDepartureMs !== undefined ? new Date(result.laterDepartureMs) : departAt;
+      return toPlanView(planner.ix, result, secondsOfDay(used), request.origin, request.destination);
     }
   };
 }

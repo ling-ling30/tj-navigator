@@ -139,6 +139,7 @@ export const SearchScreen: React.FC = () => {
           <div className="lg:col-span-5 flex flex-col gap-5">
             <RecentSearches onSelectTrip={handleSelectRecent} />
             <FareTipCard />
+            <p className="text-[12px] leading-[16px] text-[var(--text-muted)]">{t('app.disclaimer')}</p>
           </div>
         </div>
       </main>

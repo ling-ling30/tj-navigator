@@ -73,6 +73,8 @@ export const idDictionary: TranslationDictionary = {
   'results.status_headway': 'Tiap {minutes} mnt',
   'results.walk_chip': 'Jalan {minutes} mnt',
   'results.view_detail': 'Lihat detail',
+  'results.banner_no_service_now': 'Tidak ada layanan pada jam ini. Ini rute pertama yang tersedia, berangkat {time}.',
+  'app.disclaimer': 'Aplikasi independen, tidak berafiliasi dengan Transjakarta, KAI Commuter, MRT Jakarta atau LRT. Waktu dan tarif adalah perkiraan.',
   'live.measuring': 'Mengukur lalu lintas dari posisi bus…',
   'live.total': 'Sekarang sekitar {minutes} mnt',
   'live.next_bus': 'Bus berikutnya sekitar {minutes} mnt lagi',

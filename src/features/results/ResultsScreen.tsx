@@ -52,6 +52,7 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onSelectItinerary 
   const [expandedId, setExpandedId] = useState<string | null>(null);
 
   const liveByOption = useTransitStore(state => state.liveByOption);
+  const laterDepartureMs = useTransitStore(state => state.laterDepartureMs);
   const measureLive = useTransitStore(state => state.measureLive);
 
   /** Opening a row also measures it from the live bus positions. */
@@ -186,6 +187,11 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onSelectItinerary 
         ) : (
           <>
             {/* Tone-step Banners (One at a time) */}
+            {laterDepartureMs != null && (
+              <div className="p-3 rounded-[var(--radius-card)] bg-[var(--surface-raised)] border border-[var(--border)] text-[13px] leading-[18px] text-[var(--text-secondary)] font-medium">
+                {t('results.banner_no_service_now', { time: new Date(laterDepartureMs).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', hour12: false }).replace('.', ':') })}
+              </div>
+            )}
             {modesGaveNothing ? (
               <div className="p-3 rounded-[var(--radius-card)] bg-[var(--surface-raised)] border border-[var(--border)] text-[13px] leading-[18px] text-[var(--text-secondary)] font-medium">
                 {t('results.banner_modes_nothing')}

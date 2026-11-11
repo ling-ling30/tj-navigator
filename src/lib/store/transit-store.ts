@@ -41,6 +41,8 @@ interface TransitStoreState {
   suggestion: ModeSuggestionView | null;
   /** The chosen modes gave nothing; the options shown ignore the mode choice. */
   modesGaveNothing: boolean;
+  /** Nothing runs at the time asked for: the options are for this later departure (epoch milliseconds). */
+  laterDepartureMs: number | null;
   /** Live figures per option id, from one short listen to the bus feed. */
   liveByOption: Record<string, LiveState>;
 
@@ -112,6 +114,7 @@ export const useTransitStore = create<TransitStoreState>((set, get) => ({
   departAtMs: null,
   suggestion: null,
   modesGaveNothing: false,
+  laterDepartureMs: null,
   liveByOption: {},
 
   vehicles: [],
@@ -194,6 +197,7 @@ export const useTransitStore = create<TransitStoreState>((set, get) => ({
         selectedItinerary: view.itineraries[0] ?? null,
         suggestion: view.suggestion ?? null,
         modesGaveNothing: view.modesGaveNothing,
+        laterDepartureMs: view.laterDepartureMs ?? null,
         liveByOption: {},
         isComputingRoute: false,
         error: null

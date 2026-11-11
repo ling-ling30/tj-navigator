@@ -73,6 +73,8 @@ export interface TranslationDictionary {
   'results.status_headway': string;
   'results.walk_chip': string;
   'results.view_detail': string;
+  'results.banner_no_service_now': string;
+  'app.disclaimer': string;
   'live.measuring': string;
   'live.total': string;
   'live.next_bus': string;
