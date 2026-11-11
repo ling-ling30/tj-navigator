@@ -202,6 +202,19 @@ export interface TranslationDictionary {
   'ladder.same_place_title': string;
   'ladder.same_place_desc': string;
   'ladder.uncovered_segment': string;
+
+  // Route Map
+  'map.title': string;
+  'map.fit_route': string;
+  'map.expand': string;
+  'map.collapse': string;
+  'map.all_legs': string;
+  'map.walk_label': string;
+  'map.origin_label': string;
+  'map.destination_label': string;
+  'map.transfer_label': string;
+  'map.loading_shape': string;
+  'map.offline_tiles': string;
 }
 
 export type TranslationKey = keyof TranslationDictionary;

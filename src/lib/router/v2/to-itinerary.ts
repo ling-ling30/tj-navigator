@@ -1,6 +1,6 @@
 /** Adapter: the planner's options → the `Itinerary` shape the screens already render. */
 import { ModeGroup } from '../../../types/network-v2';
-import { TransitMode, type AnswerKind, type Itinerary, type Leg, type ModeSuggestionView, type OptionBadge, type TransitModeType } from '../../../types/transit';
+import { TransitMode, type AnswerKind, type Itinerary, type Leg, type ModeSuggestionView, type OptionBadge, type ShapeSegmentRef, type TransitModeType } from '../../../types/transit';
 import { PREMIUM_FARE_CLASSES } from './context';
 import type { NetworkIndex } from './network-index';
 import type { PlanOption, RideLeg } from './option';
@@ -61,12 +61,22 @@ function liveRef(ix: NetworkIndex, leg: RideLeg): Leg['live'] {
   return { pattern, boardStop: board - start, alightStop: alight - start, routes, approachStops };
 }
 
+function shapeSegmentsRef(ix: NetworkIndex, leg: RideLeg): ShapeSegmentRef[] {
+  return leg.segments.map(([board, alight]) => {
+    const pattern = ix.posPattern[board];
+    const start = ix.patStart[pattern];
+    return { pattern, boardStop: board - start, alightStop: alight - start };
+  });
+}
+
 export function toItinerary(
   ix: NetworkIndex, option: PlanOption, index: number, departSec: number, originName: string, destinationName: string
 ): Itinerary {
   const stops = ix.net.stops;
   const name = (s: number, endpoint: string) => (s < 0 ? endpoint : stops[s][1]);
   const id = (s: number) => (s < 0 ? undefined : stops[s][0]);
+  const lat = (s: number) => (s < 0 ? undefined : stops[s][2]);
+  const lon = (s: number) => (s < 0 ? undefined : stops[s][3]);
   const hasRide = option.legs.some(l => l.kind === 'ride');
 
   const itinerary: Itinerary = {
@@ -95,7 +105,9 @@ export function toItinerary(
       const walk: Leg = {
         type: 'WALK',
         fromStopName: name(leg.fromStop, originName), fromStopId: id(leg.fromStop),
+        fromLat: lat(leg.fromStop), fromLon: lon(leg.fromStop),
         toStopName: name(leg.toStop, destinationName), toStopId: id(leg.toStop),
+        toLat: lat(leg.toStop), toLon: lon(leg.toStop),
         departureTime: clock(leg.startSec), arrivalTime: clock(leg.startSec + leg.sec),
         durationSeconds: leg.sec, distanceMeters: leg.meters,
         isPaidAreaTransfer: leg.paidArea, isSheltered: leg.sheltered, isStepFree: leg.stepFree,
@@ -124,7 +136,9 @@ export function toItinerary(
       lineNames: Array.from(new Set(leg.lines.map(l => ix.net.lines[l][1]))),
       premiumFareClass: PREMIUM_FARE_CLASSES.has(line[5]) ? line[5] : undefined,
       fromStopName: stops[leg.boardStop][1], fromStopId: stops[leg.boardStop][0],
+      fromLat: stops[leg.boardStop][2], fromLon: stops[leg.boardStop][3],
       toStopName: stops[leg.alightStop][1], toStopId: stops[leg.alightStop][0],
+      toLat: stops[leg.alightStop][2], toLon: stops[leg.alightStop][3],
       departureTime: clock(leg.boardSec), arrivalTime: clock(leg.boardSec + leg.rideSec),
       durationSeconds: Math.round(leg.rideSec), distanceMeters: leg.meters,
       intermediateStopCount: between.length, intermediateStopNames: between,
@@ -132,7 +146,8 @@ export function toItinerary(
       headwaySeconds: Number.isFinite(leg.headwaySec) ? Math.round(leg.headwaySec) : undefined,
       waitSeconds: Math.round(leg.waitSec),
       isInfrequent: leg.infrequent,
-      live: liveRef(ix, leg)
+      live: liveRef(ix, leg),
+      shapeSegments: shapeSegmentsRef(ix, leg)
     });
   }
   return itinerary;

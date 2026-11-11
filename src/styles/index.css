@@ -260,3 +260,65 @@ html, body {
     transition-duration: 1ms;
   }
 }
+
+/* --- Route Map (Leaflet theme & cartographic fallback grid) --- */
+.tj-map-host .leaflet-container {
+  font-family: var(--font-sans);
+  background-color: var(--ground);
+  background-image:
+    linear-gradient(to right, var(--rule) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--rule) 1px, transparent 1px);
+  background-size: 28px 28px;
+  color: var(--text-primary);
+}
+
+/* Invert only the OSM basemap tile layer in dark mode so vectors & markers stay vivid */
+.tj-map-host.tj-map-dark .leaflet-tile-pane {
+  filter: invert(96%) hue-rotate(180deg) brightness(92%) contrast(90%) saturate(70%);
+}
+
+.tj-map-host .leaflet-control-zoom {
+  border: 1px solid var(--border) !important;
+  border-radius: var(--radius-control) !important;
+  overflow: hidden;
+  box-shadow: var(--shadow-floating) !important;
+}
+
+.tj-map-host .leaflet-control-zoom a {
+  background-color: var(--surface) !important;
+  color: var(--text-primary) !important;
+  border-bottom-color: var(--border) !important;
+  width: 30px !important;
+  height: 30px !important;
+  line-height: 30px !important;
+}
+
+.tj-map-host .leaflet-control-zoom a:hover {
+  background-color: var(--surface-raised) !important;
+}
+
+.tj-map-host .leaflet-control-attribution {
+  background-color: color-mix(in srgb, var(--surface) 82%, transparent) !important;
+  color: var(--text-muted) !important;
+  font-size: 10px !important;
+  padding: 1px 6px !important;
+}
+
+.tj-map-host .leaflet-control-attribution a {
+  color: var(--text-secondary) !important;
+}
+
+.tj-map-host .leaflet-popup-content-wrapper,
+.tj-map-host .leaflet-popup-tip {
+  background-color: var(--surface) !important;
+  color: var(--text-primary) !important;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-floating) !important;
+}
+
+.tj-map-host .leaflet-tooltip {
+  background-color: var(--surface) !important;
+  color: var(--text-primary) !important;
+  border-color: var(--border) !important;
+  box-shadow: var(--shadow-floating) !important;
+}

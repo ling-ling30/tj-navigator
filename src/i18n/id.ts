@@ -199,5 +199,18 @@ export const idDictionary: TranslationDictionary = {
   'ladder.walk_only_banner': 'Jarak dekat dan dapat ditempuh langsung dengan berjalan kaki.',
   'ladder.same_place_title': 'Anda sudah di tujuan',
   'ladder.same_place_desc': 'Titik asal dan tujuan berada di lokasi yang sama.',
-  'ladder.uncovered_segment': 'Bagian akhir tidak terlayani transit publik (disarankan ojek/taksi)'
+  'ladder.uncovered_segment': 'Bagian akhir tidak terlayani transit publik (disarankan ojek/taksi)',
+
+  // Route Map
+  'map.title': 'Peta Rute',
+  'map.fit_route': 'Pas',
+  'map.expand': 'Perluas peta',
+  'map.collapse': 'Perkecil peta',
+  'map.all_legs': 'Semua',
+  'map.walk_label': 'Jalan',
+  'map.origin_label': 'Asal',
+  'map.destination_label': 'Tujuan',
+  'map.transfer_label': 'Transit',
+  'map.loading_shape': 'Memuat jalur rute...',
+  'map.offline_tiles': 'Grid peta offline'
 };

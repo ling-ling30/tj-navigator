@@ -199,5 +199,18 @@ export const enDictionary: TranslationDictionary = {
   'ladder.walk_only_banner': 'Short distance reachable directly on foot.',
   'ladder.same_place_title': 'You are already at your destination',
   'ladder.same_place_desc': 'Origin and destination are in the exact same location.',
-  'ladder.uncovered_segment': 'Last part not covered by public transit (ride-hail / taxi recommended)'
+  'ladder.uncovered_segment': 'Last part not covered by public transit (ride-hail / taxi recommended)',
+
+  // Route Map
+  'map.title': 'Route Map',
+  'map.fit_route': 'Fit',
+  'map.expand': 'Expand map',
+  'map.collapse': 'Compact map',
+  'map.all_legs': 'Full route',
+  'map.walk_label': 'Walk',
+  'map.origin_label': 'Start',
+  'map.destination_label': 'Destination',
+  'map.transfer_label': 'Transfer',
+  'map.loading_shape': 'Loading route geometry...',
+  'map.offline_tiles': 'Offline map grid'
 };

@@ -78,6 +78,19 @@ export interface Leg {
   premiumFareClass?: string;
   /** Routing v2: what the live module needs to follow this ride. Absent on rail, which has no live feed. */
   live?: LiveLegRef;
+  fromLat?: number;
+  fromLon?: number;
+  toLat?: number;
+  toLon?: number;
+  /** Routing v2: shape slices along pattern geometry for every segment of a transit leg. */
+  shapeSegments?: ShapeSegmentRef[];
+}
+
+/** Slice of a compiled pattern shape between a boarding and alighting stop index. */
+export interface ShapeSegmentRef {
+  pattern: number;
+  boardStop: number;
+  alightStop: number;
 }
 
 /** Where a ride runs, so live bus positions can be placed on it. */

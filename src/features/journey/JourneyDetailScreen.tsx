@@ -3,6 +3,7 @@ import { useTransitStore } from '../../lib/store/transit-store';
 import { Stepper, type StepperItem } from '../../components/ui/Stepper';
 import { LineBadge } from '../../components/ui/LineBadge';
 import { JourneyHeader } from './JourneyHeader';
+import { JourneyMapCard } from './JourneyMapCard';
 import { JourneyTopBar } from './JourneyTopBar';
 import { TransferCard } from './TransferCard';
 import { IntermediateStops } from './IntermediateStops';
@@ -161,6 +162,14 @@ export const JourneyDetailScreen: React.FC<JourneyDetailScreenProps> = ({ onBack
 
         <JourneyHeader
           itinerary={currentItin}
+          originName={originName}
+          destName={destName}
+        />
+
+        <JourneyMapCard
+          itinerary={currentItin}
+          originStop={originStop}
+          destinationStop={destinationStop}
           originName={originName}
           destName={destName}
         />
