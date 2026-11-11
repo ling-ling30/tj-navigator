@@ -2,6 +2,7 @@
 import { DayBit, ModeGroup, type LineV2, type PatternV2, type WindowV2 } from '../../src/types/network-v2.ts';
 import { haversineMeters, projectForward, type Shape } from './geo.ts';
 import type { Gtfs, GtfsStop, Row } from './gtfs-load.ts';
+import { pathOf, type PatternPath } from './paths.ts';
 import type { BuildStats, StopRegistry } from './registry.ts';
 
 const SHAPE_NEAR_M = 60;
@@ -86,7 +87,9 @@ function hopMetersAlong(shape: Shape | undefined, stops: GtfsStop[], stats: Buil
 }
 
 export function buildPatterns(
-  gtfs: Gtfs, lineOfRoute: Map<string, number>, registry: StopRegistry, buildDate: string, stats: BuildStats
+  gtfs: Gtfs, lineOfRoute: Map<string, number>, registry: StopRegistry, buildDate: string, stats: BuildStats,
+  /** Filled with the route geometry of each pattern, in the same order as the patterns returned. */
+  paths: PatternPath[]
 ): PatternV2[] {
   const masks = dayMasks(gtfs.calendar, buildDate);
   const groups = new Map<string, string[]>();
@@ -122,7 +125,9 @@ export function buildPatterns(
     windows.sort((a, b) => a[0] - b[0] || a[1] - b[1] || a[2] - b[2] || a[3] - b[3]);
 
     const shapeTrip = tripIds.map(id => gtfs.trips.get(id)!).find(t => gtfs.shapes.has(t.shapeId));
-    const hopMeters = hopMetersAlong(shapeTrip ? gtfs.shapes.get(shapeTrip.shapeId) : undefined, stops, stats);
+    const shape = shapeTrip ? gtfs.shapes.get(shapeTrip.shapeId) : undefined;
+    const hopMeters = hopMetersAlong(shape, stops, stats);
+    paths.push(pathOf(shape, stops));
     const stopIdx = stops.map(s => registry.add(`tj:${s.id}`, s.name, s.lat, s.lon, s.parent));
     patterns.push([lineOfRoute.get(first.routeId)!, first.direction, first.headsign, stopIdx, hopMeters, windows]);
   }

@@ -8,6 +8,7 @@ import path from 'node:path';
 import type { NetworkV2 } from '../../src/types/network-v2.ts';
 import { loadGtfs } from './gtfs-load.ts';
 import { buildLines, buildPatterns } from './patterns.ts';
+import { encodePolyline, type PatternPath } from './paths.ts';
 import { buildRail } from './rail.ts';
 import { newStats, StopRegistry } from './registry.ts';
 import { buildTransfers } from './transfers.ts';
@@ -18,6 +19,7 @@ const GTFS_DIR = path.join(ROOT, 'tmp_gtfs');
 const SEED_DIR = path.join(ROOT, 'data', 'seeds');
 const OUT_FILE = path.join(ROOT, 'public', 'data', 'network-v2.json');
 const VERSION_FILE = path.join(ROOT, 'public', 'data', 'network-v2.version.json');
+const SHAPES_FILE = path.join(ROOT, 'public', 'data', 'shapes-v2.json');
 const GTFS_URL = 'https://gtfs.transjakarta.co.id/files/file_gtfs.zip';
 const VERSION = '2.0.0';
 
@@ -44,8 +46,13 @@ async function main(): Promise<void> {
   const registry = new StopRegistry();
 
   const { lines, lineOfRoute } = buildLines(gtfs, stats);
-  const patterns = buildPatterns(gtfs, lineOfRoute, registry, yyyymmdd(new Date()), stats);
-  patterns.push(...buildRail(SEED_DIR, registry, lines));
+  const paths: PatternPath[] = [];
+  const patterns = buildPatterns(gtfs, lineOfRoute, registry, yyyymmdd(new Date()), stats, paths);
+  for (const rail of buildRail(SEED_DIR, registry, lines)) {
+    // The seeds carry no track geometry: a rail pattern is drawn station to station
+    patterns.push(rail);
+    paths.push({ points: rail[3].map(s => [registry.stops[s][2], registry.stops[s][3]]), stopVertex: rail[3].map((_, i) => i) });
+  }
   const transfers = buildTransfers(SEED_DIR, gtfs, registry, stats);
 
   const network: NetworkV2 = {
@@ -58,6 +65,10 @@ async function main(): Promise<void> {
     transfers
   };
   fs.writeFileSync(OUT_FILE, JSON.stringify(network));
+  // Route geometry, in pattern order: loaded only when a map or a live arrival needs it
+  const shapes = { version: VERSION, generatedAt: network.generatedAt, patterns: paths.map(p => [encodePolyline(p.points), p.stopVertex]) };
+  fs.writeFileSync(SHAPES_FILE, JSON.stringify(shapes));
+  console.log(`Wrote ${path.relative(ROOT, SHAPES_FILE)} (${(fs.statSync(SHAPES_FILE).size / 1024).toFixed(0)} KB, ${paths.reduce((n, p) => n + p.points.length, 0)} points)`);
   // A tiny file the app checks to learn that a newer graph is out, without downloading the graph itself
   fs.writeFileSync(VERSION_FILE, JSON.stringify({ version: VERSION, generatedAt: network.generatedAt, feedDate: network.feedDate }));
 

@@ -1,7 +1,7 @@
 /**
  * Records the live bus feed for the arrival-time work: positions of every bus, and every 20 s per bus
  * the operator's own ETA to each upcoming stop (the yardstick our model has to beat).
- * Run from the repo root: node scripts/live-eta/record.mjs [minutes]     (default 40)
+ * Run from the repo root: node scripts/live-eta/record.mjs [minutes] [seconds between ETA snapshots]     (defaults 40 and 20)
  * One read-only connection. Output: scripts/diag/recordings/eta-<stamp>.ndjson (git-ignored).
  *
  * Line formats:
@@ -15,7 +15,7 @@ import mqtt from 'mqtt';
 const BROKER = 'wss://mqtt.tj.co.id:8084/mqtt';
 const TOPIC = '/mobile_armada/#';
 const MINUTES = Number(process.argv[2] ?? 40);
-const ETA_EVERY_SEC = 20;
+const ETA_EVERY_SEC = Number(process.argv[3] ?? 20);
 const POSITION_EVERY_SEC = 3;
 
 const dir = path.resolve('scripts/diag/recordings');
