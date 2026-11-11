@@ -1,14 +1,16 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTransitStore } from './lib/store/transit-store';
-import { HeaderBar } from './components/HeaderBar';
-import { MapCanvas } from './components/MapCanvas';
-import { SearchCard } from './components/SearchCard';
-import { ItineraryDrawer } from './components/ItineraryDrawer';
-import { LiveRadarSheet } from './components/LiveRadarSheet';
-import { StopSearchModal } from './components/StopSearchModal';
-import { Loader2 } from 'lucide-react';
+import { SearchScreen } from './features/search/SearchScreen';
+import { ResultsScreen } from './features/results/ResultsScreen';
+import { JourneyDetailScreen } from './features/journey/JourneyDetailScreen';
+import { StopPickerModal } from './features/stop-picker/StopPickerModal';
+import { LiveRadarScreen } from './features/radar/LiveRadarScreen';
+import { OfflineBanner } from './components/OfflineBanner';
+import { Skeleton } from './components/ui/Skeleton';
+import { useT } from './hooks/useT';
 
 export const App: React.FC = () => {
+  const { t } = useT();
   const {
     isLoading,
     loadInitialData,
@@ -21,55 +23,69 @@ export const App: React.FC = () => {
     setDestinationStop
   } = useTransitStore();
 
+  const [isViewingDetail, setIsViewingDetail] = useState(false);
+
   useEffect(() => {
     loadInitialData();
   }, [loadInitialData]);
 
+  // Reset detail view if screen changes away from RESULTS
+  useEffect(() => {
+    if (activeScreen !== 'RESULTS') {
+      setIsViewingDetail(false);
+    }
+  }, [activeScreen]);
+
   if (isLoading) {
     return (
-      <div className="fixed inset-0 bg-[#0A0E17] flex flex-col items-center justify-center p-6 text-center select-none">
-        <div className="relative mb-6">
-          <div className="w-16 h-16 rounded-3xl bg-gradient-to-tr from-[#007AFF] to-[#00E676] flex items-center justify-center text-white font-black text-2xl shadow-2xl shadow-blue-500/20">
-            TJ
-          </div>
-          <Loader2 className="w-8 h-8 text-white animate-spin absolute -bottom-2 -right-2 bg-[#0A0E17] rounded-full p-1 border-2 border-emerald-400" />
+      <div className="fixed inset-0 bg-[var(--ground)] flex flex-col items-center justify-center p-6 text-center select-none">
+        <div className="w-12 h-12 rounded-[var(--radius-control)] bg-[var(--action-primary)] flex items-center justify-center text-[var(--text-inverse)] font-bold text-[18px] mb-4">
+          TJ
         </div>
-        <h1 className="text-xl font-black text-white tracking-tight mb-2">
-          TJ-Navigator
+        <h1 className="text-[16px] leading-[24px] font-bold text-[var(--text-primary)] mb-2">
+          {t('app.title')}
         </h1>
-        <p className="text-xs text-white/50 max-w-xs leading-relaxed">
-          Hydrating 8,270+ Jakarta transit stops & live corridor telemetry into IndexedDB...
+        <p className="text-[12px] leading-[16px] text-[var(--text-secondary)] max-w-xs mb-6">
+          {t('state.loading')}
         </p>
+        <div className="w-48 flex flex-col gap-2">
+          <Skeleton height="12px" rounded="full" />
+          <Skeleton height="12px" rounded="full" className="w-3/4 mx-auto" />
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="relative w-screen h-screen overflow-hidden bg-[#0A0E17] select-none">
-      {/* Top Header Bar */}
-      <HeaderBar />
-
-      {/* Background Interactive Map */}
-      <MapCanvas />
+    <div className="relative w-screen h-screen overflow-x-hidden bg-[var(--ground)] select-none">
+      <OfflineBanner />
 
       {/* Screen Views */}
-      {activeScreen === 'HOME' && <SearchCard />}
-      {activeScreen === 'RESULTS' && <ItineraryDrawer />}
-      {activeScreen === 'RADAR' && <LiveRadarSheet />}
+      {activeScreen === 'HOME' && <SearchScreen />}
 
-      {/* Search Modals */}
-      <StopSearchModal
+      {activeScreen === 'RESULTS' && (
+        isViewingDetail ? (
+          <JourneyDetailScreen onBack={() => setIsViewingDetail(false)} />
+        ) : (
+          <ResultsScreen onSelectItinerary={() => setIsViewingDetail(true)} />
+        )
+      )}
+
+      {activeScreen === 'RADAR' && <LiveRadarScreen />}
+
+      {/* Stop Picker Autocomplete Sheets */}
+      <StopPickerModal
         isOpen={isSearchingOrigin}
         onClose={() => setIsSearchingOrigin(false)}
         onSelect={setOriginStop}
-        title="Select Departure (Origin)"
+        title={t('search.origin_label')}
       />
 
-      <StopSearchModal
+      <StopPickerModal
         isOpen={isSearchingDest}
         onClose={() => setIsSearchingDest(false)}
         onSelect={setDestinationStop}
-        title="Select Destination (Halte / Station)"
+        title={t('search.dest_label')}
       />
     </div>
   );

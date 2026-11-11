@@ -1,0 +1,145 @@
+/* ==========================================================================
+   TJ-NAVIGATOR DESIGN SYSTEM TOKENS
+   Achromatic Ledger Base + Transit Accent System
+   ========================================================================== */
+
+:root {
+  /* --- Surfaces & Canvas (Light Mode Default) --- */
+  --ground: #F8FAFC;            /* Page canvas background (cool crisp neutral) */
+  --surface: #FFFFFF;           /* Card, sheet, and container backgrounds */
+  --surface-raised: #F1F5F9;    /* Inset blocks, list hover, input backgrounds */
+  --surface-active: #E2E8F0;    /* Pressed row, active chip background */
+
+  /* --- Dividers & Borders --- */
+  --border: #E2E8F0;            /* Standard 1px container and card hairline */
+  --border-strong: #CBD5E1;     /* Input border, focused control border */
+  --rule: #F1F5F9;              /* Sub-item hairline list dividers */
+
+  /* --- Text & Ink --- */
+  --text-primary: #0F172A;      /* Primary headings, titles, timestamps (high contrast) */
+  --text-secondary: #334155;    /* Subtitles, secondary metadata, walking instructions (>=4.5:1) */
+  --text-muted: #475569;        /* Placeholders, disabled states, inactive labels (>=4.5:1) */
+  --text-inverse: #FFFFFF;      /* Text on dark buttons or badges */
+
+  /* --- Single Primary Action Colour --- */
+  --action-primary: #004B87;    /* Deep Transit Blue: primary buttons, selected tabs */
+  --action-primary-hover: #003865;
+  --action-primary-active: #002B4E;
+  --action-primary-surface: #EBF4FC; /* Subtle background for selected chips/states */
+
+  /* --- Semantic Status Colours (STRICT: State Only) --- */
+  --status-on-time: #16A34A;    /* Green: On-time transit, active vehicle GPS */
+  --status-on-time-surface: #DCFCE7;
+  --status-on-time-text: #14532D;
+
+  --status-delayed: #DC2626;    /* Red: Delays, cancelled routes, missed transfers */
+  --status-delayed-surface: #FEE2E2;
+  --status-delayed-text: #7F1D1D;
+
+  --status-warning: #D97706;    /* Amber: Tight transfers (<3m), traffic congestion */
+  --status-warning-surface: #FEF3C7;
+  --status-warning-text: #78350F;
+
+  /* --- Transit Line Identification Colours (Official Badges Only) --- */
+  --line-tj: #0055A5;           /* TransJakarta BRT Blue */
+  --line-krl: #C8102E;          /* KRL Commuter Line Red */
+  --line-mrt: #002F6C;          /* MRT Jakarta Deep Blue */
+  --line-lrt: #F58220;          /* LRT Jabodebek / Jakarta Orange */
+  --line-mikro: #00A3E0;        /* Mikrotrans Light Blue */
+  --line-walk: #64748B;         /* Walking transfer Slate */
+
+  /* --- Radius (Bimodal Rule: 6px controls, 8px cards, 16px sheets) --- */
+  --radius-badge: 4px;
+  --radius-control: 6px;        /* Buttons, inputs, chips */
+  --radius-card: 8px;           /* Cards, dialogs */
+  --radius-sheet: 16px;         /* Bottom sheets top corners */
+
+  /* --- Typography Scale --- */
+  --font-sans: 'Plus Jakarta Sans Variable', 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+
+  --text-title: 20px;           /* Screen titles, modal headings */
+  --text-title-lh: 28px;
+  
+  --text-section: 16px;         /* Stop names, card titles, hero times */
+  --text-section-lh: 24px;
+  
+  --text-body: 14px;            /* Standard body, durations, descriptions */
+  --text-body-lh: 20px;
+  
+  --text-small: 12px;           /* Badges, meta tags, timestamps (MINIMUM ALLOWED) */
+  --text-small-lh: 16px;
+
+  /* --- Touch Targets & Sizing --- */
+  --touch-target-min: 48px;     /* Minimum interactive dimension */
+  --control-height: 48px;       /* Primary input & button height */
+  --button-compact-height: 36px;/* Secondary compact button height */
+  --badge-height: 24px;
+
+  /* --- Spacing Scale (4px Strict Modular Grid) --- */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;              /* Standard screen horizontal gutter */
+  --space-5: 20px;
+  --space-6: 24px;              /* Section gap */
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+
+  /* --- Elevation & Shadows (No resting shadow; elevation on floating items only) --- */
+  --shadow-none: none;
+  --shadow-floating: 0 4px 12px -2px rgba(15, 23, 42, 0.08), 0 2px 6px -1px rgba(15, 23, 42, 0.04);
+  --shadow-sheet: 0 -4px 20px -2px rgba(15, 23, 42, 0.12);
+
+  /* --- Z-Index Hierarchy --- */
+  --z-base: 0;
+  --z-sticky: 10;
+  --z-dropdown: 20;
+  --z-backdrop: 30;
+  --z-sheet: 40;
+  --z-toast: 50;
+
+  /* --- Motion --- */
+  --duration-snappy: 150ms;
+  --duration-sheet: 250ms;
+  --ease-out-snappy: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* --- Dark Theme (Follows System Preferences) --- */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --ground: #090D16;
+    --surface: #131A29;
+    --surface-raised: #1C2638;
+    --surface-active: #28354D;
+
+    --border: #242F44;
+    --border-strong: #374663;
+    --rule: #1E283A;
+
+    --text-primary: #F8FAFC;
+    --text-secondary: #CBD5E1;   /* High-contrast secondary text (>7:1) */
+    --text-muted: #94A3B8;       /* High-contrast muted/inactive text (>4.5:1) */
+    --text-inverse: #0F172A;
+
+    --action-primary: #38BDF8;    /* Lighter blue for dark background contrast */
+    --action-primary-hover: #7DD3FC;
+    --action-primary-active: #BAE6FD;
+    --action-primary-surface: #082F49; /* Deep tone ensuring >= 7:1 contrast with action-primary */
+
+    --status-on-time: #4ADE80;
+    --status-on-time-surface: #064E3B;
+    --status-on-time-text: #D1FAE5;
+
+    --status-delayed: #F87171;
+    --status-delayed-surface: #7F1D1D;
+    --status-delayed-text: #FEE2E2;
+
+    --status-warning: #FBBF24;
+    --status-warning-surface: #78350F;
+    --status-warning-text: #FEF3C7;
+
+    --shadow-floating: 0 4px 12px -2px rgba(0, 0, 0, 0.4);
+    --shadow-sheet: 0 -4px 20px -2px rgba(0, 0, 0, 0.5);
+  }
+}

@@ -1,0 +1,66 @@
+@import "tailwindcss";
+@import "@fontsource-variable/plus-jakarta-sans";
+@import "./tokens.css";
+
+@theme {
+  --color-ground: var(--ground);
+  --color-surface: var(--surface);
+  --color-surface-raised: var(--surface-raised);
+  --color-surface-active: var(--surface-active);
+
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-rule: var(--rule);
+
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-muted: var(--text-muted);
+  --color-text-inverse: var(--text-inverse);
+
+  --color-action: var(--action-primary);
+  --color-action-hover: var(--action-primary-hover);
+  --color-action-active: var(--action-primary-active);
+  --color-action-surface: var(--action-primary-surface);
+
+  --color-status-ontime: var(--status-on-time);
+  --color-status-ontime-surface: var(--status-on-time-surface);
+  --color-status-ontime-text: var(--status-on-time-text);
+
+  --color-status-delayed: var(--status-delayed);
+  --color-status-delayed-surface: var(--status-delayed-surface);
+  --color-status-delayed-text: var(--status-delayed-text);
+
+  --color-status-warning: var(--status-warning);
+  --color-status-warning-surface: var(--status-warning-surface);
+  --color-status-warning-text: var(--status-warning-text);
+
+  --color-line-tj: var(--line-tj);
+  --color-line-krl: var(--line-krl);
+  --color-line-mrt: var(--line-mrt);
+  --color-line-lrt: var(--line-lrt);
+  --color-line-mikro: var(--line-mikro);
+  --color-line-walk: var(--line-walk);
+
+  --font-sans: var(--font-sans);
+
+  --radius-badge: var(--radius-badge);
+  --radius-control: var(--radius-control);
+  --radius-card: var(--radius-card);
+  --radius-sheet: var(--radius-sheet);
+}
+
+/* Global resetting rules */
+html, body {
+  background-color: var(--ground);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  min-height: 100dvh;
+  margin: 0;
+  padding: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Tabular figures utility for all timing, pricing and countdowns */
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
